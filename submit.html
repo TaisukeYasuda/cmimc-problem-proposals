@@ -1,0 +1,76 @@
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
+<link rel="stylesheet" href="CSS/main.css" />
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
+<script type="text/javascript" src="JS/submit-proposal.js"></script>
+</head>
+
+<body>
+<header>
+	<img src="Graphics/cmimc-logo-huge.png" height="28px" />
+	<!-- Logged Out -->
+	<!-- Logged In -->
+	<a href="" class="logout">Log Out</a>
+	<!-- Member -->
+	<nav>
+		<ul>
+			<li><a href="index.html">My Proposals</a></li>
+			<li><a href="submit.html">Submit Proposal</a></li>
+		</ul>
+	</nav>
+	<!-- Secure Member
+	<nav>
+		<ul>
+			<li><a href="">Problem Bank</a></li>
+			<li><a href="">My Proposals</a></li>
+			<li><a href="">Submit Proposal</a></li>
+		</ul>
+	</nav> -->
+	<!-- Test Solver -->
+	<!-- Admin
+	<nav>
+		<ul>
+			<li><a href="">Manage Users</a></li>
+			<li><a href="">Manage Contest</a></li>
+			<li><a href="">Problem Bank</a></li>
+			<li><a href="">My Proposals</a></li>
+			<li><a href="">Submit Proposal</a></li>
+		</ul>
+	</nav> -->
+	<br class="clearFloat" />
+</header>
+
+<section>
+<h1>Submit Proposal</h1>
+<form>
+<label>Subject:</label><select name="prob-topic">
+	<option value="Algebra">Algebra</option>
+	<option value="Combinatorics">Combinatorics</option>
+	<option value="Computer Science">Computer Science</option>
+	<option value="Geometry">Geometry</option>
+	<option value="Number Theory">Number Theory</option>
+	<option value="Other">Other</option>
+</select><br class="clearFloat" />
+<label>Difficulty:</label><select name="prob-diff">
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="4">4</option>
+	<option value="5">5</option>
+</select><br class="clearFloat" />
+<textarea name="prob-stmt" id="prob-stmt" placeholder="Problem statement"></textarea><br />
+<input type="text" name="prob-ans" id="prob-ans" placeholder="Answer" /><br />
+<textarea name="prob-soln" id="prob-soln" placeholder="Solution"></textarea><br />
+<a class="form-btn" onclick="previewProposal()">Preview</a>
+<input type="submit" name="prob-submit" value="Submit" />
+</form>
+<div id="preview-zone"></div>
+</section>
+</body>
+</html>

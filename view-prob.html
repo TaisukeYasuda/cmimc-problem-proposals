@@ -1,0 +1,93 @@
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
+<link rel="stylesheet" href="CSS/main.css" />
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+
+<body>
+<header>
+	<img src="Graphics/cmimc-logo-huge.png" height="28px" />
+	<!-- Logged Out -->
+	<!-- Logged In -->
+	<a href="" class="logout">Log Out</a>
+	<!-- Member -->
+	<nav>
+		<ul>
+			<li><a href="index.html">My Proposals</a></li>
+			<li><a href="submit.html">Submit Proposal</a></li>
+		</ul>
+	</nav>
+	<!-- Secure Member
+	<nav>
+		<ul>
+			<li><a href="">Problem Bank</a></li>
+			<li><a href="">My Proposals</a></li>
+			<li><a href="">Submit Proposal</a></li>
+		</ul>
+	</nav> -->
+	<!-- Test Solver -->
+	<!-- Admin
+	<nav>
+		<ul>
+			<li><a href="">Manage Users</a></li>
+			<li><a href="">Manage Contest</a></li>
+			<li><a href="">Problem Bank</a></li>
+			<li><a href="">My Proposals</a></li>
+			<li><a href="">Submit Proposal</a></li>
+		</ul>
+	</nav> -->
+	<br class="clearFloat" />
+</header>
+
+<section>
+<h1>View Proposal</h1>
+ID: 123<br />
+Topic: Combi<br />
+<h3>Problem</h3>
+Calculate $\sum_{k=0}^n\binom{n}k$.
+<h3>Answer</h3>
+$2^n$
+<h3>Solution</h3>
+Consider all the subsets of $\{1,2,\dots,n\}$. There are $2^n$ of these, consisting of $\binom{n}0$ subsets of size $0$, $\binom{n}1$ subsets of size $1$, etc. so $\sum_{k=0}^n\binom{n}k=2^n$.
+
+<br /><br />
+
+<h1>Alternate Solutions</h1>
+<!-- No alternate solutions
+<p>No alternate solutions.</p> -->
+<!-- Alternate solutions -->
+<table>
+<tr>
+	<td>User</td>
+	<td>Solution</td>
+</tr>
+<tr>
+	<td>Cody</td>
+	<td>Note that $2^n=(1+1)^n=\sum_{k=0}^n\binom{n}k$.</td>
+</tr>
+</table>
+
+<br />
+
+<h1>Comments</h1>
+<!-- No comments
+<p>No comments.</p> -->
+<!-- Comments -->
+<table>
+<tr>
+	<td>User</td>
+	<td>Comment</td>
+</tr>
+<tr>
+	<td>Cody</td>
+	<td>Nice problem, but a bit well-known.</td>
+</tr>
+</table>
+</body>
+</html>
