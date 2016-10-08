@@ -17,6 +17,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+var routes = require('./routes');
+app.use('/', routes);
+
 var connection = mysql.createConnection({
   // host: "fdb7.biz.nf:3306",
   // user: "1991601_cmimc",
@@ -64,11 +67,6 @@ passport.use(new LocalStrategy(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-app.get('/test', function (req, res) {
-   res.sendFile( __dirname + "/" + "test.html" );
-})
 
 
 app.post('/login',

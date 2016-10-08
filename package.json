@@ -4,6 +4,7 @@
   "description": "Official Carnegie Mellon Informatics and Mathematics Competition website",
   "main": "index.js",
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
     "client-sessions": "^0.7.0",
     "cookie-parser": "^1.4.3",
