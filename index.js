@@ -1,8 +1,13 @@
 var http = require("http");
 var passport = require('passport');
-var localStrategy = require("passwort-local").Strategy;
-var something = true;
+var localStrategy = require("passport-local").Strategy;
 var mysql = require("mysql");
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var app = express();
 
 var mysql_password = process.env.MYSQL_PASSWORD;
 
@@ -12,20 +17,23 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var connection = mysql.createConnection({
-  host: "fdb7.biz.nf:3306",
-  user: "1991601_cmimc",
-  password: mysql_password,
-  database: "1991601_cmimc"
+  // host: "fdb7.biz.nf:3306",
+  // user: "1991601_cmimc",
+  // password: mysql_password,
+  // database: "1991601_cmimc"
+  host: "localhost",
+  user: "root",
+  database: "cmimc"
 });
 
 connection.connect();
 
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username}, function(err, user) {
-      if (err) { return done(err); }
-      if (!user)
+// passport.use(new LocalStrategy(
+//   function(username, password, done) {
+//     User.findOne({ username: username}, function(err, user) {
+//       if (err) { return done(err); }
+//       if (!user)
 
 
 http.createServer(function (request, response) {
