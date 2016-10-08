@@ -1,0 +1,64 @@
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
+<link rel="stylesheet" href="CSS/main.css" />
+<link rel="stylesheet" href="CSS/my-proposals.css" />
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
+<script type="text/javascript" src="JS/submit-proposal.js"></script>
+<!-- angular js -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+</head>
+
+<body>
+<header>
+	<img src="Graphics/cmimc-logo-huge.png" height="28px" />
+	<!-- Logged Out -->
+	<!-- Logged In -->
+	<a href="" class="logout">Log Out</a>
+	<!-- Member -->
+	<nav>
+		<ul>
+			<li><a href="index.html">My Proposals</a></li>
+			<li><a href="submit.html">Submit Proposal</a></li>
+		</ul>
+	</nav>
+	<!-- Secure Member
+	<nav>
+		<ul>
+			<li><a href="">Problem Bank</a></li>
+			<li><a href="">My Proposals</a></li>
+			<li><a href="">Submit Proposal</a></li>
+		</ul>
+	</nav> -->
+	<!-- Test Solver -->
+	<!-- Admin
+	<nav>
+		<ul>
+			<li><a href="">Manage Users</a></li>
+			<li><a href="">Manage Contest</a></li>
+			<li><a href="">Problem Bank</a></li>
+			<li><a href="">My Proposals</a></li>
+			<li><a href="">Submit Proposal</a></li>
+		</ul>
+	</nav> -->
+	<br class="clearFloat" />
+</header>
+
+<section>
+<h1>Log In</h1>
+<form>
+<input type="text" name="name" placeholder="Full Name" /><br />
+<input type="text" name="andrewid" placeholder="AndrewID" /><br />
+<input type="text" name="email" placeholder="Email" /><br />
+<input type="text" name="password1" placeholder="Password" /><br />
+<input type="text" name="password2" placeholder="Password (confirm)" /><br />
+<input type="submit" name="submit" value="Log In" />
+</form>
+</section>
+</body>
+</html>
