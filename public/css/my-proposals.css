@@ -23,17 +23,17 @@ tr td:nth-child(4), tr td:nth-child(5)	{
 }
 
 .view-btn, .view-btn:link, .view-btn:visited	{
-	background-image: url("../Graphics/view.png");
+	background-image: url("../img/view.png");
 }
 
 .edit-btn, .edit-btn:link, .edit-btn:visited	{
-	background-image: url("../Graphics/edit.png");
+	background-image: url("../img/edit.png");
 }
 
 .view-btn:hover, .view-btn:active	{
-	background-image: url("../Graphics/view-gray.png");
+	background-image: url("../img/view-gray.png");
 }
 
 .edit-btn:hover, .edit-btn:active	{
-	background-image: url("../Graphics/edit-gray.png");
+	background-image: url("../img/edit-gray.png");
 }
