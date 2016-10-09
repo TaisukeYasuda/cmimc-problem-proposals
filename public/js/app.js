@@ -21,5 +21,5 @@ function($stateProvider, $urlRouterProvider) {
       controller: 'signupCtrl'
     });
 
-  $urlRouterProvider.otherwise('proposals');
+  $urlRouterProvider.otherwise('error');
 }]);

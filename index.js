@@ -1,16 +1,13 @@
 var http = require("http");
 var passport = require('passport');
 var LocalStrategy = require("passport-local").Strategy;
-var mysql = require("mysql");
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var bcrypt = require('bcrypt');
 var app = express();
 
-var mysql_password = process.env.MYSQL_PASSWORD;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,6 +29,11 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+// refresh connection every 30 min
+setTimeout (function () {
+  connection.query('SELECT 1');
+},1000*60*30);
+
 passport.use(new LocalStrategy(
   function(username, password, done) {
     var email = username;
@@ -42,55 +44,27 @@ passport.use(new LocalStrategy(
       }
       else
       {
-        console.log(rows[0].password);
         var submitPassword = rows[0].password;
-        if(submitPassword === password)
-        {
-          console.log("authenticated");
-          return done(null, rows[0]);
+        bcrypt.hash(submitPassword, 10, function(err, hash) {
+           if(hash === submitPassword)
+           {//if the password is correct
+             return done(null, userinfo);
+           }
+           else
+           {//if the password is not correct
+             return done(null, false, { message: 'Incorrect password.' });
+           }
+        });
+        if (submitPassword === password) {
+          console.log('good');
+          return done(null, userinfo);
+        } else {
+          return (null, false , { message: 'Incorrect password.' });
         }
-        else
-        {
-          return done(null, false, { message: 'Incorrect password.' });
-         }
-       }
+      }
       });
     }));
 
-
-
-
-
-
-
-
-
-
-		/*if(userinfo.length == 0)
-		{//if the email is valid
-		   return done(null, false, { message: 'Incorrect username.' });
-		}
-		else
-		{
-		  console.log(password);
-		  console.log(userinfo);
-		  var submitPassword = userinfo[0][2];
-		  //  bcrypt.hash(password, 10, function(err, hash) {
-		  //    if(hash === submitPassword)
-		  //    {//if the password is correct
-		  //      return done(null, userinfo);
-		  //    }
-		  //    else
-		  //    {//if the password is not correct
-		  //      return done(null, false, { message: 'Incorrect password.' });
-		  //    }
-		  // });
-		  if (submitPassword === password) {
-		    console.log('good');
-		    return done(null, userinfo);
-		  } else {
-		    return (null, false , { message: 'Incorrect password.' });
-		  }*/
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
