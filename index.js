@@ -97,7 +97,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(user, done) {
   done(null, user);
-});  
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -111,6 +111,6 @@ app.post('/login',
     console.log("authentication success");
   });
 
-var server = app.listen(8081, function () {
-   console.log("Server running at http://localhost:8081/")
+var server = app.listen(3000, function () {
+   console.log("Server running at http://localhost:3000/")
 });

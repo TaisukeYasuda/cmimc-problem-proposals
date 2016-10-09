@@ -1,18 +1,25 @@
-var app = angular.module('mainApp', ['ngRoute']);
+var app = angular.module('mainApp', ['ui.router']);
 
-app.config(function($routeProvider) {
-  $routeProvider
-  .when("/proposals", {
-    templateUrl : "templates/proposals.html"
-  })
-  .when("/login", {
-    templateUrl : "templates/login.html",
-    controller : "loginCtrl"
-  })
-  .when("/signup", {
-    templateUrl : "templates/signup.html"
-  })
-  .otherwise({
-    templateUrl : "home.html"
-  });
-});
+app.config([
+'$stateProvider',
+'$urlRouterProvider',
+function($stateProvider, $urlRouterProvider) {
+
+  $stateProvider
+    .state('proposals', {
+      url: '/proposals',
+      templateUrl: 'templates/proposals.html'
+    })
+    .state('login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'loginCtrl'
+    })
+    .state('signup', {
+      url: '/signup',
+      templateUrl: 'templates/signup.html',
+      controller: 'signupCtrl'
+    });
+
+  $urlRouterProvider.otherwise('proposals');
+}]);

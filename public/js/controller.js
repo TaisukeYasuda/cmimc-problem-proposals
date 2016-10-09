@@ -9,3 +9,11 @@ app.controller('loginCtrl', [
 function ($scope) {
   $scope.test = 'Hello world!';
 }]);
+
+app.controller('signupCtrl', [
+'$scope',
+function ($scope) {
+  $scope.signup = function() {
+
+  }
+}]);
