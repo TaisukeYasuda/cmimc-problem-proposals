@@ -1,6 +1,8 @@
 app.controller('mainCtrl', [
 '$scope',
 function ($scope) {
+  $scope.logged_in = true;
+  $scope.account_class = 'Admin';
   $scope.test = 'Hello world!';
 }]);
 
