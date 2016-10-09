@@ -50,7 +50,7 @@ function($stateProvider, $urlRouterProvider) {
     .state('signup', {
       url: '/signup',
       templateUrl: 'templates/signup.html',
-      controller: 'signupCtrl'
+      controller: 'authCtrl'
     })
     .state('error', {
       url: '/error',

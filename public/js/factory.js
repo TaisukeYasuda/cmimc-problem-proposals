@@ -43,7 +43,7 @@ app.factory('auth', ['$http', '$window', function($http, $window){
   };
 
   auth.logout = function () {
-    $window.localStorage.removeItem('flapper-news-token');
+    $window.localStorage.removeItem('jwt-token');
   };
 
   return auth;

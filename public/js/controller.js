@@ -9,7 +9,7 @@ function($scope, $state, auth){
     auth.signup($scope.user).error(function(error){
       $scope.error = error;
     }).then(function(){
-      $state.go('home');
+      $state.go('proposals');
     });
   };
 
@@ -17,7 +17,7 @@ function($scope, $state, auth){
     auth.login($scope.user).error(function(error){
       $scope.error = error;
     }).then(function(){
-      $state.go('home');
+      $state.go('proposals');
     });
   };
 }])

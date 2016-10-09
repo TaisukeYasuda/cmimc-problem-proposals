@@ -1,4 +1,3 @@
-var http = require("http");
 var passport = require('passport');
 var LocalStrategy = require("passport-local").Strategy;
 var express = require('express');
@@ -6,6 +5,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var mysql = require('mysql');
 var app = express();
 
 
