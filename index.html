@@ -13,7 +13,6 @@
   });
   </script>
   <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
-  <script type="text/javascript" src="JS/submit-proposal.js"></script>
   <!-- angular js -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
@@ -33,6 +32,7 @@
 	<a href="#/logged-out" class="logout">Log Out</a>
 	<nav>
 		<ul>
+      <li>Welcome, {{currentUser()}}!</li>
 			<li ng-if="account_class == 'Admin'"><a href="#/manage-users">Manage Users</a></li>
 			<li ng-if="account_class == 'Admin'"><a href="#/manage-contest">Manage Contest</a></li>
 			<li ng-if="account_class == 'Admin' || account_class == 'Test Solver' || account_class == 'Secure Member'"><a href="#/prob-bank">Problem Bank</a></li>
