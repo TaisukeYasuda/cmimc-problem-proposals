@@ -11,8 +11,8 @@ function ($scope) {
 }]);
 
 app.controller('signupCtrl', [
-'$scope',
-function ($scope) {
+'$scope', '$http',
+function ($scope, $http) {
   $scope.signup = function() {
 
   }
