@@ -22,38 +22,24 @@
   <script type="text/javascript" src="js/controller.js"></script>
 </head>
 
-<body ng-app="mainApp" ng-controller="mainCtrl">
-<header>
+<body ng-app="mainApp">
+<header ng-controller="headerCtrl">
 	<img src="img/cmimc-logo-huge.png" height="28px" />
-	<!-- Logged Out -->
-	<!-- Logged In -->
+	<div ng-if="!logged_in">
+	<a href="" class="login">Log In</a>
+	</div>
+	<div ng-if="logged_in">
 	<a href="" class="logout">Log Out</a>
-	<!-- Member -->
 	<nav>
 		<ul>
-			<li><a href="index.html">My Proposals</a></li>
-			<li><a href="submit.html">Submit Proposal</a></li>
+			<li ng-if="account_class == 'Admin'"><a href="#/manage-users">Manage Users</a></li>
+			<li ng-if="account_class == 'Admin'"><a href="#/manage-contest">Manage Contest</a></li>
+			<li ng-if="account_class == 'Admin' || account_class == 'Test Solver' || account_class == 'Secure Member'"><a href="#/prob-bank">Problem Bank</a></li>
+			<li ng-if="account_class == 'Admin' || account_class == 'Secure Member' || account_class == 'Member'"><a href="#/proposals">My Proposals</a></li>
+			<li ng-if="account_class == 'Admin' || account_class == 'Secure Member' || account_class == 'Member'"><a href="#/propose">Submit Proposal</a></li>
 		</ul>
 	</nav>
-	<!-- Secure Member
-	<nav>
-		<ul>
-			<li><a href="">Problem Bank</a></li>
-			<li><a href="">My Proposals</a></li>
-			<li><a href="">Submit Proposal</a></li>
-		</ul>
-	</nav> -->
-	<!-- Test Solver -->
-	<!-- Admin
-	<nav>
-		<ul>
-			<li><a href="">Manage Users</a></li>
-			<li><a href="">Manage Contest</a></li>
-			<li><a href="">Problem Bank</a></li>
-			<li><a href="">My Proposals</a></li>
-			<li><a href="">Submit Proposal</a></li>
-		</ul>
-	</nav> -->
+	</div>
 	<br class="clearFloat" />
 </header>
 
