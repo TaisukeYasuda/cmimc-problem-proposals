@@ -26,11 +26,11 @@
 <body ng-app="mainApp">
 <header ng-controller="navCtrl">
 	<img src="img/cmimc-logo-huge.png" height="28px" />
-	<div ng-if="!logged_in">
-	<a href="" class="logout">Log In</a>
+	<div ng-hide="isLoggedIn()">
+	<a href="#/login" class="logout">Log In</a>
 	</div>
-	<div ng-if="logged_in">
-	<a href="" class="logout">Log Out</a>
+	<div ng-show="isLoggedIn()">
+	<a href="#/logged-out" class="logout">Log Out</a>
 	<nav>
 		<ul>
 			<li ng-if="account_class == 'Admin'"><a href="#/manage-users">Manage Users</a></li>

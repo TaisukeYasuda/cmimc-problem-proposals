@@ -45,7 +45,12 @@ function($stateProvider, $urlRouterProvider) {
     .state('login', {
       url: '/login',
       templateUrl: 'templates/login.html',
-      controller: 'authCtrl'
+      controller: 'authCtrl',
+      onEnter: ['$state', 'auth', function ($state, auth) {
+        if (auth.isLoggedIn()) {
+          $state.go('propose');
+        }
+      }]
     })
     .state('signup', {
       url: '/signup',
@@ -55,6 +60,15 @@ function($stateProvider, $urlRouterProvider) {
     .state('error', {
       url: '/error',
       templateUrl: 'templates/404.html'
+    })
+    .state('logged-out', {
+      url: '/logged-out',
+      templateUrl: 'templates/logged-out.html',
+      onEnter: ['$state', 'auth', function ($state, auth) {
+        if (auth.isLoggedIn()) {
+          auth.logout()
+        }
+      }]
     });
 
   $urlRouterProvider.otherwise('error');

@@ -7,7 +7,6 @@ function($scope, $state, auth){
     alert(JSON.stringify($scope.user));
     auth.signup($scope.user).error(function(error){
       $scope.error = error;
-      alert(JSON.stringify(error));
     }).then(function(){
       $state.go('proposals');
     });

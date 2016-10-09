@@ -7,15 +7,15 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mysql = require('mysql');
 var app = express();
+// security
+var crypto = require('crypto');
+var jwt = require('jsonwebtoken');
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-var routes = require('./routes');
-app.use('/', routes);
 
 var connection = mysql.createConnection({
   // host: "fdb7.biz.nf:3306",
@@ -38,29 +38,19 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     var email = username;
     connection.query("SELECT * FROM staff WHERE email='"+email+"' LIMIT 1", function(err, rows, fields) {
-      if(rows.length == 0)
-      {
+      if (err) { return done(err); }
+
+      if(rows.length == 0) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      else
-      {
+      else {
         var submitPassword = rows[0].password;
-        bcrypt.hash(submitPassword, 10, function(err, hash) {
-           if(hash === submitPassword)
-           {//if the password is correct
-             return done(null, userinfo);
-           }
-           else
-           {//if the password is not correct
-             return done(null, false, { message: 'Incorrect password.' });
-           }
-        });
-        if (submitPassword === password) {
-          console.log('good');
-          return done(null, userinfo);
-        } else {
-          return (null, false , { message: 'Incorrect password.' });
+        var salt = rows[0].salt;
+        var hash = crypto.pbkdf2Sync(password, salt, 1000, 64).toString('hex');
+        if (submitPassword !== hash) {
+          return done(null, false, { message: 'Incorrect password.' });
         }
+        return done(null, rows[0]);
       }
       });
     }));
@@ -77,13 +67,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-app.post('/login',
-  passport.authenticate('local'),
-  function(req, res) {
-    // If this function gets called, authentication was successful.
-    // `req.user` contains the authenticated user.
-    console.log("authentication success");
-  });
+// app.post('/login',
+//   passport.authenticate('local'),
+//   function(req, res) {
+//     // If this function gets called, authentication was successful.
+//     // `req.user` contains the authenticated user.
+//     console.log("authentication success");
+//   });
+
+var routes = require('./routes');
+app.use('/', routes);
 
 var server = app.listen(3000, function () {
    console.log("Server running at http://localhost:3000/")
