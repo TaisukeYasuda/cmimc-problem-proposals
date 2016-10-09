@@ -1,15 +1,3 @@
-app.controller('mainCtrl', [
-'$scope',
-function ($scope) {
-  $scope.test = 'Hello world!';
-}]);
-
-app.controller('loginCtrl', [
-'$scope',
-function ($scope) {
-  $scope.test = 'Hello world!';
-}]);
-
 app.controller('authCtrl', [
 '$scope',
 '$state',
@@ -33,3 +21,43 @@ function($scope, $state, auth){
     });
   };
 }])
+
+app.controller('proposeCtrl', [
+'$scope', '$http',
+function ($scope, $http) {
+  // submit:
+  // INSERT INTO proposals (staffid, topic, problem, answer, solution, difficulty) VALUES ()
+}]);
+
+app.controller('editProbCtrl', [
+'$scope', '$http',
+function ($scope, $http) {
+  // submit:
+  // UPDATE proposals SET topic=, difficulty=, problem=, answer=, solution= WHERE probid=
+  // delete:
+  // DELETE FROM proposals WHERE probid=
+}]);
+
+app.controller('manageContestCtrl', [
+'$scope', '$http',
+function ($scope, $http) {
+  //
+}]);
+
+app.controller('probBankCtrl', [
+'$scope', '$http',
+function ($scope, $http) {
+  //
+}]);
+
+app.controller('myProposalsCtrl', [
+'$scope', '$http',
+function ($scope, $http) {
+  //
+}]);
+
+app.controller('viewProposalCtrl', [
+'$scope', '$http',
+function ($scope, $http) {
+  //
+}]);
