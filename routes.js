@@ -23,14 +23,18 @@ router.get('/', function (req, res) {
 })
 
 router.post('/signup', function(req, res, next){
-  if(!req.body.email || !req.body.password){
+  if (!req.body.email || !req.body.password1 || !req.body.password2) {
     return res.status(400).json({message: 'Please fill out all fields'});
+  }
+
+  if (req.body.password1 !== req.body.password2) {
+    return res.status(400).json({message: 'The two passwords do not match'});
   }
 
   var salt = crypto.randomBytes(16).toString('hex');
   var user = {
     email: req.body.email,
-    password: crypto.pbkdf2Sync(password, salt, 1000, 64).toString('hex'),
+    password: crypto.pbkdf2Sync(req.body.password1, salt, 1000, 64).toString('hex'),
     type: "Member",
     name: req.body.name,
     andrewid: req.body.andrewid,

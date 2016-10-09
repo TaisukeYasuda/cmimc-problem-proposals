@@ -3,24 +3,34 @@ app.controller('authCtrl', [
 '$state',
 'auth',
 function($scope, $state, auth){
-  $scope.user = {};
-
-  $scope.signup = function(){
+  $scope.signup = function () {
+    alert(JSON.stringify($scope.user));
     auth.signup($scope.user).error(function(error){
       $scope.error = error;
+      alert(JSON.stringify(error));
     }).then(function(){
       $state.go('proposals');
     });
   };
 
-  $scope.login = function(){
+  $scope.login = function () {
     auth.login($scope.user).error(function(error){
       $scope.error = error;
     }).then(function(){
       $state.go('proposals');
     });
   };
-}])
+}]);
+
+app.controller('navCtrl', [
+'$scope',
+'auth',
+function($scope, auth){
+  // get info by calling isLoggedIn() and currentUser()
+  $scope.isLoggedIn = auth.isLoggedIn;
+  $scope.currentUser = auth.currentUser;
+  $scope.logOut = auth.logOut;
+}]);
 
 app.controller('proposeCtrl', [
 '$scope', '$http',
