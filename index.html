@@ -33,11 +33,11 @@
 	<nav>
 		<ul>
       <li>Welcome, {{currentUser()}}!</li>
-			<li ng-if="account_class == 'Admin'"><a href="#/manage-users">Manage Users</a></li>
-			<li ng-if="account_class == 'Admin'"><a href="#/manage-contest">Manage Contest</a></li>
-			<li ng-if="account_class == 'Admin' || account_class == 'Test Solver' || account_class == 'Secure Member'"><a href="#/prob-bank">Problem Bank</a></li>
-			<li ng-if="account_class == 'Admin' || account_class == 'Secure Member' || account_class == 'Member'"><a href="#/proposals">My Proposals</a></li>
-			<li ng-if="account_class == 'Admin' || account_class == 'Secure Member' || account_class == 'Member'"><a href="#/propose">Submit Proposal</a></li>
+			<li ng-if="accountType() == 'Admin'"><a href="#/manage-users">Manage Users</a></li>
+			<li ng-if="accountType() == 'Admin'"><a href="#/manage-contest">Manage Contest</a></li>
+			<li ng-if="accountType() == 'Admin' || accountType() == 'Test Solver' || accountType() == 'Secure Member'"><a href="#/prob-bank">Problem Bank</a></li>
+			<li ng-if="accountType() == 'Admin' || accountType() == 'Secure Member' || accountType() == 'Member'"><a href="#/proposals">My Proposals</a></li>
+			<li ng-if="accountType() == 'Admin' || accountType() == 'Secure Member' || accountType() == 'Member'"><a href="#/propose">Submit Proposal</a></li>
 		</ul>
 	</nav>
 	</div>

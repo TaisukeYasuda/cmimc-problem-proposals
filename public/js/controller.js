@@ -28,6 +28,7 @@ function($scope, auth){
   // get info by calling isLoggedIn() and currentUser()
   $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
+  $scope.accountType = auth.accountType;
   $scope.logOut = auth.logOut;
 }]);
 
