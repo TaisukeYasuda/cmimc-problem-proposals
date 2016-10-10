@@ -61,9 +61,11 @@ function ($scope, $http) {
 }]);
 
 app.controller('myProposalsCtrl', [
-'$scope', '$http',
-function ($scope, $http) {
-  //
+'$scope',
+'$http',
+'proposals',
+function ($scope, $http, proposals) {
+  $scope.proposals = proposals.proposals;
 }]);
 
 app.controller('viewProposalCtrl', [

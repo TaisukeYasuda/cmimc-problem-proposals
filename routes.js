@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
    res.sendFile( __dirname + "/" + "index.html" );
 })
 
-function generateJWT (name, email, type) {
+function generateJWT (name, email, type, id) {
   // set expiration to 60 days
   var today = new Date();
   var exp = new Date(today);
@@ -33,6 +33,7 @@ function generateJWT (name, email, type) {
     email: email,
     name: name,
     type: type,
+    id: id,
     exp: parseInt(exp.getTime() / 1000),
   }, process.env.JWT_SECRET);
 };
@@ -60,7 +61,8 @@ router.post('/signup', function(req, res, next){
   var query = connection.query(sql, user, function(err, result) {
     if(err) { return next(err); }
 
-    return res.json({token: generateJWT(user.name, user.email, user.type)});
+    var user = result[0];
+    return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
   });
 });
 
@@ -75,7 +77,7 @@ router.post('/login', function(req, res, next){
     if (err) { return next(err); }
 
     if (user){
-      return res.json({token: generateJWT(user.name, user.email, user.type)});
+      return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
     } else {
       return res.status(401).json(info);
     }

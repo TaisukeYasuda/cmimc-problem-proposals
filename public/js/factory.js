@@ -57,3 +57,10 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 
   return auth;
 }])
+
+app.factory('proposals', [function(){
+  var o = {
+    proposals: []
+  };
+  return o;
+}]);
