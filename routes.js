@@ -84,4 +84,20 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
+router.param('staffid', function(req, res, next, id) {
+  var sql = 'SELECT * FROM proposals WHERE ?';
+  var query = connection.query(sql, {staffid: id}, function(err, result) {
+    if(err) { return next(err); }
+    if(!result) { return next(new Error('can\'t find staffid')); }
+
+    req.proposals = result;
+    return next();
+  });
+});
+
+router.get('/proposals/:staffid', function(req, res) {
+  res.json(req.proposals);
+});
+
+
 module.exports = router

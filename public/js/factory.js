@@ -39,6 +39,15 @@ app.factory('auth', ['$http', '$window', function($http, $window){
     }
   };
 
+  auth.userId = function () {
+    if(auth.isLoggedIn()){
+      var token = auth.getToken();
+      var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+      return payload.id;
+    }
+  };
+
   auth.signup = function (user) {
     return $http.post('/signup', user).success(function(data){
       auth.saveToken(data.token);
@@ -58,9 +67,12 @@ app.factory('auth', ['$http', '$window', function($http, $window){
   return auth;
 }])
 
-app.factory('proposals', [function(){
+app.factory('proposals', ['$http', function($http) {
   var o = {
     proposals: []
   };
+
+  
+
   return o;
 }]);

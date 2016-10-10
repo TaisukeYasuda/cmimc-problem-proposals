@@ -29,6 +29,7 @@ function($scope, auth){
   $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
   $scope.accountType = auth.accountType;
+  $scope.userId = auth.userId;
   $scope.logOut = auth.logOut;
 }]);
 
