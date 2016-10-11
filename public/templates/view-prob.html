@@ -1,13 +1,13 @@
-<section ng-controller="viewProposalCtrl">
+<section>
 <h1>View Proposal</h1>
-ID: 123<br />
-Topic: Combi<br />
+ID: {{prob.probid}}<br />
+Topic: {{prob.topic}}<br />
 <h3>Problem</h3>
-Calculate $\sum_{k=0}^n\binom{n}k$.
+{{prob.problem}}
 <h3>Answer</h3>
-$2^n$
+{{prob.answer}}
 <h3>Solution</h3>
-Consider all the subsets of $\{1,2,\dots,n\}$. There are $2^n$ of these, consisting of $\binom{n}0$ subsets of size $0$, $\binom{n}1$ subsets of size $1$, etc. so $\sum_{k=0}^n\binom{n}k=2^n$.
+{{prob.solution}}
 
 <br /><br />
 

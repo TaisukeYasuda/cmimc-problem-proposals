@@ -37,12 +37,18 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'templates/access-denied.html'
     })
     .state('edit-prob', {
-      url: '/edit-prob',
+      url: '/edit-prob/{id}',
       templateUrl: 'templates/edit-prob.html'
     })
     .state('view-prob', {
-      url: '/view-prob',
-      templateUrl: 'templates/view-prob.html'
+      url: '/view-prob/{id}',
+      templateUrl: 'templates/view-prob.html',
+      controller: 'viewProbCtrl',
+      resolve: {
+        prob: ['$stateParams', 'proposals', function($stateParams, proposals) {
+          return proposals.get($stateParams.id);
+        }]
+      }
     })
     .state('propose', {
       url: '/propose',

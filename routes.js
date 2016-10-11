@@ -94,7 +94,7 @@ router.post('/proposals/', function(req, res, next) {
 });
 
 router.param('staffid', function(req, res, next, id) {
-  var sql = 'SELECT * FROM proposals WHERE ?';
+  var sql = 'SELECT probid, problem, topic FROM proposals WHERE ?';
   var query = connection.query(sql, {staffid: id}, function(err, result) {
     if(err) { return next(err); }
     if(!result) { return next(new Error('can\'t find staffid')); }
@@ -104,8 +104,24 @@ router.param('staffid', function(req, res, next, id) {
   });
 });
 
+router.param('probid', function(req, res, next, id) {
+  var sql = 'SELECT * FROM proposals WHERE ?';
+  var query = connection.query(sql, {probid: id}, function(err, result) {
+    if(err) { return next(err); }
+    if(!result) { return next(new Error('can\'t find probid')); }
+
+    req.prob = result;
+    return next();
+  });
+});
+
 router.get('/proposals/:staffid', function(req, res) {
   res.json(req.proposals);
+});
+
+router.get('/proposals/problem/:probid', function(req, res) {
+  console.log(req.prob)
+  res.json(req.prob);
 });
 
 module.exports = router

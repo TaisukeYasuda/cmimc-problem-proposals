@@ -79,8 +79,15 @@ function ($scope, $http, proposals) {
   $scope.probs = proposals.probs;
 }]);
 
-app.controller('viewProposalCtrl', [
-'$scope', '$http',
-function ($scope, $http) {
-  //
+app.controller('viewProbCtrl', [
+'$scope',
+'$state',
+'proposals',
+function ($scope, $state, proposals) {
+  var p = proposals.prob;
+  if (p == []) {
+    $state.go('proposals')
+  } else {
+    $scope.prob = proposals.prob[0];
+  }
 }]);

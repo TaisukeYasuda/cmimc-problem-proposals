@@ -69,26 +69,33 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 
 app.factory('proposals', ['$http', 'auth', function($http, auth) {
   var o = {
-    probs: []
+    probs: [],
+    prob: []
   };
 
-  o.getAll = function() {
+  o.getAll = function () {
     return $http.get('/proposals/'+auth.staffId()).success(function(data){
       angular.copy(data, o.probs);
     });
   };
 
-  o.create = function(prob) {
+  o.create = function (prob) {
     return $http.post('/proposals', prob).then(
-       function(res) {
+       function (res) {
          // success callback
          o.probs.push(res)
        },
-       function(res) {
+       function (res) {
          // failure callback
        }
     );
   };
+
+  o.get = function (probid) {
+    return $http.get('/proposals/problem/'+probid).success(function(data){
+      angular.copy(data, o.prob);
+    });
+  }
 
   return o;
 }]);
