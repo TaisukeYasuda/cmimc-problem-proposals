@@ -66,15 +66,6 @@ passport.deserializeUser(function(user, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-// app.post('/login',
-//   passport.authenticate('local'),
-//   function(req, res) {
-//     // If this function gets called, authentication was successful.
-//     // `req.user` contains the authenticated user.
-//     console.log("authentication success");
-//   });
-
 var routes = require('./routes');
 app.use('/', routes);
 

@@ -50,15 +50,6 @@ function ($scope, $state, $http, auth, proposals) {
   }
 }]);
 
-app.controller('editProbCtrl', [
-'$scope', '$http',
-function ($scope, $http) {
-  // submit:
-  // UPDATE proposals SET topic=, difficulty=, problem=, answer=, solution= WHERE probid=
-  // delete:
-  // DELETE FROM proposals WHERE probid=
-}]);
-
 app.controller('manageContestCtrl', [
 '$scope', '$http',
 function ($scope, $http) {
@@ -86,8 +77,32 @@ app.controller('viewProbCtrl', [
 function ($scope, $state, proposals) {
   var p = proposals.prob;
   if (p == []) {
-    $state.go('proposals')
+    $state.go('proposals') //@TODO go to an error message
   } else {
     $scope.prob = proposals.prob[0];
+  }
+}]);
+
+app.controller('editProbCtrl', [
+'$scope',
+'$state',
+'proposals',
+function ($scope, $state, proposals) {
+  // submit:
+  // UPDATE proposals SET topic=, difficulty=, problem=, answer=, solution= WHERE probid=
+  // delete:
+  // DELETE FROM proposals WHERE probid=
+  var p = proposals.prob;
+  if (p == []) {
+    $state.go('proposals') //@TODO go to an error message
+  } else {
+    p = p[0];
+    p.difficulty = p.difficulty.toString();
+    $scope.prob = p;
+  }
+
+  $scope.delete = function () {
+    proposals.delete(p.probid);
+    $state.go('proposals');
   }
 }]);

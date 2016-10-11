@@ -38,7 +38,13 @@ function($stateProvider, $urlRouterProvider) {
     })
     .state('edit-prob', {
       url: '/edit-prob/{id}',
-      templateUrl: 'templates/edit-prob.html'
+      templateUrl: 'templates/edit-prob.html',
+      controller: 'editProbCtrl',
+      resolve: {
+        prob: ['$stateParams', 'proposals', function($stateParams, proposals) {
+          return proposals.get($stateParams.id);
+        }]
+      }
     })
     .state('view-prob', {
       url: '/view-prob/{id}',
