@@ -84,6 +84,15 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
+router.post('/proposals/', function(req, res, next) {
+  var sql = 'INSERT INTO proposals SET ?';
+  var query = connection.query(sql, req.body, function(err, result) {
+    if(err) { return next(err); }
+
+    res.json(result[0]);
+  });
+});
+
 router.param('staffid', function(req, res, next, id) {
   var sql = 'SELECT * FROM proposals WHERE ?';
   var query = connection.query(sql, {staffid: id}, function(err, result) {
@@ -98,6 +107,5 @@ router.param('staffid', function(req, res, next, id) {
 router.get('/proposals/:staffid', function(req, res) {
   res.json(req.proposals);
 });
-
 
 module.exports = router

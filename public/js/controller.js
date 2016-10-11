@@ -34,10 +34,20 @@ function($scope, auth){
 }]);
 
 app.controller('proposeCtrl', [
-'$scope', '$http',
-function ($scope, $http) {
+'$scope',
+'$state',
+'$http',
+'auth',
+'proposals',
+function ($scope, $state, $http, auth, proposals) {
   // submit:
   // INSERT INTO proposals (staffid, topic, problem, answer, solution, difficulty) VALUES ()
+  $scope.submit = function() {
+    var prob = $scope.prob;
+    prob.staffid = auth.staffId();
+    proposals.create(prob);
+    // @TODO go to view prob afterwards
+  }
 }]);
 
 app.controller('editProbCtrl', [

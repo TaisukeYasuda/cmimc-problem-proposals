@@ -1,7 +1,7 @@
-<section ng-controller="proposeCtrl">
+<section>
 <h1>Submit Proposal</h1>
-<form>
-<label>Subject:</label><select name="prob-topic">
+<form ng-submit="submit()">
+<label>Subject:</label><select name="prob-topic" ng-model="prob.topic">
 	<option value="Algebra">Algebra</option>
 	<option value="Combinatorics">Combinatorics</option>
 	<option value="Computer Science">Computer Science</option>
@@ -9,7 +9,7 @@
 	<option value="Number Theory">Number Theory</option>
 	<option value="Other">Other</option>
 </select><br class="clearFloat" />
-<label>Difficulty:</label><select name="prob-diff">
+<label>Difficulty:</label><select name="prob-diff" ng-model="prob.difficulty">
 	<option value="1">1</option>
 	<option value="2">2</option>
 	<option value="3">3</option>
@@ -21,9 +21,9 @@
 	<option value="9">9</option>
 	<option value="10">10</option>
 </select><br class="clearFloat" />
-<textarea name="prob-stmt" id="prob-stmt" placeholder="Problem statement"></textarea><br />
-<input type="text" name="prob-ans" id="prob-ans" placeholder="Answer" /><br />
-<textarea name="prob-soln" id="prob-soln" placeholder="Solution"></textarea><br />
+<textarea name="prob-stmt" id="prob-stmt" ng-model="prob.problem" placeholder="Problem statement"></textarea><br />
+<input type="text" name="prob-ans" id="prob-ans" ng-model="prob.answer" placeholder="Answer" /><br />
+<textarea name="prob-soln" id="prob-soln" ng-model="prob.solution" placeholder="Solution"></textarea><br />
 <a class="form-btn" onclick="previewProposal()">Preview</a>
 <input type="submit" name="prob-submit" value="Submit" />
 </form>

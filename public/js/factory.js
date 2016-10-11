@@ -39,7 +39,7 @@ app.factory('auth', ['$http', '$window', function($http, $window){
     }
   };
 
-  auth.userId = function () {
+  auth.staffId = function () {
     if(auth.isLoggedIn()){
       var token = auth.getToken();
       var payload = JSON.parse($window.atob(token.split('.')[1]));
@@ -72,7 +72,17 @@ app.factory('proposals', ['$http', function($http) {
     proposals: []
   };
 
-  
+  o.create = function(prob) {
+    return $http.post('/proposals', prob).then(
+       function(res) {
+         // success callback
+         o.proposals.push(res)
+       },
+       function(res) {
+         // failure callback
+       }
+    );
+  };
 
   return o;
 }]);
