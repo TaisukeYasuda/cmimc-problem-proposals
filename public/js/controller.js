@@ -88,10 +88,6 @@ app.controller('editProbCtrl', [
 '$state',
 'proposals',
 function ($scope, $state, proposals) {
-  // submit:
-  // UPDATE proposals SET topic=, difficulty=, problem=, answer=, solution= WHERE probid=
-  // delete:
-  // DELETE FROM proposals WHERE probid=
   var p = proposals.prob;
   if (p == []) {
     $state.go('proposals') //@TODO go to an error message
@@ -99,6 +95,11 @@ function ($scope, $state, proposals) {
     p = p[0];
     p.difficulty = p.difficulty.toString();
     $scope.prob = p;
+  }
+
+  $scope.put = function () {
+    proposals.put(p.probid, p);
+    $state.go('proposals');
   }
 
   $scope.delete = function () {

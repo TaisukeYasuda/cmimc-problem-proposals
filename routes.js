@@ -123,6 +123,17 @@ router.get('/proposals/problem/:probid', function(req, res) {
   res.json(req.prob);
 });
 
+router.put('/proposals/problem/:probid', function(req, res) {
+  console.log(req.body)
+  var sql = "UPDATE proposals SET ? WHERE probid="+mysql.escape(req.prob[0].probid);
+  var query = connection.query(sql, req.body, function(err, result) {
+    if(err) { return next(err); }
+    if(!result) { return next(new Error('can\'t find probid')); }
+
+    res.sendStatus(200);
+  });
+});
+
 router.delete('/proposals/problem/:probid', function(req, res) {
   var sql = "DELETE FROM proposals WHERE ?";
   var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {

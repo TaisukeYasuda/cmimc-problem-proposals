@@ -1,6 +1,6 @@
 <section>
 <h1>Edit Proposal</h1>
-<form id="prob-form">
+<form id="prob-form" ng-submit="put()">
 <a class="form-btn" ng-click="delete()">Delete</a><br /><br />
 <select required="required" form="prob-form" name="prob-topic" ng-model="prob.topic">
 	<option value="Algebra">Algebra</option>

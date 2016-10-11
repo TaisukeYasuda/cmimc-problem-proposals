@@ -97,6 +97,12 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
     });
   }
 
+  o.put = function (probid, prob) {
+    return $http.put('/proposals/problem/'+probid, prob).success(function(data){
+      //
+    });
+  }
+
   o.delete = function (probid) {
     return $http.delete('/proposals/problem/'+probid).success(function(data){
       //
