@@ -57,12 +57,19 @@ router.post('/signup', function(req, res, next){
     salt: salt
   };
 
-  var sql = 'INSERT INTO staff SET ?';
-  var query = connection.query(sql, user, function(err, result) {
-    if(err) { return next(err); }
+  var sql = 'SELECT * FROM staff WHERE ?';
+  var query = connection.query(sql, {email: user.email}, function(err, result) {
+    if (err) {return next(err); }
 
-    var user = result[0];
-    return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
+    if (result.length > 0) {
+      return res.status(400).json({message: 'This email is already taken'})
+    }
+    var sql = 'INSERT INTO staff SET ?';
+    var query = connection.query(sql, user, function(err, result) {
+      if (err) { return next(err); }
+
+      return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
+    });
   });
 });
 
@@ -124,7 +131,6 @@ router.get('/proposals/problem/:probid', function(req, res) {
 });
 
 router.put('/proposals/problem/:probid', function(req, res) {
-  console.log(req.body)
   var sql = "UPDATE proposals SET ? WHERE probid="+mysql.escape(req.prob[0].probid);
   var query = connection.query(sql, req.body, function(err, result) {
     if(err) { return next(err); }

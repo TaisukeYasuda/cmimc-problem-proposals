@@ -4,7 +4,6 @@ app.controller('authCtrl', [
 'auth',
 function($scope, $state, auth){
   $scope.signup = function () {
-    alert(JSON.stringify($scope.user));
     auth.signup($scope.user).error(function(error){
       $scope.error = error;
     }).then(function(){
