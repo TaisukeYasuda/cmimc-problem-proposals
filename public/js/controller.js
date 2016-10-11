@@ -46,7 +46,7 @@ function ($scope, $state, $http, auth, proposals) {
     var prob = $scope.prob;
     prob.staffid = auth.staffId();
     proposals.create(prob);
-    // @TODO go to view prob afterwards
+    $state.go('proposals');
   }
 }]);
 
@@ -76,7 +76,7 @@ app.controller('myProposalsCtrl', [
 '$http',
 'proposals',
 function ($scope, $http, proposals) {
-  $scope.proposals = proposals.proposals;
+  $scope.probs = proposals.probs;
 }]);
 
 app.controller('viewProposalCtrl', [

@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
 <head>
   <!-- css -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
@@ -32,7 +32,7 @@
 	<a href="#/logged-out" class="logout">Log Out</a>
 	<nav>
 		<ul>
-      <li>Welcome, {{currentUser()}}!</li>
+      <li><a href="/">Welcome, {{currentUser()}}!</a></li>
 			<li ng-if="accountType() == 'Admin'"><a href="#/manage-users">Manage Users</a></li>
 			<li ng-if="accountType() == 'Admin'"><a href="#/manage-contest">Manage Contest</a></li>
 			<li ng-if="accountType() == 'Admin' || accountType() == 'Test Solver' || accountType() == 'Secure Member'"><a href="#/prob-bank">Problem Bank</a></li>

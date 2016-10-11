@@ -24,7 +24,13 @@ function($stateProvider, $urlRouterProvider) {
     })
     .state('proposals', {
       url: '/proposals',
-      templateUrl: 'templates/proposals.html'
+      templateUrl: 'templates/proposals.html',
+      controller: 'myProposalsCtrl',
+      resolve: {
+        postPromise: ['proposals', function(proposals){
+          return proposals.getAll();
+        }]
+      }
     })
     .state('access-denied', {
       url: '/access-denied',
