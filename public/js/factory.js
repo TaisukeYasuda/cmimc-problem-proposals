@@ -74,37 +74,47 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
   };
 
   o.getAll = function () {
-    return $http.get('/proposals/'+auth.staffId()).success(function(data){
+    return $http.get('/proposals/'+auth.staffId(), {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).success(function(data){
       angular.copy(data, o.probs);
     });
   };
 
   o.create = function (prob) {
-    return $http.post('/proposals', prob).then(
-       function (res) {
-         // success callback
-         o.probs.push(res)
-       },
-       function (res) {
-         // failure callback
-       }
+    return $http.post('/proposals', prob, {
+        headers: {Authorization: 'Bearer '+auth.getToken()}
+      }).then(
+      function (res) {
+        // success callback
+        o.probs.push(res)
+      },
+      function (res) {
+        // failure callback
+      }
     );
   };
 
   o.get = function (probid) {
-    return $http.get('/proposals/problem/'+probid).success(function(data){
+    return $http.get('/proposals/problem/'+probid, {
+        headers: {Authorization: 'Bearer '+auth.getToken()}
+      }).success(function(data){
       angular.copy(data, o.prob);
     });
   }
 
   o.put = function (probid, prob) {
-    return $http.put('/proposals/problem/'+probid, prob).success(function(data){
+    return $http.put('/proposals/problem/'+probid, prob, {
+        headers: {Authorization: 'Bearer '+auth.getToken()}
+      }).success(function(data){
       //
     });
   }
 
   o.delete = function (probid) {
-    return $http.delete('/proposals/problem/'+probid).success(function(data){
+    return $http.delete('/proposals/problem/'+probid, {
+        headers: {Authorization: 'Bearer '+auth.getToken()}
+      }).success(function(data){
       //
     });
   }

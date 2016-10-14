@@ -5,6 +5,8 @@ var passport = require('passport');
 // security
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
+var client_jwt = require('express-jwt');
+var auth = client_jwt({secret: process.env.JWT_SECRET, userProperty: 'payload'});
 
 var mysql_password = process.env.MYSQL_PASSWORD;
 var connection = mysql.createConnection({
@@ -94,7 +96,10 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
-router.post('/proposals/', function(req, res, next) {
+router.post('/proposals/', auth, function(req, res, next) {
+  if (req.payload.staffid != req.body.staffid) {
+    res.status(401).json({message: 'Unauthorized post to problem proposals'})
+  }
   var sql = 'INSERT INTO proposals SET ?';
   var query = connection.query(sql, req.body, function(err, result) {
     if(err) { return next(err); }
@@ -125,15 +130,24 @@ router.param('probid', function(req, res, next, id) {
   });
 });
 
-router.get('/proposals/:staffid', function(req, res) {
+router.get('/proposals/:staffid', auth, function(req, res) {
+  if (req.payload.staffid != req.proposals.staffid) {
+    res.status(401).json({message: 'Unauthorized access to problem proposals'})
+  }
   res.json(req.proposals);
 });
 
-router.get('/proposals/problem/:probid', function(req, res) {
+router.get('/proposals/problem/:probid', auth, function(req, res) {
+  if (req.payload.staffid != req.prob.staffid) {
+    res.status(401).json({message: 'Unauthorized access to problem proposals'})
+  }
   res.json(req.prob);
 });
 
-router.put('/proposals/problem/:probid', function(req, res) {
+router.put('/proposals/problem/:probid', auth, function(req, res) {
+  if (req.payload.staffid != req.proposals.staffid) {
+    res.status(401).json({message: 'Unauthorized modification to problem proposals'})
+  }
   var sql = "UPDATE proposals SET ? WHERE probid="+mysql.escape(req.prob[0].probid);
   var query = connection.query(sql, req.body, function(err, result) {
     if(err) { return next(err); }
@@ -143,7 +157,10 @@ router.put('/proposals/problem/:probid', function(req, res) {
   });
 });
 
-router.delete('/proposals/problem/:probid', function(req, res) {
+router.delete('/proposals/problem/:probid', auth, function(req, res) {
+  if (req.payload.staffid != req.proposals.staffid) {
+    res.status(401).json({message: 'Unauthorized deletion of problem proposals'})
+  }
   var sql = "DELETE FROM proposals WHERE ?";
   var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
     if(err) { return next(err); }
