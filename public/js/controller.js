@@ -70,6 +70,7 @@ app.controller('myProposalsCtrl', [
 'proposals',
 function ($scope, $http, proposals) {
   $scope.probs = proposals.probs;
+  $scope.hasProposals = ($scope.probs.length > 0);
 }]);
 
 app.controller('viewProbCtrl', [
@@ -107,7 +108,7 @@ function ($scope, $state, $location, proposals) {
 
   $scope.delete = function () {
     proposals.delete(p.probid);
-    $state.go('proposals');
+    $location.path('proposals');
   }
 }]);
 
@@ -115,6 +116,7 @@ app.controller('homeCtrl', [
 '$scope',
 'auth',
 function($scope, auth){
+  $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
   $scope.accountType = auth.accountType;
 }]);
