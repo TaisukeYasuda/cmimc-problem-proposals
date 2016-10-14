@@ -109,3 +109,11 @@ function ($scope, $state, proposals) {
     $state.go('proposals');
   }
 }]);
+
+app.controller('homeCtrl', [
+'$scope',
+'auth',
+function($scope, auth){
+  $scope.currentUser = auth.currentUser;
+  $scope.accountType = auth.accountType;
+}]);
