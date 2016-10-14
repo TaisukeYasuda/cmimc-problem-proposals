@@ -67,8 +67,11 @@ router.post('/signup', function(req, res, next){
     var sql = 'INSERT INTO staff SET ?';
     var query = connection.query(sql, user, function(err, result) {
       if (err) { return next(err); }
-
-      return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
+      var sql = 'SELECT * FROM staff WHERE ?'
+      var query = connection.query(sql, {email: user.email}, function(err, result) {
+        var user = result[0];
+        return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
+      });
     });
   });
 });

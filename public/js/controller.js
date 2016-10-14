@@ -41,6 +41,9 @@ app.controller('proposeCtrl', [
 function ($scope, $state, $http, auth, proposals) {
   // submit:
   // INSERT INTO proposals (staffid, topic, problem, answer, solution, difficulty) VALUES ()
+  $scope.staffid = auth.staffId();
+  $scope.test = "test";
+
   $scope.submit = function() {
     var prob = $scope.prob;
     prob.staffid = auth.staffId();
