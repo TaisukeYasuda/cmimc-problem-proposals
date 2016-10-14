@@ -145,7 +145,7 @@ router.get('/proposals/problem/:probid', auth, function(req, res) {
 });
 
 router.put('/proposals/problem/:probid', auth, function(req, res) {
-  if (req.payload.staffid != req.proposals.staffid) {
+  if (req.payload.staffid != req.prob.staffid) {
     res.status(401).json({message: 'Unauthorized modification to problem proposals'})
   }
   var sql = "UPDATE proposals SET ? WHERE probid="+mysql.escape(req.prob[0].probid);
@@ -158,7 +158,7 @@ router.put('/proposals/problem/:probid', auth, function(req, res) {
 });
 
 router.delete('/proposals/problem/:probid', auth, function(req, res) {
-  if (req.payload.staffid != req.proposals.staffid) {
+  if (req.payload.staffid != req.prob.staffid) {
     res.status(401).json({message: 'Unauthorized deletion of problem proposals'})
   }
   var sql = "DELETE FROM proposals WHERE ?";

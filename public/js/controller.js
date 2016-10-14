@@ -88,8 +88,9 @@ function ($scope, $state, proposals) {
 app.controller('editProbCtrl', [
 '$scope',
 '$state',
+'$location',
 'proposals',
-function ($scope, $state, proposals) {
+function ($scope, $state, $location, proposals) {
   var p = proposals.prob;
   if (p == []) {
     $state.go('proposals') //@TODO go to an error message
@@ -101,7 +102,7 @@ function ($scope, $state, proposals) {
 
   $scope.put = function () {
     proposals.put(p.probid, p);
-    $state.go('proposals');
+    $location.path('proposals');
   }
 
   $scope.delete = function () {
