@@ -21,6 +21,14 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
     });
   };
 
+  o.changeChecked = function (probid, checked) {
+    return $http.put('/proposals/checked/'+probid, {checked: checked}, {
+        headers: {Authorization: 'Bearer '+auth.getToken()}
+      }).success(function(data){
+      //
+    });
+  }
+
   o.create = function (prob) {
     prob.checked = false;
     return $http.post('/proposals', prob, {

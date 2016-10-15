@@ -23,14 +23,20 @@ function($stateProvider, $urlRouterProvider) {
     })
     .state('manage-contest', {
       url: '/manage-contest',
-      templateUrl: 'templates/manage-contest.html'
+      controller: 'manageContestCtrl',
+      templateUrl: 'templates/manage-contest.html',
+      resolve: {
+        bankPromise: ['proposals', function(proposals){
+          return proposals.getBank();
+        }]
+      }
     })
     .state('prob-bank', {
       url: '/prob-bank',
       controller: 'probBankCtrl',
       templateUrl: 'templates/prob-bank.html',
       resolve: {
-        postPromise: ['proposals', function(proposals){
+        bankPromise: ['proposals', function(proposals){
           return proposals.getBank();
         }]
       }

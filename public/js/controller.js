@@ -53,9 +53,11 @@ function ($scope, $state, $http, auth, proposals) {
 }]);
 
 app.controller('manageContestCtrl', [
-'$scope', '$http',
-function ($scope, $http) {
-  //
+'$scope',
+'proposals',
+function ($scope, proposals) {
+  $scope.bank = proposals.bank;
+  $scope.changeChecked = proposals.changeChecked;
 }]);
 
 app.controller('manageUsersCtrl', [

@@ -105,10 +105,11 @@ router.get('/proposals/bank/', auth, function(req, res, next) {
   if (req.payload.type !== 'Admin' && req.payload.type !== 'Secure Member') {
     res.status(401).json({message: 'Unauthorized access to problem bank'});
   }
-  var sql = 'SELECT probid, problem, topic FROM proposals';
+  var sql = 'SELECT probid, problem, topic, checked FROM proposals';
   var query = connection.query(sql, function(err, result) {
     if(err) { return next(err); }
 
+    console.log('Problem bank requested')
     res.json(result);
   });
 });
@@ -175,11 +176,34 @@ router.put('/proposals/problem/:probid', auth, function(req, res, next) {
   if (req.payload.id != req.prob[0].staffid) {
     res.status(401);
   }
+
   var sql = 'UPDATE proposals SET ? WHERE probid='+mysql.escape(req.prob[0].probid);
   var query = connection.query(sql, req.body, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
+    console.log('Problem '+req.prob[0].probid.toString()+' updated');
+    res.status(200);
+  });
+});
+
+router.put('/proposals/checked/:probid', auth, function(req, res, next) {
+  // must be admin
+  if (req.payload.type != 'Admin') {
+    res.status(401);
+  }
+
+  var sql = 'UPDATE proposals SET ? WHERE probid='+mysql.escape(req.prob[0].probid);
+  console.log(req.body);
+  var query = connection.query(sql, {checked: req.body.checked}, function(err, result) {
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find probid')); }
+
+    if (req.body.checked) {
+      console.log('Problem '+req.prob[0].probid.toString()+' checked');
+    } else {
+      console.log('Problem '+req.prob[0].probid.toString()+' unchecked');
+    }
     res.status(200);
   });
 });
