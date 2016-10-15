@@ -8,16 +8,21 @@ var jwt = require('jsonwebtoken');
 var client_jwt = require('express-jwt');
 var auth = client_jwt({secret: process.env.JWT_SECRET, userProperty: 'payload'});
 
-var mysql_password = process.env.MYSQL_PASSWORD;
-var connection = mysql.createConnection({
-  // host: "fdb7.biz.nf:3306",
-  // user: "1991601_cmimc",
-  // password: mysql_password,
-  // database: "1991601_cmimc"
-  host: "localhost",
-  user: "root",
-  database: "cmimc"
-});
+if (process.env.dev_mode) {
+  var connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    database: "cmimc"
+  });
+} else {
+  var connection = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
+  });
+}
+
 connection.connect();
 
 /* GET home page. */
@@ -194,7 +199,6 @@ router.put('/proposals/checked/:probid', auth, function(req, res, next) {
   }
 
   var sql = 'UPDATE proposals SET ? WHERE probid='+mysql.escape(req.prob[0].probid);
-  console.log(req.body);
   var query = connection.query(sql, {checked: req.body.checked}, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }

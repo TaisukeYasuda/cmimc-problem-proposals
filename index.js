@@ -17,16 +17,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var connection = mysql.createConnection({
-  // host: "fdb7.biz.nf:3306",
-  // user: "1991601_cmimc",
-  // password: mysql_password,
-  // database: "1991601_cmimc"
-  host: "localhost",
-  user: "root",
-  database: "cmimc"
-});
-
+if (process.env.dev_mode) {
+  var connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    database: "cmimc"
+  });
+} else {
+  var connection = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
+  });
+}
 connection.connect();
 
 // refresh connection every 30 min
