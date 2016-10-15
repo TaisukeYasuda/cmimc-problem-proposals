@@ -2,6 +2,7 @@
 <h1>View Proposal</h1>
 ID: {{prob.probid}}<br />
 Topic: {{prob.topic}}<br />
+Author: <a href="" id="prob-author" ng-click="revealIdentity()">Anonymous</a><br />
 <h3>Problem</h3>
 {{prob.problem}}
 <h3>Answer</h3>
@@ -26,6 +27,17 @@ Topic: {{prob.topic}}<br />
 </tr>
 </table>
 
+<form>
+<textarea id="alternate" placeholder="Write an alternate solution..."></textarea>
+<br />
+<a class="form-btn" onclick="previewAlternate()">Preview</a>
+<input type="submit" value="Post" />
+</form>
+
+<br />
+
+<div id="preview-alternate"></div>
+
 <br />
 
 <h1>Comments</h1>
@@ -42,4 +54,15 @@ Topic: {{prob.topic}}<br />
 	<td>Nice problem, but a bit well-known.</td>
 </tr>
 </table>
+
+<form>
+<textarea id="comment" placeholder="Write a comment..."></textarea>
+<br />
+<a class="form-btn" onclick="previewComment()">Preview</a>
+<input type="submit" value="Post" />
+</form>
+
+<br />
+
+<div id="preview-comment"></div>
 </section>
