@@ -22,6 +22,7 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
   };
 
   o.create = function (prob) {
+    prob.checked = false;
     return $http.post('/proposals', prob, {
         headers: {Authorization: 'Bearer '+auth.getToken()}
       }).then(

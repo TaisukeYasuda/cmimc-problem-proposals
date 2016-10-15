@@ -198,13 +198,13 @@ router.get('/comments/:probid', auth, function(req, res, next) {
   });
 });
 
-router.post('/comments/:probid', auth, function(req, res, next) {
+router.post('/comments/', auth, function(req, res, next) {
   var sql = 'INSERT INTO proposals SET ?';
-  var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
+  var query = connection.query(sql, req.body, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    res.status(200).json(result);
+    res.sendStatus(200).json(req.body);
   });
 });
 

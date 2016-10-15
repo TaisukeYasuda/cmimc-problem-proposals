@@ -91,6 +91,10 @@ function ($scope, $state, proposals) {
       document.getElementById("prob-author").removeAttribute("href");
     };
   }
+
+  $scope.comment = function () {
+    //@TODO
+  };
 }]);
 
 app.controller('editProbCtrl', [
