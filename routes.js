@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken');
 var client_jwt = require('express-jwt');
 var auth = client_jwt({secret: process.env.JWT_SECRET, userProperty: 'payload'});
 
-if (process.env.dev_mode) {
+if (process.env.NODE_ENV!='production') {
   var connection = mysql.createConnection({
     host: "localhost",
     user: "root",

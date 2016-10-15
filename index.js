@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-if (process.env.dev_mode) {
+if (process.env.NODE_ENV!='production') {
   var connection = mysql.createConnection({
     host: "localhost",
     user: "root",
