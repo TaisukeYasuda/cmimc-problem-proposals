@@ -101,6 +101,7 @@ router.post('/login', function(req, res, next){
 // routes for problem proposals
 
 router.get('/proposals/bank/', auth, function(req, res, next) {
+  // must be admin or secure member
   if (req.payload.type !== 'Admin' && req.payload.type !== 'Secure Member') {
     res.status(401).json({message: 'Unauthorized access to problem bank'});
   }
@@ -113,7 +114,8 @@ router.get('/proposals/bank/', auth, function(req, res, next) {
 });
 
 router.post('/proposals/', auth, function(req, res, next) {
-  if (req.payload.staffid != req.body.staffid) {
+  // proposer must match request
+  if (req.payload.id != req.body.staffid) {
     res.status(401).json({message: 'Unauthorized post to problem proposals'});
   }
   var sql = 'INSERT INTO proposals SET ?';
@@ -130,7 +132,8 @@ router.param('staffid', function(req, res, next, id) {
     if(err) { return next(err); }
     if(!result) { return next(new Error('can\'t find staffid')); }
 
-    req.proposals = result;
+    req.proposals = result[0];
+    req.proposals.staffid = id;
     return next();
   });
 });
@@ -147,42 +150,48 @@ router.param('probid', function(req, res, next, id) {
 });
 
 router.get('/proposals/:staffid', auth, function(req, res, next) {
-  if (req.payload.staffid != req.proposals.staffid) {
-    res.status(401).json({message: 'Unauthorized access to problem proposals'})
+  // must be proposer
+  if (req.payload.id != req.proposals.staffid) {
+    res.status(401);
   }
   res.json(req.proposals);
 });
 
 router.get('/proposals/problem/:probid', auth, function(req, res, next) {
-  if (req.payload.staffid != req.prob.staffid) {
-    res.status(401).json({message: 'Unauthorized access to problem proposals'})
+  // must be proposer, admin, or secure member
+  if (req.payload.type != 'Admin' &&
+      req.payload.type != 'Secure Member' &&
+      req.payload.id != req.prob[0].staffid) {
+    res.status(401);
   }
   res.json(req.prob);
 });
 
 router.put('/proposals/problem/:probid', auth, function(req, res, next) {
-  if (req.payload.staffid != req.prob.staffid) {
-    res.status(401).json({message: 'Unauthorized modification to problem proposals'})
+  // must be proposer
+  if (req.payload.id != req.prob[0].staffid) {
+    res.status(401);
   }
   var sql = 'UPDATE proposals SET ? WHERE probid='+mysql.escape(req.prob[0].probid);
   var query = connection.query(sql, req.body, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    res.sendStatus(200);
+    res.status(200);
   });
 });
 
 router.delete('/proposals/problem/:probid', auth, function(req, res, next) {
-  if (req.payload.staffid != req.prob.staffid) {
-    res.status(401).json({message: 'Unauthorized deletion of problem proposals'})
+  // must be proposer
+  if (req.payload.id != req.prob[0].staffid) {
+    res.status(401).json({message: 'Unauthorized deletion of problem proposals'});
   }
   var sql = 'DELETE FROM proposals WHERE ?';
   var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    res.sendStatus(200);
+    res.status(200);
   });
 });
 
@@ -195,7 +204,6 @@ router.get('/comments/problem/:probid', auth, function(req, res, next) {
     if (!result) { return next(new Error('can\'t find probid')); }
 
     console.log('Comments requested for problem '+req.prob[0].probid.toString());
-    console.log(result);
     res.json(result);
   });
 });
@@ -219,7 +227,6 @@ router.get('/solutions/problem/:probid', auth, function(req, res, next) {
     if (!result) { return next(new Error('can\'t find probid')); }
 
     console.log('Alternate solutions requested for problem '+req.prob[0].probid.toString());
-    console.log(result);
     res.json(result);
   });
 });
@@ -234,6 +241,12 @@ router.post('/solutions', auth, function(req, res, next) {
     console.log(req.body);
     res.sendStatus(200);
   });
+});
+
+// routes for staff members
+
+router.get('/staff', auth, function(req, res, next) {
+  var sql = 'SELECT * FROM staff';
 });
 
 module.exports = router
