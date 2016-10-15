@@ -1,9 +1,9 @@
 <section>
 <h1>Problem Bank</h1>
-<div ng-if="bankEmpty">
+<div ng-show="bank.length == 0">
 	Problem bank is empty.
 </div>
-<table ng-if="!bankEmpty">
+<table ng-hide="bank.length == 0">
 <tr>
 	<td>ID</td>
 	<td>Topic</td>

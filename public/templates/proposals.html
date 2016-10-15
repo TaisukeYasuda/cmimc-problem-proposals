@@ -1,9 +1,9 @@
 <section>
 <h1>My Proposals</h1>
-<div ng-if="!hasProposals">
+<div ng-show="probs.length == 0">
 	No proposals.
 </div>
-<table ng-if="hasProposals">
+<table ng-hide="probs.length == 0">
 <tr>
 	<td>ID</td>
 	<td>Topic</td>

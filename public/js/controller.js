@@ -74,7 +74,6 @@ app.controller('probBankCtrl', [
 'proposals',
 function ($scope, $http, proposals) {
   $scope.bank = proposals.bank;
-  $scope.bankEmpty = ($scope.bank.length == 0);
 }]);
 
 app.controller('myProposalsCtrl', [
@@ -83,7 +82,6 @@ app.controller('myProposalsCtrl', [
 'proposals',
 function ($scope, $http, proposals) {
   $scope.probs = proposals.probs;
-  $scope.hasProposals = ($scope.probs.length > 0);
 }]);
 
 app.controller('viewProbCtrl', [
@@ -112,6 +110,7 @@ function ($scope, $state, auth, proposals, comments, solutions) {
     $scope.comment.staffid = auth.staffId();
     $scope.comment.probid = $scope.prob.probid;
     comments.create(angular.copy($scope.comment));
+    $scope.comments.push(angular.copy($scope.comment));
     $scope.comment.comment = '';
   };
 
@@ -119,6 +118,7 @@ function ($scope, $state, auth, proposals, comments, solutions) {
     $scope.solution.staffid = auth.staffId();
     $scope.solution.probid = $scope.prob.probid;
     solutions.create(angular.copy($scope.solution));
+    $scope.solutions.push(angular.copy($scope.solution));
     $scope.solution.solution = '';
   };
 }]);
