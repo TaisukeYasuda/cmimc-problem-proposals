@@ -60,6 +60,9 @@ function($stateProvider, $urlRouterProvider) {
       resolve: {
         prob: ['$stateParams', 'proposals', function($stateParams, proposals) {
           return proposals.get($stateParams.id);
+        }],
+        commentsPromise: ['$stateParams', 'comments', function($stateParams, comments) {
+          return comments.get($stateParams.id);
         }]
       }
     })

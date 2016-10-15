@@ -188,23 +188,27 @@ router.delete('/proposals/problem/:probid', auth, function(req, res, next) {
 
 // routes for comments and alternate solutions
 
-router.get('/comments/:probid', auth, function(req, res, next) {
+router.get('/comments/problem/:probid', auth, function(req, res, next) {
   var sql = 'SELECT * FROM comments WHERE ?';
   var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    res.status(200).json(result);
+    console.log('Comments requested for problem '+req.prob[0].probid.toString());
+    console.log(result);
+    res.json(result);
   });
 });
 
-router.post('/comments/', auth, function(req, res, next) {
-  var sql = 'INSERT INTO proposals SET ?';
+router.post('/comments', auth, function(req, res, next) {
+  console.log('Comment received: ');
+  console.log(req.body);
+  var sql = 'INSERT INTO comments SET ?';
   var query = connection.query(sql, req.body, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    res.sendStatus(200).json(req.body);
+    res.sendStatus(200);
   });
 });
 

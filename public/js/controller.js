@@ -79,8 +79,12 @@ function ($scope, $http, proposals) {
 app.controller('viewProbCtrl', [
 '$scope',
 '$state',
+'auth',
 'proposals',
-function ($scope, $state, proposals) {
+'comments',
+function ($scope, $state, auth, proposals, comments) {
+  $scope.comments = comments.comments;
+
   var p = proposals.prob;
   if (p == []) {
     $state.go('proposals') //@TODO go to an error message
@@ -92,8 +96,11 @@ function ($scope, $state, proposals) {
     };
   }
 
-  $scope.comment = function () {
-    //@TODO
+  $scope.submitComment = function () {
+    $scope.comment.staffid = auth.staffId();
+    $scope.comment.probid = $scope.prob.probid;
+    comments.create(angular.copy($scope.comment));
+    $scope.comment = '';
   };
 }]);
 

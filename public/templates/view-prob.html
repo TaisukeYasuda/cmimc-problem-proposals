@@ -49,14 +49,14 @@ Author: <a href="" id="prob-author" ng-click="revealIdentity()">Anonymous</a><br
 	<td>User</td>
 	<td>Comment</td>
 </tr>
-<tr>
-	<td>Cody</td>
-	<td>Nice problem, but a bit well-known.</td>
+<tr ng-repeat="c in comments">
+	<td>{{c.staffid}}</td>
+	<td>{{c.comment}}</td>
 </tr>
 </table>
 
-<form>
-<textarea id="comment" placeholder="Write a comment..."></textarea>
+<form ng-submit=submitComment()>
+<textarea ng-model="comment.comment" id="comment" placeholder="Write a comment..."></textarea>
 <br />
 <a class="form-btn" onclick="previewComment()">Preview</a>
 <input type="submit" value="Post" />
