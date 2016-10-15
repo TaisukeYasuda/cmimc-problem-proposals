@@ -32,7 +32,6 @@
 	<a href="#/logged-out" class="logout">Log Out</a>
 	<nav>
 		<ul>
-      <li><a href="/">Welcome, {{currentUser()}}!</a></li>
 			<li ng-if="accountType() == 'Admin'"><a href="#/manage-users">Manage Users</a></li>
 			<li ng-if="accountType() == 'Admin'"><a href="#/manage-contest">Manage Contest</a></li>
 			<li ng-if="accountType() == 'Admin' || accountType() == 'Test Solver' || accountType() == 'Secure Member'"><a href="#/prob-bank">Problem Bank</a></li>

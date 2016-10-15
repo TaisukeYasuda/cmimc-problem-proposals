@@ -40,6 +40,8 @@ function generateJWT (name, email, type, id) {
   }, process.env.JWT_SECRET);
 };
 
+// routes for login and signup
+
 router.post('/signup', function(req, res, next){
   if (!req.body.email || !req.body.password1 || !req.body.password2) {
     return res.status(400).json({message: 'Please fill out all fields'});
@@ -96,6 +98,8 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
+// routes for problem proposals
+
 router.get('/proposals/bank/', auth, function(req, res, next) {
   if (req.payload.type !== 'Admin' && req.payload.type !== 'Secure Member') {
     res.status(401).json({message: 'Unauthorized access to problem bank'});
@@ -142,43 +146,65 @@ router.param('probid', function(req, res, next, id) {
   });
 });
 
-router.get('/proposals/:staffid', auth, function(req, res) {
+router.get('/proposals/:staffid', auth, function(req, res, next) {
   if (req.payload.staffid != req.proposals.staffid) {
     res.status(401).json({message: 'Unauthorized access to problem proposals'})
   }
   res.json(req.proposals);
 });
 
-router.get('/proposals/problem/:probid', auth, function(req, res) {
+router.get('/proposals/problem/:probid', auth, function(req, res, next) {
   if (req.payload.staffid != req.prob.staffid) {
     res.status(401).json({message: 'Unauthorized access to problem proposals'})
   }
   res.json(req.prob);
 });
 
-router.put('/proposals/problem/:probid', auth, function(req, res) {
+router.put('/proposals/problem/:probid', auth, function(req, res, next) {
   if (req.payload.staffid != req.prob.staffid) {
     res.status(401).json({message: 'Unauthorized modification to problem proposals'})
   }
-  var sql = "UPDATE proposals SET ? WHERE probid="+mysql.escape(req.prob[0].probid);
+  var sql = 'UPDATE proposals SET ? WHERE probid='+mysql.escape(req.prob[0].probid);
   var query = connection.query(sql, req.body, function(err, result) {
-    if(err) { return next(err); }
-    if(!result) { return next(new Error('can\'t find probid')); }
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find probid')); }
 
     res.sendStatus(200);
   });
 });
 
-router.delete('/proposals/problem/:probid', auth, function(req, res) {
+router.delete('/proposals/problem/:probid', auth, function(req, res, next) {
   if (req.payload.staffid != req.prob.staffid) {
     res.status(401).json({message: 'Unauthorized deletion of problem proposals'})
   }
-  var sql = "DELETE FROM proposals WHERE ?";
+  var sql = 'DELETE FROM proposals WHERE ?';
   var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
-    if(err) { return next(err); }
-    if(!result) { return next(new Error('can\'t find probid')); }
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find probid')); }
 
     res.sendStatus(200);
+  });
+});
+
+// routes for comments and alternate solutions
+
+router.get('/comments/:probid', auth, function(req, res, next) {
+  var sql = 'SELECT * FROM comments WHERE ?';
+  var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find probid')); }
+
+    res.status(200).json(result);
+  });
+});
+
+router.post('/comments/:probid', auth, function(req, res, next) {
+  var sql = 'INSERT INTO proposals SET ?';
+  var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find probid')); }
+
+    res.status(200).json(result);
   });
 });
 

@@ -1,7 +1,7 @@
 <section>
 <h1>Problem Bank</h1>
 <div ng-if="bankEmpty">
-	Problem bank is empty!
+	Problem bank is empty.
 </div>
 <table ng-if="!bankEmpty">
 <tr>
@@ -9,14 +9,12 @@
 	<td>Topic</td>
 	<td>Statement</td>
 	<td>View</td>
-	<td>Edit</td>
 </tr>
 <tr ng-repeat="p in bank">
 	<td>{{p.probid}}</td>
 	<td>{{p.topic}}</td>
 	<td>{{p.problem}}</td>
   <td><a href="#/view-prob/{{p.probid}}" class="view-btn"></a></td>
-	<td><a href="#/edit-prob/{{p.probid}}" class="edit-btn"></a></td>
 </tr>
 </table>
 </section>
