@@ -70,7 +70,8 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 app.factory('proposals', ['$http', 'auth', function($http, auth) {
   var o = {
     probs: [],
-    prob: []
+    prob: [],
+    bank: []
   };
 
   o.getAll = function () {
@@ -78,6 +79,14 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).success(function(data){
       angular.copy(data, o.probs);
+    });
+  };
+
+  o.getBank = function () {
+    return $http.get('/proposals/bank/', {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).success(function(data){
+      angular.copy(data, o.bank);
     });
   };
 

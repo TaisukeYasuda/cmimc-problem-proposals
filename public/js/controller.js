@@ -28,7 +28,7 @@ function($scope, auth){
   $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
   $scope.accountType = auth.accountType;
-  $scope.userId = auth.userId;
+  $scope.staffId = auth.staffId;
   $scope.logOut = auth.logOut;
 }]);
 
@@ -59,9 +59,12 @@ function ($scope, $http) {
 }]);
 
 app.controller('probBankCtrl', [
-'$scope', '$http',
-function ($scope, $http) {
-  //
+'$scope',
+'$http',
+'proposals',
+function ($scope, $http, proposals) {
+  $scope.bank = proposals.bank;
+  $scope.bankEmpty = ($scope.bank.length == 0);
 }]);
 
 app.controller('myProposalsCtrl', [

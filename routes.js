@@ -96,9 +96,21 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
+router.get('/proposals/bank/', auth, function(req, res, next) {
+  if (req.payload.type !== 'Admin' && req.payload.type !== 'Secure Member') {
+    res.status(401).json({message: 'Unauthorized access to problem bank'});
+  }
+  var sql = 'SELECT probid, problem, topic FROM proposals';
+  var query = connection.query(sql, function(err, result) {
+    if(err) { return next(err); }
+
+    res.json(result);
+  });
+});
+
 router.post('/proposals/', auth, function(req, res, next) {
   if (req.payload.staffid != req.body.staffid) {
-    res.status(401).json({message: 'Unauthorized post to problem proposals'})
+    res.status(401).json({message: 'Unauthorized post to problem proposals'});
   }
   var sql = 'INSERT INTO proposals SET ?';
   var query = connection.query(sql, req.body, function(err, result) {
@@ -109,7 +121,7 @@ router.post('/proposals/', auth, function(req, res, next) {
 });
 
 router.param('staffid', function(req, res, next, id) {
-  var sql = 'SELECT probid, problem, topic FROM proposals WHERE ?';
+  var sql = 'SELECT probid, problem, topic FROM proposals WHERE ? ORDER BY topic';
   var query = connection.query(sql, {staffid: id}, function(err, result) {
     if(err) { return next(err); }
     if(!result) { return next(new Error('can\'t find staffid')); }

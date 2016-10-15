@@ -21,7 +21,13 @@ function($stateProvider, $urlRouterProvider) {
     })
     .state('prob-bank', {
       url: '/prob-bank',
-      templateUrl: 'templates/prob-bank.html'
+      controller: 'probBankCtrl',
+      templateUrl: 'templates/prob-bank.html',
+      resolve: {
+        postPromise: ['proposals', function(proposals){
+          return proposals.getBank();
+        }]
+      }
     })
     .state('proposals', {
       url: '/proposals',
