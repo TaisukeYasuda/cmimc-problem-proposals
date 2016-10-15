@@ -1,15 +1,15 @@
-app.factory('comments', ['$http', 'auth', function($http, auth) {
+app.factory('solutions', ['$http', 'auth', function($http, auth) {
   var o = {
-    comments: []
+    solutions: []
   };
 
-  o.create = function (comment) {
-    return $http.post('/comments', comment, {
+  o.create = function (solution) {
+    return $http.post('/solutions', solution, {
         headers: {Authorization: 'Bearer '+auth.getToken()}
       }).then(
       function (res) {
         // success callback
-        o.comments.push(angular.copy(comment));
+        o.solutions.push(angular.copy(solution));
       },
       function (res) {
         // failure callback
@@ -18,10 +18,10 @@ app.factory('comments', ['$http', 'auth', function($http, auth) {
   };
 
   o.get = function (probid) {
-    return $http.get('/comments/problem/'+probid, {
+    return $http.get('/solutions/problem/'+probid, {
         headers: {Authorization: 'Bearer '+auth.getToken()}
       }).success(function(data){
-      angular.copy(data, o.comments);
+      angular.copy(data, o.solutions);
     });
   }
 

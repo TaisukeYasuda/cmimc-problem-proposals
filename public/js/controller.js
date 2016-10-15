@@ -82,8 +82,10 @@ app.controller('viewProbCtrl', [
 'auth',
 'proposals',
 'comments',
-function ($scope, $state, auth, proposals, comments) {
+'solutions',
+function ($scope, $state, auth, proposals, comments, solutions) {
   $scope.comments = comments.comments;
+  $scope.solutions = solutions.solutions;
 
   var p = proposals.prob;
   if (p == []) {
@@ -100,7 +102,14 @@ function ($scope, $state, auth, proposals, comments) {
     $scope.comment.staffid = auth.staffId();
     $scope.comment.probid = $scope.prob.probid;
     comments.create(angular.copy($scope.comment));
-    $scope.comment = '';
+    $scope.comment.comment = '';
+  };
+
+  $scope.submitSolution = function () {
+    $scope.solution.staffid = auth.staffId();
+    $scope.solution.probid = $scope.prob.probid;
+    solutions.create(angular.copy($scope.solution));
+    $scope.solution.solution = '';
   };
 }]);
 

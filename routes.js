@@ -201,13 +201,37 @@ router.get('/comments/problem/:probid', auth, function(req, res, next) {
 });
 
 router.post('/comments', auth, function(req, res, next) {
-  console.log('Comment received: ');
-  console.log(req.body);
   var sql = 'INSERT INTO comments SET ?';
   var query = connection.query(sql, req.body, function(err, result) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
+    console.log('Comment received: ');
+    console.log(req.body);
+    res.sendStatus(200);
+  });
+});
+
+router.get('/solutions/problem/:probid', auth, function(req, res, next) {
+  var sql = 'SELECT * FROM alternate_solutions WHERE ?';
+  var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find probid')); }
+
+    console.log('Alternate solutions requested for problem '+req.prob[0].probid.toString());
+    console.log(result);
+    res.json(result);
+  });
+});
+
+router.post('/solutions', auth, function(req, res, next) {
+  var sql = 'INSERT INTO alternate_solutions SET ?';
+  var query = connection.query(sql, req.body, function(err, result) {
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find probid')); }
+
+    console.log('Alternate solution received: ');
+    console.log(req.body);
     res.sendStatus(200);
   });
 });

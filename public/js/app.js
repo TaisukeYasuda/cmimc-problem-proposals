@@ -63,6 +63,9 @@ function($stateProvider, $urlRouterProvider) {
         }],
         commentsPromise: ['$stateParams', 'comments', function($stateParams, comments) {
           return comments.get($stateParams.id);
+        }],
+        solutionsPromise: ['$stateParams', 'solutions', function($stateParams, solutions) {
+          return solutions.get($stateParams.id);
         }]
       }
     })
