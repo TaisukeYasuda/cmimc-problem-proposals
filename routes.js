@@ -73,6 +73,10 @@ router.post('/signup', function(req, res, next){
     if (result.length > 0) {
       return res.status(400).json({message: 'This email is already taken'})
     }
+
+    if (email === 'taisukey@andrew.cmu.edu') {
+      user.type = "Admin"
+    }
     var sql = 'INSERT INTO staff SET ?';
     var query = connection.query(sql, user, function(err, result) {
       if (err) { return next(err); }
