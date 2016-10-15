@@ -272,7 +272,11 @@ router.param('staffid', function(req, res, next, id) {
 
 router.put('/staff/type/:staffid', auth, function(req, res, next) {
   // must be admin
-  if (req.payload.type != 'Admin') {
+  if (req.payload.type !== 'Admin') {
+    res.status(401);
+  }
+  // cannot change own status (so that there will always be at least one admin)
+  if (req.payload.id === req.staff.staffid) {
     res.status(401);
   }
   var sql = 'UPDATE staff SET ? WHERE staffid='+mysql.escape(req.staff.staffid);

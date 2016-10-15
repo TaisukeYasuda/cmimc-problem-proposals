@@ -135,6 +135,10 @@ select {
 	width: 300px;
 }
 
+select:disabled {
+    color: #ccc;
+}
+
 textarea	{
 	padding : 4px 8px;
 	width   : 600px;

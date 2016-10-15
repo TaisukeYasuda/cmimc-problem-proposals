@@ -15,13 +15,13 @@
   <td>{{s.email}}</td>
   <td>{{s.andrewid}}</td>
 	<td>
-    <select required="required" name="type" ng-model="s.type" ng-change="changeType(s.staffid,s.type)" style="width: 200px">
+    <select ng-disabled="s.staffid===staffId()" required="required" name="type" ng-model="s.type" ng-change="changeType(s.staffid,s.type)" style="width: 200px">
       <option value="Member">Member</option>
       <option value="Secure Member">Secure Member</option>
     	<option value="Admin">Admin</option>
     </select><br class="clearFloat" />
   </td>
-  </tr>
+</tr>
 </table>
 
 </section>

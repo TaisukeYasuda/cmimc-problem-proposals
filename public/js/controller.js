@@ -61,9 +61,11 @@ function ($scope, $http) {
 app.controller('manageUsersCtrl', [
 '$scope',
 'staff',
-function ($scope, staff) {
+'auth',
+function ($scope, staff, auth) {
   $scope.staff = staff.staff;
   $scope.changeType = staff.changeType;
+  $scope.staffId = auth.staffId;
 }]);
 
 app.controller('probBankCtrl', [
