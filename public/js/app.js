@@ -13,7 +13,13 @@ function($stateProvider, $urlRouterProvider) {
     })
     .state('manage-users', {
       url: '/manage-users',
-      templateUrl: 'templates/manage-users.html'
+      controller: 'manageUsersCtrl',
+      templateUrl: 'templates/manage-users.html',
+      resolve: {
+        staffPromise: ['staff', function(staff){
+          return staff.getAll();
+        }]
+      }
     })
     .state('manage-contest', {
       url: '/manage-contest',

@@ -58,6 +58,13 @@ function ($scope, $http) {
   //
 }]);
 
+app.controller('manageUsersCtrl', [
+'$scope',
+'staff',
+function ($scope, staff) {
+  $scope.staff = staff.staff;
+}]);
+
 app.controller('probBankCtrl', [
 '$scope',
 '$http',

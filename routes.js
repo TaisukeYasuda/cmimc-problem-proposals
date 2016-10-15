@@ -216,7 +216,7 @@ router.post('/comments', auth, function(req, res, next) {
 
     console.log('Comment received: ');
     console.log(req.body);
-    res.sendStatus(200);
+    res.status(200);
   });
 });
 
@@ -239,7 +239,7 @@ router.post('/solutions', auth, function(req, res, next) {
 
     console.log('Alternate solution received: ');
     console.log(req.body);
-    res.sendStatus(200);
+    res.status(200);
   });
 });
 
@@ -247,6 +247,13 @@ router.post('/solutions', auth, function(req, res, next) {
 
 router.get('/staff', auth, function(req, res, next) {
   var sql = 'SELECT * FROM staff';
+  var query = connection.query(sql, function(err, result) {
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find staff')); }
+
+    console.log('Staff list requested');
+    res.json(result);
+  });
 });
 
 module.exports = router

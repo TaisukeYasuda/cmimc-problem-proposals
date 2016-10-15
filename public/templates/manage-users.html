@@ -1,4 +1,21 @@
-<section ng-controller="manageUsersCtrl">
+<section>
 <h1>Manage Users</h1>
+
+<table>
+<tr>
+	<td>Staff ID</td>
+	<td>Name</td>
+  <td>Email</td>
+  <td>Andrew ID</td>
+  <td>Account Type</td>
+</tr>
+<tr ng-repeat="s in staff">
+	<td>{{s.staffid}}</td>
+  <td>{{s.name}}</td>
+  <td>{{s.email}}</td>
+  <td>{{s.andrewid}}</td>
+	<td>{{s.type}}</td>
+</tr>
+</table>
 
 </section>
