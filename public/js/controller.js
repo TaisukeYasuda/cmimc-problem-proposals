@@ -63,6 +63,7 @@ app.controller('manageUsersCtrl', [
 'staff',
 function ($scope, staff) {
   $scope.staff = staff.staff;
+  $scope.changeType = staff.changeType;
 }]);
 
 app.controller('probBankCtrl', [

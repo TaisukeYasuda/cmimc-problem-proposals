@@ -126,14 +126,16 @@ router.post('/proposals/', auth, function(req, res, next) {
   });
 });
 
-router.param('staffid', function(req, res, next, id) {
+router.param('prob_staffid', function(req, res, next, id) {
   var sql = 'SELECT probid, problem, topic FROM proposals WHERE ? ORDER BY topic';
   var query = connection.query(sql, {staffid: id}, function(err, result) {
     if(err) { return next(err); }
     if(!result) { return next(new Error('can\'t find staffid')); }
 
-    req.proposals = result[0];
-    req.proposals.staffid = id;
+    req.proposals = {
+      proposals: result,
+      staffid: id
+    };
     return next();
   });
 });
@@ -149,12 +151,13 @@ router.param('probid', function(req, res, next, id) {
   });
 });
 
-router.get('/proposals/:staffid', auth, function(req, res, next) {
+router.get('/proposals/:prob_staffid', auth, function(req, res, next) {
   // must be proposer
   if (req.payload.id != req.proposals.staffid) {
     res.status(401);
   }
-  res.json(req.proposals);
+  console.log('Problem proposals for staff '+req.proposals.staffid.toString()+' requested');
+  res.json(req.proposals.proposals);
 });
 
 router.get('/proposals/problem/:probid', auth, function(req, res, next) {
@@ -253,6 +256,32 @@ router.get('/staff', auth, function(req, res, next) {
 
     console.log('Staff list requested');
     res.json(result);
+  });
+});
+
+router.param('staffid', function(req, res, next, id) {
+  var sql = 'SELECT * FROM staff WHERE ?';
+  var query = connection.query(sql, {staffid: id}, function(err, result) {
+    if(err) { return next(err); }
+    if(!result) { return next(new Error('can\'t find staffid')); }
+
+    req.staff = result[0];
+    return next();
+  });
+});
+
+router.put('/staff/type/:staffid', auth, function(req, res, next) {
+  // must be admin
+  if (req.payload.type != 'Admin') {
+    res.status(401);
+  }
+  var sql = 'UPDATE staff SET ? WHERE staffid='+mysql.escape(req.staff.staffid);
+  var query = connection.query(sql, {type: req.body.type}, function(err, result) {
+    if (err) { return next(err); }
+    if (!result) { return next(new Error('can\'t find staffid')); }
+
+    console.log('Staff account type of '+req.staff.staffid.toString()+' updated to '+req.body.type);
+    res.status(200);
   });
 });
 

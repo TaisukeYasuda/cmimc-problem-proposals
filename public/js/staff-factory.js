@@ -11,5 +11,13 @@ app.factory('staff', ['$http', 'auth', function($http, auth) {
     });
   }
 
+  o.changeType = function (staffid, type) {
+    return $http.put('/staff/type/'+staffid.toString(), {type: type}, {
+        headers: {Authorization: 'Bearer '+auth.getToken()}
+      }).success(function(data){
+      //
+    });
+  }
+
   return o;
 }]);
