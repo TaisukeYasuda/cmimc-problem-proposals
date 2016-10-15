@@ -86,6 +86,10 @@ function ($scope, $state, proposals) {
     $state.go('proposals') //@TODO go to an error message
   } else {
     $scope.prob = proposals.prob[0];
+    $scope.revealIdentity = function() {
+      document.getElementById("prob-author").innerHTML = $scope.prob.staffid;
+      document.getElementById("prob-author").removeAttribute("href");
+    };
   }
 }]);
 
