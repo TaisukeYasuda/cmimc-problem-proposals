@@ -107,27 +107,30 @@ app.controller('viewProbCtrl', [
 '$scope',
 '$state',
 'auth',
+'staff',
 'proposals',
 'comments',
 'solutions',
-function ($scope, $state, auth, proposals, comments, solutions) {
+function ($scope, $state, auth, staff, proposals, comments, solutions) {
   $scope.comments = comments.comments;
   $scope.solutions = solutions.solutions;
+  $scope.author = '';
 
   var p = proposals.prob;
-  if (p == []) {
+  if (!p) {
     $state.go('proposals') //@TODO go to an error message
   } else {
-    $scope.prob = proposals.prob[0];
-    $scope.revealIdentity = function() {
-      document.getElementById("prob-author").innerHTML = $scope.prob.staffid;
-      document.getElementById("prob-author").removeAttribute("href");
-    };
+    $scope.prob = proposals.prob;
   }
 
+  staff.getName($scope.prob.staff_id).then(function() {
+    if (staff.author) $scope.author = staff.author.name;
+    else $scope.author = 'Not found';
+  })  
+
   $scope.submitComment = function () {
-    $scope.comment.staffid = auth.staffId();
-    $scope.comment.probid = $scope.prob.probid;
+    $scope.comment.staff_id = auth.staffId();
+    $scope.comment.prob_id = $scope.prob.prob_id;
     comments.create(angular.copy($scope.comment));
     $scope.comments.push(angular.copy($scope.comment));
     $scope.comment.comment = '';
@@ -149,10 +152,9 @@ app.controller('editProbCtrl', [
 'proposals',
 function ($scope, $state, $location, proposals) {
   var p = proposals.prob;
-  if (p == []) {
+  if (!p) {
     $state.go('proposals') //@TODO go to an error message
   } else {
-    p = p[0];
     p.difficulty = p.difficulty.toString();
     $scope.prob = p;
   }

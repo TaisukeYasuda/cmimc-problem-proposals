@@ -36,7 +36,7 @@ function($stateProvider, $urlRouterProvider) {
       controller: 'probBankCtrl',
       templateUrl: 'templates/prob-bank.html',
       resolve: {
-        bankPromise: ['proposals', function(proposals){
+        bankPromise: ['proposals', function(proposals) {
           return proposals.getBank();
         }]
       }
@@ -46,7 +46,7 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'templates/proposals.html',
       controller: 'myProposalsCtrl',
       resolve: {
-        postPromise: ['proposals', function(proposals){
+        postPromise: ['proposals', function(proposals) {
           return proposals.getAll();
         }]
       }
@@ -56,28 +56,28 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'templates/access-denied.html'
     })
     .state('edit-prob', {
-      url: '/edit-prob/{id}',
+      url: '/edit-prob/{prob_id}',
       templateUrl: 'templates/edit-prob.html',
       controller: 'editProbCtrl',
       resolve: {
         prob: ['$stateParams', 'proposals', function($stateParams, proposals) {
-          return proposals.get($stateParams.id);
+          return proposals.get($stateParams.prob_id);
         }]
       }
     })
     .state('view-prob', {
-      url: '/view-prob/{id}',
+      url: '/view-prob/{prob_id}',
       templateUrl: 'templates/view-prob.html',
       controller: 'viewProbCtrl',
       resolve: {
         prob: ['$stateParams', 'proposals', function($stateParams, proposals) {
-          return proposals.get($stateParams.id);
+          return proposals.get($stateParams.prob_id);
         }],
         commentsPromise: ['$stateParams', 'comments', function($stateParams, comments) {
-          return comments.get($stateParams.id);
+          return comments.get($stateParams.prob_id);
         }],
         solutionsPromise: ['$stateParams', 'solutions', function($stateParams, solutions) {
-          return solutions.get($stateParams.id);
+          return solutions.get($stateParams.prob_id);
         }]
       }
     })

@@ -214,13 +214,17 @@ router.param('prob_staff_id', function(req, res, next, staff_id) {
   });
 });
 
-router.param('probid', function(req, res, next, id) {
+router.param('prob_id', function(req, res, next, prob_id) {
   var sql = 'SELECT * FROM proposals WHERE ?';
-  var query = connection.query(sql, {probid: id}, function(err, result) {
-    if(err) { return next(err); }
-    if(!result) { return next(new Error('can\'t find probid')); }
+  var query = connection.query(sql, {prob_id: prob_id}, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to load proposal'
+      });
+    }
+    if (!result) return res.status(400).json({message: 'Proposal not found.'});
+    else req.prob = result[0];
 
-    req.prob = result;
     return next();
   });
 });
@@ -234,97 +238,118 @@ router.get('/proposals/:prob_staff_id', auth, function(req, res, next) {
   res.status(200).json(req.proposals.proposals);
 });
 
-router.get('/proposals/problem/:probid', auth, function(req, res, next) {
+router.get('/proposals/problem/:prob_id', auth, function(req, res, next) {
   // must be proposer, admin, or secure member
-  if (req.payload.type != 'Admin' &&
-      req.payload.type != 'Secure Member' &&
-      req.payload.id != req.prob[0].staffid) {
-    res.status(401);
+  if (req.payload.type != 'admin' &&
+      req.payload.type != 'secure' &&
+      req.payload.staff_id != req.prob.staff_id) {
+    return res.status(401).json({
+      message: 'Must be admin, secure member, or author.'
+    });
   }
-  res.json(req.prob);
+  res.status(200).json(req.prob);
 });
 
-router.put('/proposals/problem/:probid', auth, function(req, res, next) {
+router.put('/proposals/problem/:prob_id', auth, function(req, res, next) {
   // must be proposer
-  if (req.payload.id != req.prob[0].staffid) {
-    res.status(401);
+  if (req.payload.id != req.prob.staff_id) {
+    return res.status(401).json({message: 'Must be the author.'});
   }
 
-  var sql = 'UPDATE proposals SET ? WHERE probid='+mysql.escape(req.prob[0].probid);
-  var query = connection.query(sql, req.body, function(err, result) {
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find probid')); }
+  var sql = 'UPDATE proposals SET ? WHERE prob_id='+mysql.escape(req.prob.prob_id);
+  connection.query(sql, req.body, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to update proposal.'
+      });
+    }
+    if (!result) return res.status(400).json({message: 'Proposal not found.'});
 
     res.status(200);
   });
 });
 
-router.put('/proposals/checked/:probid', auth, function(req, res, next) {
+router.put('/proposals/checked/:prob_id', auth, function(req, res, next) {
   // must be admin
-  if (req.payload.type != 'Admin') {
+  if (req.payload.type != 'admin') {
     res.status(401);
   }
 
-  var sql = 'UPDATE proposals SET ? WHERE probid='+mysql.escape(req.prob[0].probid);
-  var query = connection.query(sql, {checked: req.body.checked}, function(err, result) {
+  var sql = 'UPDATE proposals SET ? WHERE prob_id=' + 
+    mysql.escape(req.prob.prob_id);
+  connection.query(sql, {checked: req.body.checked}, function(err, result) {
     if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find probid')); }
+    if (!result) return res.status(400).json({message: 'Proposal not found.'});
 
     res.status(200);
   });
 });
 
-router.delete('/proposals/problem/:probid', auth, function(req, res, next) {
+router.delete('/proposals/problem/:prob_id', auth, function(req, res, next) {
   // must be proposer
-  if (req.payload.id != req.prob[0].staffid) {
-    res.status(401).json({message: 'Unauthorized deletion of problem proposals'});
+  if (req.payload.id != req.prob.staff_id) {
+    res.status(401).json({message: 'Must be the author.'});
   }
   var sql = 'DELETE FROM proposals WHERE ?';
-  var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
+  connection.query(sql, {prob_id: req.prob.prob_id}, function(err, result) {
     if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find probid')); }
+    if (!result) return res.status(400).json({message: 'Proposal not found.'});
 
     res.status(200);
   });
 });
 
-// routes for comments and alternate solutions
+/*******************************************************************************
+ * Comments and alternate solutions routes.
+ ******************************************************************************/
 
-router.get('/comments/problem/:probid', auth, function(req, res, next) {
+router.get('/comments/problem/:prob_id', auth, function(req, res, next) {
   var sql = 'SELECT * FROM comments WHERE ?';
-  var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find probid')); }
+  connection.query(sql, {prob_id: req.prob.prob_id}, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to load comments.'
+      });
+    }
 
-    res.json(result);
+    res.status(200).json(result);
   });
 });
 
 router.post('/comments', auth, function(req, res, next) {
   var sql = 'INSERT INTO comments SET ?';
-  var query = connection.query(sql, req.body, function(err, result) {
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find probid')); }
+  connection.query(sql, req.body, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to create comment.'
+      });
+    }
 
     res.status(200);
   });
 });
 
-router.get('/solutions/problem/:probid', auth, function(req, res, next) {
+router.get('/solutions/problem/:prob_id', auth, function(req, res, next) {
   var sql = 'SELECT * FROM alternate_solutions WHERE ?';
-  var query = connection.query(sql, {probid: req.prob[0].probid}, function(err, result) {
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find probid')); }
+  connection.query(sql, {prob_id: req.prob.prob_id}, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to load alternate solutions.'
+      });
+    }
 
-    res.json(result);
+    res.status(200).json(result);
   });
 });
 
 router.post('/solutions', auth, function(req, res, next) {
   var sql = 'INSERT INTO alternate_solutions SET ?';
-  var query = connection.query(sql, req.body, function(err, result) {
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find probid')); }
+  connection.query(sql, req.body, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to insert alternate solution.'
+      });
+    }
 
     res.status(200);
   });
@@ -349,16 +374,21 @@ router.get('/staff', auth, function(req, res, next) {
 
 router.param('staff_id', function(req, res, next, staff_id) {
   var sql = 'SELECT * FROM staff WHERE ?';
-  var query = connection.query(sql, {staff_id: staff_id}, function(err, result) {
+  connection.query(sql, {staff_id: staff_id}, function(err, result) {
     if(err) {
       return res.status(503).json({
         message: 'Database failed to load staff data.'
       });
     }
-    if (!result) req.staff = null;
+    if (!result) return res.status(400).json({message: 'Staff not found.'});
     else req.staff = result[0];
+
     return next();
   });
+});
+
+router.get('/staff/:staff_id', function(req, res, next) {
+  res.status(200).json({name: req.staff.name}); 
 });
 
 router.put('/staff/privilege/:staff_id', auth, function(req, res, next) {
@@ -374,7 +404,9 @@ router.put('/staff/privilege/:staff_id', auth, function(req, res, next) {
       message: 'One cannot change their own status.'
     });
   }
-  var sql = 'UPDATE staff SET ? WHERE staff_id='+mysql.escape(req.staff.staff_id);
+
+  var sql = 'UPDATE staff SET ? WHERE staff_id=' + 
+    mysql.escape(req.staff.staff_id);
   connection.query(sql, {privilege: req.body.privilege}, function(err, result) {
     if (err) {
       return res.status(503).json({

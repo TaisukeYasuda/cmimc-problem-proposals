@@ -3,7 +3,8 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
     probs: [],
     prob: [],
     bank: [],
-    subjects: []
+    subjects: [],
+    author: null
   };
 
   o.getAll = function () {
@@ -44,7 +45,7 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
    * proposals.create: 
    *    prob: {subject, difficulty, problem, answer, solution, staff_id}
    */
-  o.create = function (prob) {
+  o.create = function(prob) {
     return $http.post('/proposals', prob, {
         headers: {Authorization: 'Bearer '+auth.getToken()}
       }).then(
@@ -58,18 +59,20 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
     );
   };
 
-  o.get = function (probid) {
-    return $http.get('/proposals/problem/'+probid, {
-        headers: {Authorization: 'Bearer '+auth.getToken()}
-      }).success(function(data){
-      angular.copy(data, o.prob);
-    });
+  o.get = function(prob_id) {
+    return $http.get('/proposals/problem/'+prob_id, {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).then(function(res) {
+      angular.copy(res.data, o.prob);
+      o.prob.subject = o.subjects[o.prob.subject];
+      if (!o.prob.subject) o.prob.subject = 'Invalid';
+    })
   }
 
-  o.put = function (probid, prob) {
-    return $http.put('/proposals/problem/'+probid, prob, {
-        headers: {Authorization: 'Bearer '+auth.getToken()}
-      }).success(function(data){
+  o.put = function(prob_id, prob) {
+    return $http.put('/proposals/problem/'+prob_id, prob, {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).success(function(data){
       //
     });
   }

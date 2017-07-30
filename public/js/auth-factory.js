@@ -40,24 +40,26 @@ app.factory('auth', ['$http', '$window', function($http, $window){
   };
 
   auth.currentUser = function() {
-    if (auth.isLoggedIn()) return auth.name;
+    if (auth.isLoggedIn()) return $window.localStorage['user'];
   }
 
   auth.signup = function (user) {
-    return $http.post('/signup', user).success(function(data){
-      auth.saveToken(data.token);
+    return $http.post('/signup', user).success(function(res){
+      auth.saveToken(res.token);
+      $window.localStorage['user'] = res.name;
     });
   };
 
   auth.login = function(user) {
     return $http.post('/login', user).success(function(res) {
       auth.saveToken(res.token);
-      auth.name = res.name;
+      $window.localStorage['user'] = res.name;
     });
   };
 
   auth.logout = function() {
     $window.localStorage.removeItem('jwt-token');
+    $window.localStorage.removeItem('user');
   };
 
   return auth;
