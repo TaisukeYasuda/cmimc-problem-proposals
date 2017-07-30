@@ -1,19 +1,18 @@
-var passport = require('passport');
-var LocalStrategy = require("passport-local").Strategy;
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var mysql = require('mysql');
-var app = express();
+var passport = require('passport'),
+    LocalStrategy = require("passport-local").Strategy,
+    express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
+    mysql = require('mysql'),
+    app = express();
 // security
-var crypto = require('crypto');
-var jwt = require('jsonwebtoken');
-
+var crypto = require('crypto'),
+    jwt = require('jsonwebtoken');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -21,7 +20,8 @@ if (process.env.NODE_ENV!='production') {
   var connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    database: "cmimc"
+    password: process.env.MYSQL_PASSWORD,
+    database: "cmimcdb"
   });
 } else {
   var connection = mysql.createConnection({
@@ -39,25 +39,25 @@ setTimeout (function () {
 },1000*60*30);
 
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-    var email = username;
-    connection.query("SELECT * FROM staff WHERE email='"+email+"' LIMIT 1", function(err, rows, fields) {
-      if (err) { return done(err); }
+  function(email, password, done) {
+    var sql = 'SELECT * FROM staff WHERE email=?';
+    connection.query(sql, [email], function(err, rows, fields) {
+      if (err) return done(err);
 
       if(rows.length == 0) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      else {
-        var submitPassword = rows[0].password;
-        var salt = rows[0].salt;
-        var hash = crypto.pbkdf2Sync(password, salt, 1000, 64).toString('hex');
+        return done(null, false, {message: 'Email not found.'});
+      } else {
+        var user = rows[0],
+            submitPassword = user.password,
+            salt = user.salt,
+            hash = crypto.pbkdf2Sync(password, salt, 1000, 64).toString('hex');
         if (submitPassword !== hash) {
-          return done(null, false, { message: 'Incorrect password.' });
+          return done(null, false, {message: 'Incorrect password.'});
         }
-        return done(null, rows[0]);
+        return done(null, user);
       }
-      });
-    }));
+    }); // end searching for user
+  }));
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -73,7 +73,7 @@ app.use(passport.session());
 var routes = require('./routes');
 app.use('/', routes);
 
-var server = app.listen(process.env.PORT || 3000, function () {
+var server = app.listen(process.env.PORT || 8000, function () {
     var port = server.address().port;
-    console.log("App now running on port", port);
+    console.log("CMIMC problem proposals running on port", port);
 });

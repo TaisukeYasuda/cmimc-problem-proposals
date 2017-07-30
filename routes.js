@@ -1,18 +1,19 @@
-var app = require('express');
-var router = app.Router();
-var mysql = require('mysql');
-var passport = require('passport');
+var app = require('express'),
+    router = app.Router(),
+    mysql = require('mysql'),
+    passport = require('passport');
 // security
-var crypto = require('crypto');
-var jwt = require('jsonwebtoken');
-var client_jwt = require('express-jwt');
-var auth = client_jwt({secret: process.env.JWT_SECRET, userProperty: 'payload'});
+var crypto = require('crypto'),
+    jwt = require('jsonwebtoken'),
+    client_jwt = require('express-jwt'),
+    auth = client_jwt({secret: process.env.JWT_SECRET, userProperty: 'payload'});
 
 if (process.env.NODE_ENV!='production') {
   var connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    database: "cmimc"
+    password: process.env.MYSQL_PASSWORD,
+    database: "cmimcdb"
   });
 } else {
   var connection = mysql.createConnection({
@@ -25,122 +26,180 @@ if (process.env.NODE_ENV!='production') {
 
 connection.connect();
 
-/* GET home page. */
-router.get('/', function (req, res) {
-   res.sendFile( __dirname + "/" + "index.html" );
-})
+/*******************************************************************************
+ *
+ * Utilities.
+ *
+ ******************************************************************************/
+function twoDigits(d) {
+  if(0 <= d && d < 10) return "0" + d.toString();
+  if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+  return d.toString();
+}
 
-function generateJWT (name, email, type, id) {
+Date.prototype.toMySQL = function() {
+  var timestamp = this.getUTCFullYear() + "-" + 
+    twoDigits(1 + this.getUTCMonth()) + "-" + 
+    twoDigits(this.getUTCDate()) + " " + 
+    twoDigits(this.getUTCHours()) + ":" + 
+    twoDigits(this.getUTCMinutes()) + ":" + 
+    twoDigits(this.getUTCSeconds());
+  return timestamp;
+};
+
+function generateJWT (email, privilege, staff_id) {
   // set expiration to 60 days
-  var today = new Date();
-  var exp = new Date(today);
+  var today = new Date(),
+      exp = new Date(today);
   exp.setDate(today.getDate() + 60);
 
   return jwt.sign({
     email: email,
-    name: name,
-    type: type,
-    id: id,
+    privilege: privilege,
+    staff_id: staff_id,
     exp: parseInt(exp.getTime() / 1000),
   }, process.env.JWT_SECRET);
 };
 
-// routes for login and signup
+/*******************************************************************************
+ *
+ * Routes.
+ *
+ ******************************************************************************/
+
+/* home page */
+router.get('/', function (req, res) {
+   res.sendFile( __dirname + "/" + "index.html" );
+})
+
+/*******************************************************************************
+ * Authentication routes.
+ ******************************************************************************/
 
 router.post('/signup', function(req, res, next){
-  if (!req.body.email || !req.body.password1 || !req.body.password2) {
-    return res.status(400).json({message: 'Please fill out all fields'});
-  }
+  if (!req.body.email) 
+    return res.status(400).json({message: 'Email is missing.'});
+  if (!req.body.password) 
+    return res.status(400).json({message: 'Password is missing.'});
 
-  if (req.body.password1 !== req.body.password2) {
-    return res.status(400).json({message: 'The two passwords do not match'});
-  }
-
+  // encrypt password with salt
   var salt = crypto.randomBytes(16).toString('hex');
   var user = {
-    email: req.body.email,
-    password: crypto.pbkdf2Sync(req.body.password1, salt, 1000, 64).toString('hex'),
-    type: "Member",
     name: req.body.name,
-    andrewid: req.body.andrewid,
+    password: crypto.pbkdf2Sync(req.body.password, salt, 1000, 64).toString('hex'),
+    email: req.body.email,
+    privilege: 'member',
+    joined: new Date().toMySQL(),
     salt: salt
   };
 
   var sql = 'SELECT * FROM staff WHERE ?';
-  var query = connection.query(sql, {email: user.email}, function(err, result) {
-    if (err) {return next(err); }
+  connection.query(sql, {email: user.email}, function(err, result) {
+    if (err) return next(err);
 
-    if (result.length > 0) {
-      return res.status(400).json({message: 'This email is already taken'})
-    }
+    if (result.length > 0)
+      return res.status(400).json({message: 'Email is already taken.'});
+
     var sql = 'INSERT INTO staff SET ?';
-    var query = connection.query(sql, user, function(err, result) {
-      if (err) { return next(err); }
-      var sql = 'SELECT * FROM staff WHERE ?'
-      var query = connection.query(sql, {email: user.email}, function(err, result) {
+    connection.query(sql, user, function(err, result) {
+      if (err) 
+        return res.status(503).json({message: 'Database failed to add user.'});
+      // query again to get staff_id
+      var sql = 'SELECT * FROM staff WHERE ?';
+      connection.query(sql, {
+        email: user.email
+      }, function(err, result) {
         var user = result[0];
-        return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
+        return res.status(200).json({
+          token: generateJWT(user.email, user.privilege, user.staff_id),
+          name: user.name,
+          joined: user.joined
+        });
       });
-    });
-  });
+    }); // end sending response to user
+  }); // end inserting user into database
 });
 
 router.post('/login', function(req, res, next){
-  if(!req.body.email || !req.body.password){
-    return res.status(400).json({message: 'Please fill out all fields'});
-  }
+  if (!req.body.email) 
+    return res.status(400).json({message: 'Email is missing.'});
+  if (!req.body.password) 
+    return res.status(400).json({message: 'Password is missing.'});
 
   req.body.username = req.body.email
 
   passport.authenticate('local', function(err, user, info) {
-    if (err) { return next(err); }
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to authenticate user.'
+      });
+    }
 
-    if (user){
-      return res.json({token: generateJWT(user.name, user.email, user.type, user.staffid)});
+    if (user) {
+      return res.json({
+        token: generateJWT(user.email, user.privilege, user.staff_id),
+        name: user.name,
+        joined: user.joined
+      });
     } else {
       return res.status(401).json(info);
     }
   })(req, res, next);
 });
 
-// routes for problem proposals
+/*******************************************************************************
+ * Problem proposal routes.
+ ******************************************************************************/
 
 router.get('/proposals/bank/', auth, function(req, res, next) {
   // must be admin or secure member
-  if (req.payload.type !== 'Admin' && req.payload.type !== 'Secure Member') {
-    res.status(401).json({message: 'Unauthorized access to problem bank'});
+  if (req.payload.privilege !== 'admin' && req.payload.privilege !== 'secure') {
+    return res.status(401).json({
+      message: 'Problem bank can only be accessed by admin and secure members.'
+    });
   }
-  var sql = 'SELECT probid, problem, topic, checked FROM proposals';
-  var query = connection.query(sql, function(err, result) {
-    if(err) { return next(err); }
+  var sql = 'SELECT * FROM proposals';
+  connection.query(sql, function(err, result) {
+    if(err) {
+      return res.status(503).json({
+        message: 'Database failed to load problem bank.'
+      });
+    }
 
-    console.log('Problem bank requested')
-    res.json(result);
+    return res.status(200).json(result);
   });
 });
 
 router.post('/proposals/', auth, function(req, res, next) {
-  // proposer must match request
-  if (req.payload.id != req.body.staffid) {
-    res.status(401).json({message: 'Unauthorized post to problem proposals'});
+  if (req.payload.staff_id != req.body.staff_id) {
+    return res.status(401).json({
+      message: 'Problem proposal author doesn\'t match the request owner.'
+    });
   }
   var sql = 'INSERT INTO proposals SET ?';
-  var query = connection.query(sql, req.body, function(err, result) {
-    if(err) { return next(err); }
+  connection.query(sql, req.body, function(err, result) {
+    if(err) { 
+      return res.status(503).json({
+        message: 'Database failed to insert the problem proposal.'
+      });
+    }
 
-    res.json(result[0]);
+    res.status(200).json(result[0]);
   });
 });
 
-router.param('prob_staffid', function(req, res, next, id) {
-  var sql = 'SELECT probid, problem, topic FROM proposals WHERE ? ORDER BY topic';
-  var query = connection.query(sql, {staffid: id}, function(err, result) {
-    if(err) { return next(err); }
-    if(!result) { return next(new Error('can\'t find staffid')); }
+router.param('prob_staff_id', function(req, res, next, staff_id) {
+  var sql = 'SELECT * FROM proposals WHERE ? ORDER BY updated';
+  var query = connection.query(sql, {staff_id: staff_id}, function(err, result) {
+    if(err) {
+      return res.status(503).json({
+        message: 'Database failed to load proposals.'
+      });
+    }
 
     req.proposals = {
       proposals: result,
-      staffid: id
+      staff_id: staff_id
     };
     return next();
   });
@@ -157,13 +216,13 @@ router.param('probid', function(req, res, next, id) {
   });
 });
 
-router.get('/proposals/:prob_staffid', auth, function(req, res, next) {
-  // must be proposer
-  if (req.payload.id != req.proposals.staffid) {
-    res.status(401);
+router.get('/proposals/:prob_staff_id', auth, function(req, res, next) {
+  if (req.payload.staff_id != req.proposals.staff_id) {
+    return res.status(401).json({
+      message: 'Request for proposals must be from the original author.'
+    });
   }
-  console.log('Problem proposals for staff '+req.proposals.staffid.toString()+' requested');
-  res.json(req.proposals.proposals);
+  res.status(200).json(req.proposals.proposals);
 });
 
 router.get('/proposals/problem/:probid', auth, function(req, res, next) {
@@ -187,7 +246,6 @@ router.put('/proposals/problem/:probid', auth, function(req, res, next) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    console.log('Problem '+req.prob[0].probid.toString()+' updated');
     res.status(200);
   });
 });
@@ -203,11 +261,6 @@ router.put('/proposals/checked/:probid', auth, function(req, res, next) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    if (req.body.checked) {
-      console.log('Problem '+req.prob[0].probid.toString()+' checked');
-    } else {
-      console.log('Problem '+req.prob[0].probid.toString()+' unchecked');
-    }
     res.status(200);
   });
 });
@@ -234,7 +287,6 @@ router.get('/comments/problem/:probid', auth, function(req, res, next) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    console.log('Comments requested for problem '+req.prob[0].probid.toString());
     res.json(result);
   });
 });
@@ -245,8 +297,6 @@ router.post('/comments', auth, function(req, res, next) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    console.log('Comment received: ');
-    console.log(req.body);
     res.status(200);
   });
 });
@@ -257,7 +307,6 @@ router.get('/solutions/problem/:probid', auth, function(req, res, next) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    console.log('Alternate solutions requested for problem '+req.prob[0].probid.toString());
     res.json(result);
   });
 });
@@ -268,52 +317,98 @@ router.post('/solutions', auth, function(req, res, next) {
     if (err) { return next(err); }
     if (!result) { return next(new Error('can\'t find probid')); }
 
-    console.log('Alternate solution received: ');
-    console.log(req.body);
     res.status(200);
   });
 });
 
-// routes for staff members
+/*******************************************************************************
+ * Staff routes.
+ ******************************************************************************/
 
 router.get('/staff', auth, function(req, res, next) {
-  var sql = 'SELECT * FROM staff';
-  var query = connection.query(sql, function(err, result) {
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find staff')); }
+  var sql = 'SELECT staff_id, name, email, privilege FROM staff';
+  connection.query(sql, function(err, result) {
+    if (err) { 
+      return res.status(503).json({
+        message: 'Database failed to load staff list.'
+      });
+    }
 
-    console.log('Staff list requested');
-    res.json(result);
+    res.status(200).json(result);
   });
 });
 
-router.param('staffid', function(req, res, next, id) {
+router.param('staff_id', function(req, res, next, staff_id) {
   var sql = 'SELECT * FROM staff WHERE ?';
-  var query = connection.query(sql, {staffid: id}, function(err, result) {
-    if(err) { return next(err); }
-    if(!result) { return next(new Error('can\'t find staffid')); }
-
-    req.staff = result[0];
+  var query = connection.query(sql, {staff_id: staff_id}, function(err, result) {
+    if(err) {
+      return res.status(503).json({
+        message: 'Database failed to load staff data.'
+      });
+    }
+    if (!result) req.staff = null;
+    else req.staff = result[0];
     return next();
   });
 });
 
-router.put('/staff/type/:staffid', auth, function(req, res, next) {
+router.put('/staff/privilege/:staff_id', auth, function(req, res, next) {
   // must be admin
-  if (req.payload.type !== 'Admin') {
-    res.status(401);
+  if (req.payload.privilege !== 'admin') { 
+    return res.status(401).json({
+      message: 'Must be admin to change privileges.'
+    });
   }
   // cannot change own status (so that there will always be at least one admin)
-  if (req.payload.id === req.staff.staffid) {
-    res.status(401);
+  if (req.payload.staff_id === req.staff.staff_id) {
+    return res.status(401).json({
+      message: 'One cannot change their own status.'
+    });
   }
-  var sql = 'UPDATE staff SET ? WHERE staffid='+mysql.escape(req.staff.staffid);
-  var query = connection.query(sql, {type: req.body.type}, function(err, result) {
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find staffid')); }
+  var sql = 'UPDATE staff SET ? WHERE staff_id='+mysql.escape(req.staff.staff_id);
+  connection.query(sql, {privilege: req.body.privilege}, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to update staff privilege.'
+      });
+    }
+    if (!result) {
+      return res.status(400).json({message: 'Staff not found.'});
+    }
 
-    console.log('Staff account type of '+req.staff.staffid.toString()+' updated to '+req.body.type);
     res.status(200);
+  });
+});
+
+router.delete('/staff/:staff_id', auth, function(req, res, next) {
+  // must be admin
+  if (req.payload.privilege !== 'admin') { 
+    return res.status(401).json({message: 'Must be admin to delete staff.'});
+  }
+  var sql = "DELETE FROM staff WHERE ?";
+  connection.query(sql, {staff_id: req.staff.staff_id}, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to delete staff.'
+      });
+    }
+    res.status(200);
+  });
+});
+
+/*******************************************************************************
+ * Subject routes.
+ ******************************************************************************/
+
+router.get('/subjects', function(req, res, next) {
+  var sql = 'SELECT * FROM subjects';
+  connection.query(sql, function(err, result) {
+    if (err) {
+      return res.status(503).json({
+        message: 'Database failed to load subjects.'
+      });
+    }
+    res.status(200).json(result);
   });
 });
 

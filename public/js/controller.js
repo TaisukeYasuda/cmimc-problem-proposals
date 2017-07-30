@@ -4,19 +4,31 @@ app.controller('authCtrl', [
 'auth',
 function($scope, $state, auth){
   $scope.signup = function () {
+    if (!$scope.user.name || !$scope.user.email || 
+        !$scope.user.password || !$scope.user.passwordConfirm) {
+      $scope.error = {message: 'Please fill out all fields.'};
+      return
+    } else if ($scope.user.password !== $scope.user.passwordConfirm) {
+      $scope.error = {message: 'Passwords do not match.'};
+      return
+    }
     auth.signup($scope.user).error(function(error){
       $scope.error = error;
-    }).then(function(){
+    }).then(function() {
       $state.go('proposals');
     });
   };
 
   $scope.login = function () {
-    auth.login($scope.user).error(function(error){
-      $scope.error = error;
-    }).then(function(){
-      $state.go('proposals');
-    });
+    if (!$scope.user.email || !$scope.user.password) {
+      $scope.error = {message: 'Please fill out all fields.'};
+    } else {
+      auth.login($scope.user).error(function(error){
+        $scope.error = error;
+      }).then(function() {
+        $state.go('proposals');
+      });
+    }
   };
 }]);
 
@@ -27,7 +39,7 @@ function($scope, auth){
   // get info by calling isLoggedIn() and currentUser()
   $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
-  $scope.accountType = auth.accountType;
+  $scope.privilege = auth.privilege;
   $scope.staffId = auth.staffId;
   $scope.logOut = auth.logOut;
 }]);
@@ -39,14 +51,18 @@ app.controller('proposeCtrl', [
 'auth',
 'proposals',
 function ($scope, $state, $http, auth, proposals) {
-  // submit:
-  // INSERT INTO proposals (staffid, topic, problem, answer, solution, difficulty) VALUES ()
-  $scope.staffid = auth.staffId();
-  $scope.test = "test";
+  $scope.subjects = proposals.subjects;
 
   $scope.submit = function() {
+    if (!$scope.prob.subject || !$scope.prob.difficulty ||
+        !$scope.prob.problem || !$scope.prob.answer ||
+        !$scope.prob.solution) {
+      $scope.error = {message: 'Please fill out all fields.'};
+      return
+    }
+
     var prob = $scope.prob;
-    prob.staffid = auth.staffId();
+    prob.staff_id = auth.staffId();
     proposals.create(prob);
     $state.go('proposals');
   }
@@ -66,7 +82,7 @@ app.controller('manageUsersCtrl', [
 'auth',
 function ($scope, staff, auth) {
   $scope.staff = staff.staff;
-  $scope.changeType = staff.changeType;
+  $scope.changePrivilege = staff.changePrivilege;
   $scope.staffId = auth.staffId;
 }]);
 
@@ -83,6 +99,7 @@ app.controller('myProposalsCtrl', [
 '$http',
 'proposals',
 function ($scope, $http, proposals) {
+  $scope.subjects = proposals.subjects;
   $scope.probs = proposals.probs;
 }]);
 
@@ -157,5 +174,5 @@ app.controller('homeCtrl', [
 function($scope, auth){
   $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
-  $scope.accountType = auth.accountType;
+  $scope.privilege = auth.privilege;
 }]);

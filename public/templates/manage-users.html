@@ -6,19 +6,21 @@
 	<td>Staff ID</td>
 	<td>Name</td>
   <td>Email</td>
-  <td>Andrew ID</td>
-  <td>Account Type</td>
+  <td>Privilege</td>
 </tr>
 <tr ng-repeat="s in staff">
-	<td>{{s.staffid}}</td>
+	<td>{{s.staff_id}}</td>
   <td>{{s.name}}</td>
   <td>{{s.email}}</td>
-  <td>{{s.andrewid}}</td>
 	<td>
-    <select ng-disabled="s.staffid===staffId()" required="required" name="type" ng-model="s.type" ng-change="changeType(s.staffid,s.type)" style="width: 200px">
-      <option value="Member">Member</option>
-      <option value="Secure Member">Secure Member</option>
-    	<option value="Admin">Admin</option>
+    <select ng-disabled="s.staff_id === staffId()" required="required" 
+            name="type" ng-model="s.privilege" 
+            ng-change="changePrivilege(s.staff_id, s.privilege)" 
+            style="width: 200px">
+      <option value="member">Member</option>
+      <option value="test-solver">Test Solver</option>
+      <option value="secure">Secure Member</option>
+    	<option value="admin">Admin</option>
     </select><br class="clearFloat" />
   </td>
 </tr>

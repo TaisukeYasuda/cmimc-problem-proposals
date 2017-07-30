@@ -6,17 +6,17 @@
 <table ng-hide="probs.length == 0">
 <tr>
 	<td>ID</td>
-	<td>Topic</td>
+	<td>Subject</td>
 	<td>Statement</td>
 	<td>View</td>
 	<td>Edit</td>
 </tr>
 <tr ng-repeat="p in probs">
-	<td>{{p.probid}}</td>
-	<td>{{p.topic}}</td>
+	<td>{{p.prob_id}}</td>
+	<td>{{p.subject}}</td>
 	<td>{{p.problem}}</td>
-	<td><a href="#/view-prob/{{p.probid}}" class="view-btn"></a></td>
-	<td><a href="#/edit-prob/{{p.probid}}" class="edit-btn"></a></td>
+	<td><a href="#/view-prob/{{p.prob_id}}" class="view-btn"></a></td>
+	<td><a href="#/edit-prob/{{p.prob_id}}" class="edit-btn"></a></td>
 </tr>
 </table>
 </section>

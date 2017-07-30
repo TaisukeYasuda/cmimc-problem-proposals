@@ -36,11 +36,11 @@
 	<a href="#/logged-out" class="logout">Log Out</a>
 	<nav>
 		<ul>
-			<li ng-if="accountType() == 'Admin'"><a href="#/manage-users">Manage Users</a></li>
-			<li ng-if="accountType() == 'Admin'"><a href="#/manage-contest">Manage Contest</a></li>
-			<li ng-if="accountType() == 'Admin' || accountType() == 'Test Solver' || accountType() == 'Secure Member'"><a href="#/prob-bank">Problem Bank</a></li>
-			<li ng-if="accountType() == 'Admin' || accountType() == 'Secure Member' || accountType() == 'Member'"><a href="#/proposals">My Proposals</a></li>
-			<li ng-if="accountType() == 'Admin' || accountType() == 'Secure Member' || accountType() == 'Member'"><a href="#/propose">Submit Proposal</a></li>
+			<li ng-if="privilege() == 'admin'"><a href="#/manage-users">Manage Users</a></li>
+			<li ng-if="privilege() == 'admin'"><a href="#/manage-contest">Manage Contest</a></li>
+			<li ng-if="privilege() == 'admin' || privilege() == 'test-solver' || privilege() == 'secure'"><a href="#/prob-bank">Problem Bank</a></li>
+			<li ng-if="privilege() == 'admin' || privilege() == 'secure' || privilege() == 'member'"><a href="#/proposals">My Proposals</a></li>
+			<li ng-if="privilege() == 'admin' || privilege() == 'secure' || privilege() == 'member'"><a href="#/propose">Submit Proposal</a></li>
 		</ul>
 	</nav>
 	</div>

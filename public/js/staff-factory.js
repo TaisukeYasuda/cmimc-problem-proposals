@@ -11,11 +11,13 @@ app.factory('staff', ['$http', 'auth', function($http, auth) {
     });
   }
 
-  o.changeType = function (staffid, type) {
-    return $http.put('/staff/type/'+staffid.toString(), {type: type}, {
-        headers: {Authorization: 'Bearer '+auth.getToken()}
-      }).success(function(data){
-      //
+  o.changePrivilege = function (staff_id, privilege) {
+    return $http.put('/staff/privilege/'+staff_id.toString(), {
+      privilege: privilege
+    }, {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).success(function(res){
+    //
     });
   }
 

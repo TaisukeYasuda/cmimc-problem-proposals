@@ -1,14 +1,13 @@
 <section>
 <h1>Submit Proposal</h1>
+
+<div ng-show="error" class="alert alert-danger row">
+  <span class="form-error-msg">{{error.message}}</span>
+</div>
 <form ng-submit="submit()" id="prob-form">
-<select required="required" form="prob-form" name="prob-topic" ng-model="prob.topic">
+<select required="required" form="prob-form" name="prob-subject" ng-model="prob.subject">
 	<option value="">Subject</option>
-	<option value="Algebra">Algebra</option>
-	<option value="Combinatorics">Combinatorics</option>
-	<option value="Computer Science">Computer Science</option>
-	<option value="Geometry">Geometry</option>
-	<option value="Number Theory">Number Theory</option>
-	<option value="Other">Other</option>
+  <option ng-repeat="(key, subject) in subjects" value="{{key+1}}">{{subject}}</option>
 </select><br class="clearFloat" />
 <select required="required" form="prob-form" name="prob-diff" ng-model="prob.difficulty">
 	<option value="">Difficulty</option>
