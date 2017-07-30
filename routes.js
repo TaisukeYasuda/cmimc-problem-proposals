@@ -176,8 +176,17 @@ router.post('/proposals/', auth, function(req, res, next) {
       message: 'Problem proposal author doesn\'t match the request owner.'
     });
   }
-  var sql = 'INSERT INTO proposals SET ?';
-  connection.query(sql, req.body, function(err, result) {
+  var sql = 'INSERT INTO proposals SET ?',
+      proposal = {
+        subject: req.body.subject,
+        difficulty: req.body.difficulty,
+        problem: req.body.problem,
+        answer: req.body.answer,
+        solution: req.body.solution,
+        staff_id: req.body.staff_id,
+        created: new Date().toMySQL()
+      };
+  connection.query(sql, proposal, function(err, result) {
     if(err) { 
       return res.status(503).json({
         message: 'Database failed to insert the problem proposal.'
