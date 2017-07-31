@@ -1,17 +1,19 @@
-var express = require('express'),
-    app = express(),
-    server = require('http').Server(app),
-    io = require('socket.io')(server),
-    path = require('path'),
-    favicon = require('serve-favicon'),
-    bodyParser = require('body-parser'),
-    cookieParser = require('cookie-parser'),
-    mysql = require('mysql');
-// security
-var passport = require('passport'),
-    LocalStrategy = require("passport-local").Strategy,
-    crypto = require('crypto'),
-    jwt = require('jsonwebtoken');
+const express = require('express'),
+      app = express(),
+      server = require('http').Server(app),
+      io = require('socket.io')(server),
+      path = require('path'),
+      favicon = require('serve-favicon'),
+      bodyParser = require('body-parser'),
+      cookieParser = require('cookie-parser'),
+      mysql = require('mysql'),
+
+      // security
+
+      passport = require('passport'),
+      LocalStrategy = require("passport-local").Strategy,
+      crypto = require('crypto'),
+      jwt = require('jsonwebtoken');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -26,10 +28,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 if (process.env.NODE_ENV!='production') {
   var connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
+    host: 'localhost',
+    user: 'root',
     password: process.env.MYSQL_PASSWORD,
-    database: "cmimcdb"
+    database: 'cmimcdb'
   });
 } else {
   var connection = mysql.createConnection({
@@ -42,9 +44,10 @@ if (process.env.NODE_ENV!='production') {
 connection.connect();
 
 // refresh mysql connection every 30 min
+const TIMEOUT = 1000 * 60 * 30;
 setTimeout (function () {
   connection.query('SELECT 1');
-},1000*60*30);
+}, TIMEOUT);
 
 /*******************************************************************************
  *
@@ -62,10 +65,9 @@ passport.use(new LocalStrategy(
         return done(null, false, {message: 'Email not found.'});
       } else {
         var user = rows[0],
-            submitPassword = user.password,
             salt = user.salt,
             hash = crypto.pbkdf2Sync(password, salt, 1000, 64).toString('hex');
-        if (submitPassword !== hash) {
+        if (user.password !== hash) {
           return done(null, false, {message: 'Incorrect password.'});
         }
         return done(null, user);
@@ -90,12 +92,16 @@ app.use(passport.session());
  *
  ******************************************************************************/
 
-var routes = require('./routes');
+const routes = require('./routes')(connection),
+      staffRoutes = require('./routes/staff')(connection),
+      subjectsRoutes = require('./routes/subjects')(connection);
 app.use('/', routes);
+app.use('/staff', staffRoutes);
+app.use('/subjects', subjectsRoutes);
 
 server.listen(process.env.PORT || 8000, function () {
   var port = server.address().port;
-  console.log("CMIMC problem proposals running on port", port);
+  console.log('CMIMC problem proposals running on port', port);
 });
 
 /*******************************************************************************

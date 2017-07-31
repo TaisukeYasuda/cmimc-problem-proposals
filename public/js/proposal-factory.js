@@ -64,7 +64,7 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).then(function(res) {
       angular.copy(res.data, o.prob);
-      o.prob.subjectName = o.subjects[o.prob.subject];
+      o.prob.subjectName = o.subjects[o.prob.subject-1];
       o.prob.subject = o.prob.subject.toString();
       if (!o.prob.subjectName) o.prob.subjectName = 'Invalid';
     })
