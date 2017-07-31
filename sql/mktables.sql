@@ -6,6 +6,7 @@ create table staff (
     salt varchar(255),
     privilege enum('admin', 'secure', 'test-solver', 'member'),
     joined datetime,
+    andrewid varchar(255),
     primary key (staff_id)
 );
 create table proposals (
@@ -45,6 +46,12 @@ create table subjects (
     subject_id int not null auto_increment,
     title varchar(255),
     primary key (subject_id)
+);
+create table vote (
+    vote_id int not null auto_increment,
+    category enum('prob', 'cmt', 'soln'),
+    staff_id int not null,
+    primary key (vote_id)
 );
 insert into subjects set title="Algebra";
 insert into subjects set title="Combinatorics";
