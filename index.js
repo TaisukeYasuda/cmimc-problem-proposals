@@ -1,20 +1,28 @@
-var passport = require('passport'),
-    LocalStrategy = require("passport-local").Strategy,
-    express = require('express'),
+var express = require('express'),
+    app = express(),
+    server = require('http').Server(app),
+    io = require('socket.io')(server),
     path = require('path'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    mysql = require('mysql'),
-    app = express();
+    mysql = require('mysql');
 // security
-var crypto = require('crypto'),
+var passport = require('passport'),
+    LocalStrategy = require("passport-local").Strategy,
+    crypto = require('crypto'),
     jwt = require('jsonwebtoken');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+/*******************************************************************************
+ *
+ * Database setup.
+ *
+ ******************************************************************************/
 
 if (process.env.NODE_ENV!='production') {
   var connection = mysql.createConnection({
@@ -33,10 +41,16 @@ if (process.env.NODE_ENV!='production') {
 }
 connection.connect();
 
-// refresh connection every 30 min
+// refresh mysql connection every 30 min
 setTimeout (function () {
   connection.query('SELECT 1');
 },1000*60*30);
+
+/*******************************************************************************
+ *
+ * Passport authentication setup.
+ *
+ ******************************************************************************/
 
 passport.use(new LocalStrategy(
   function(email, password, done) {
@@ -70,10 +84,30 @@ passport.deserializeUser(function(user, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
+/*******************************************************************************
+ *
+ * Run server. 
+ *
+ ******************************************************************************/
+
 var routes = require('./routes');
 app.use('/', routes);
 
-var server = app.listen(process.env.PORT || 8000, function () {
-    var port = server.address().port;
-    console.log("CMIMC problem proposals running on port", port);
+server.listen(process.env.PORT || 8000, function () {
+  var port = server.address().port;
+  console.log("CMIMC problem proposals running on port", port);
+});
+
+/*******************************************************************************
+ *
+ * Socket IO server. 
+ *
+ ******************************************************************************/
+
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+
+  socket.on('my other event', function(data) {
+    console.log(data);
+  });
 });

@@ -44,6 +44,7 @@ function($scope, $state, $http, auth){
 app.controller('navCtrl', [
 '$scope',
 'auth',
+'socket',
 function($scope, auth){
   // get info by calling isLoggedIn() and currentUser()
   $scope.isLoggedIn = auth.isLoggedIn;

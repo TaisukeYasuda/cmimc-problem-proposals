@@ -114,6 +114,7 @@ router.post('/signup', function(req, res, next){
         return res.status(200).json({
           token: generateJWT(user.email, user.privilege, user.staff_id),
           name: user.name,
+          andrewid: user.andrewid,
           joined: user.joined
         });
       });
@@ -140,6 +141,7 @@ router.post('/login', function(req, res, next){
       return res.json({
         token: generateJWT(user.email, user.privilege, user.staff_id),
         name: user.name,
+        andrewid: user.andrewid,
         joined: user.joined
       });
     } else {
