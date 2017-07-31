@@ -1,9 +1,9 @@
-const auth = require('../config/auth'),
-      mysql = require('mysql'),
-      router = require('express').Router();
-
 module.exports = function(connection) {
-  router.get('/', auth.authenticate, function(req, res, next) {
+  const auth = require('../config/auth')(connection),
+        mysql = require('mysql'),
+        router = require('express').Router();
+
+  router.get('/', auth.verifyJWT, function(req, res, next) {
     var sql = 'SELECT staff_id, name, email, privilege FROM staff';
     connection.query(sql, function(err, result) {
       if (err) { 
@@ -35,7 +35,7 @@ module.exports = function(connection) {
     res.status(200).json({name: req.staff.name}); 
   });
 
-  router.put('/privilege/:staff_id', auth.authenticate, function(req, res, next) {
+  router.put('/privilege/:staff_id', auth.verifyJWT, function(req, res, next) {
     // must be admin
     if (req.payload.privilege !== 'admin') { 
       return res.status(401).json({
@@ -65,7 +65,7 @@ module.exports = function(connection) {
     });
   });
 
-  router.delete('/:staff_id', auth.authenticate, function(req, res, next) {
+  router.delete('/:staff_id', auth.verifyJWT, function(req, res, next) {
     // must be admin
     if (req.payload.privilege !== 'admin') { 
       return res.status(401).json({message: 'Must be admin to delete staff.'});

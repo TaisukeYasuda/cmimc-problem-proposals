@@ -1,43 +1,12 @@
 module.exports = function(connection) {
 
 var router = require('express').Router(),
-    passport = require('passport'),
+    mysql = require('mysql'),
     datetimeUtil = require('./utils/datetime');
 // security
 var crypto = require('crypto'),
     jwt = require('jsonwebtoken'),
-    auth = require('./config/auth');
-
-/*******************************************************************************
- *
- * Utilities.
- *
- ******************************************************************************/
-
-function generateJWT (email, privilege, staff_id) {
-  // set expiration to 60 days
-  var today = new Date(),
-      exp = new Date(today);
-  exp.setDate(today.getDate() + 60);
-
-  return jwt.sign({
-    email: email,
-    privilege: privilege,
-    staff_id: staff_id,
-    exp: parseInt(exp.getTime() / 1000),
-  }, process.env.JWT_SECRET);
-};
-
-/*******************************************************************************
- *
- * Routes.
- *
- ******************************************************************************/
-
-/* home page */
-router.get('/', function (req, res) {
-   res.sendFile( __dirname + "/" + "index.html" );
-})
+    auth = require('./config/auth')(connection);
 
 /*******************************************************************************
  * Authentication routes.
@@ -79,7 +48,7 @@ router.post('/signup', function(req, res, next){
       }, function(err, result) {
         var user = result[0];
         return res.status(200).json({
-          token: generateJWT(user.email, user.privilege, user.staff_id),
+          token: auth.signJWT(user.email, user.privilege, user.staff_id),
           name: user.name,
           andrewid: user.andrewid,
           joined: user.joined
@@ -95,33 +64,26 @@ router.post('/login', function(req, res, next){
   if (!req.body.password) 
     return res.status(400).json({message: 'Password is missing.'});
 
-  req.body.username = req.body.email
-
-  passport.authenticate('local', function(err, user, info) {
-    if (err) {
-      return res.status(503).json({
-        message: 'Database failed to authenticate user.'
-      });
-    }
-
-    if (user) {
+  auth.authenticate(req.body.email, req.body.password, function(result) {
+    if (result.success) {
+      var user = result.user;
       return res.status(200).json({
-        token: generateJWT(user.email, user.privilege, user.staff_id),
+        token: auth.signJWT(user.email, user.privilege, user.staff_id),
         name: user.name,
         andrewid: user.andrewid,
         joined: user.joined
       });
     } else {
-      return res.status(401).json(info);
+      return res.status(403).json({message: result.message});
     }
-  })(req, res, next);
+  });
 });
 
 /*******************************************************************************
  * Problem proposal routes.
  ******************************************************************************/
 
-router.get('/proposals/bank/', auth.authenticate, function(req, res, next) {
+router.get('/proposals/bank/', auth.verifyJWT, function(req, res, next) {
   // must be admin or secure member
   if (req.payload.privilege !== 'admin' && req.payload.privilege !== 'secure') {
     return res.status(401).json({
@@ -140,7 +102,7 @@ router.get('/proposals/bank/', auth.authenticate, function(req, res, next) {
   });
 });
 
-router.post('/proposals/', auth.authenticate, function(req, res, next) {
+router.post('/proposals/', auth.verifyJWT, function(req, res, next) {
   if (req.payload.staff_id != req.body.staff_id) {
     return res.status(401).json({
       message: 'Problem proposal author doesn\'t match the request owner.'
@@ -199,7 +161,7 @@ router.param('prob_id', function(req, res, next, prob_id) {
   });
 });
 
-router.get('/proposals/:prob_staff_id', auth.authenticate, function(req, res, next) {
+router.get('/proposals/:prob_staff_id', auth.verifyJWT, function(req, res, next) {
   if (req.payload.staff_id != req.proposals.staff_id) {
     return res.status(401).json({
       message: 'Request for proposals must be from the original author.'
@@ -208,7 +170,7 @@ router.get('/proposals/:prob_staff_id', auth.authenticate, function(req, res, ne
   res.status(200).json(req.proposals.proposals);
 });
 
-router.get('/proposals/problem/:prob_id', auth.authenticate, function(req, res, next) {
+router.get('/proposals/problem/:prob_id', auth.verifyJWT, function(req, res, next) {
   // must be proposer, admin, or secure member
   if (req.payload.privilege != 'admin' &&
       req.payload.privilege != 'secure' &&
@@ -220,7 +182,7 @@ router.get('/proposals/problem/:prob_id', auth.authenticate, function(req, res, 
   res.status(200).json(req.prob);
 });
 
-router.put('/proposals/problem/:prob_id', auth.authenticate, function(req, res, next) {
+router.put('/proposals/problem/:prob_id', auth.verifyJWT, function(req, res, next) {
   // must be proposer
   if (req.payload.staff_id != req.prob.staff_id) {
     return res.status(401).json({message: 'Must be the author.'});
@@ -240,7 +202,7 @@ router.put('/proposals/problem/:prob_id', auth.authenticate, function(req, res, 
   });
 });
 
-router.put('/proposals/checked/:prob_id', auth.authenticate, function(req, res, next) {
+router.put('/proposals/checked/:prob_id', auth.verifyJWT, function(req, res, next) {
   // must be admin
   if (req.payload.privilege != 'admin') {
     return res.status(401);
@@ -256,7 +218,7 @@ router.put('/proposals/checked/:prob_id', auth.authenticate, function(req, res, 
   });
 });
 
-router.delete('/proposals/problem/:prob_id', auth.authenticate, function(req, res, next) {
+router.delete('/proposals/problem/:prob_id', auth.verifyJWT, function(req, res, next) {
   // must be proposer
   if (req.payload.staff_id != req.prob.staff_id) {
     return res.status(401).json({message: 'Must be the author.'});
@@ -274,7 +236,7 @@ router.delete('/proposals/problem/:prob_id', auth.authenticate, function(req, re
  * Comments and alternate solutions routes.
  ******************************************************************************/
 
-router.get('/comments/problem/:prob_id', auth.authenticate, function(req, res, next) {
+router.get('/comments/problem/:prob_id', auth.verifyJWT, function(req, res, next) {
   var sql = 'SELECT * FROM comments WHERE ?';
   connection.query(sql, {prob_id: req.prob.prob_id}, function(err, result) {
     if (err) {
@@ -287,7 +249,7 @@ router.get('/comments/problem/:prob_id', auth.authenticate, function(req, res, n
   });
 });
 
-router.post('/comments', auth.authenticate, function(req, res, next) {
+router.post('/comments', auth.verifyJWT, function(req, res, next) {
   var sql = 'INSERT INTO comments SET ?';
   connection.query(sql, req.body, function(err, result) {
     if (err) {
@@ -300,7 +262,7 @@ router.post('/comments', auth.authenticate, function(req, res, next) {
   });
 });
 
-router.get('/solutions/problem/:prob_id', auth.authenticate, function(req, res, next) {
+router.get('/solutions/problem/:prob_id', auth.verifyJWT, function(req, res, next) {
   var sql = 'SELECT * FROM alternate_solutions WHERE ?';
   connection.query(sql, {prob_id: req.prob.prob_id}, function(err, result) {
     if (err) {
@@ -313,7 +275,7 @@ router.get('/solutions/problem/:prob_id', auth.authenticate, function(req, res, 
   });
 });
 
-router.post('/solutions', auth.authenticate, function(req, res, next) {
+router.post('/solutions', auth.verifyJWT, function(req, res, next) {
   var sql = 'INSERT INTO alternate_solutions SET ?';
   connection.query(sql, req.body, function(err, result) {
     if (err) {
