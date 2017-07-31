@@ -54,13 +54,6 @@ function ($scope, $state, $http, auth, proposals) {
   $scope.subjects = proposals.subjects;
 
   $scope.submit = function() {
-    if (!$scope.prob.subject || !$scope.prob.difficulty ||
-        !$scope.prob.problem || !$scope.prob.answer ||
-        !$scope.prob.solution) {
-      $scope.error = {message: 'Please fill out all fields.'};
-      return
-    }
-
     var prob = $scope.prob;
     prob.staff_id = auth.staffId();
     proposals.create(prob);
@@ -151,6 +144,8 @@ app.controller('editProbCtrl', [
 '$location',
 'proposals',
 function ($scope, $state, $location, proposals) {
+  $scope.subjects = proposals.subjects;
+
   var p = proposals.prob;
   if (!p) {
     $state.go('proposals') //@TODO go to an error message
@@ -160,12 +155,19 @@ function ($scope, $state, $location, proposals) {
   }
 
   $scope.put = function () {
-    proposals.put(p.probid, p);
+    proposals.put(p.prob_id, {
+      subject: $scope.prob.subject,
+      difficulty: $scope.prob.difficulty,
+      problem: $scope.prob.problem,
+      answer: $scope.prob.answer,
+      solution: $scope.prob.solution,
+      staff_id: $scope.prob.staff_id
+    });
     $location.path('proposals');
   }
 
   $scope.delete = function () {
-    proposals.delete(p.probid);
+    proposals.delete(p.prob_id);
     $location.path('proposals');
   }
 }]);

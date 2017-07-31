@@ -240,8 +240,8 @@ router.get('/proposals/:prob_staff_id', auth, function(req, res, next) {
 
 router.get('/proposals/problem/:prob_id', auth, function(req, res, next) {
   // must be proposer, admin, or secure member
-  if (req.payload.type != 'admin' &&
-      req.payload.type != 'secure' &&
+  if (req.payload.privilege != 'admin' &&
+      req.payload.privilege != 'secure' &&
       req.payload.staff_id != req.prob.staff_id) {
     return res.status(401).json({
       message: 'Must be admin, secure member, or author.'
@@ -252,11 +252,12 @@ router.get('/proposals/problem/:prob_id', auth, function(req, res, next) {
 
 router.put('/proposals/problem/:prob_id', auth, function(req, res, next) {
   // must be proposer
-  if (req.payload.id != req.prob.staff_id) {
+  if (req.payload.staff_id != req.prob.staff_id) {
     return res.status(401).json({message: 'Must be the author.'});
   }
 
-  var sql = 'UPDATE proposals SET ? WHERE prob_id='+mysql.escape(req.prob.prob_id);
+  var sql = 'UPDATE proposals SET ? WHERE prob_id=' + 
+    mysql.escape(req.prob.prob_id);
   connection.query(sql, req.body, function(err, result) {
     if (err) {
       return res.status(503).json({
@@ -271,8 +272,8 @@ router.put('/proposals/problem/:prob_id', auth, function(req, res, next) {
 
 router.put('/proposals/checked/:prob_id', auth, function(req, res, next) {
   // must be admin
-  if (req.payload.type != 'admin') {
-    res.status(401);
+  if (req.payload.privilege != 'admin') {
+    return res.status(401);
   }
 
   var sql = 'UPDATE proposals SET ? WHERE prob_id=' + 
@@ -287,8 +288,8 @@ router.put('/proposals/checked/:prob_id', auth, function(req, res, next) {
 
 router.delete('/proposals/problem/:prob_id', auth, function(req, res, next) {
   // must be proposer
-  if (req.payload.id != req.prob.staff_id) {
-    res.status(401).json({message: 'Must be the author.'});
+  if (req.payload.staff_id != req.prob.staff_id) {
+    return res.status(401).json({message: 'Must be the author.'});
   }
   var sql = 'DELETE FROM proposals WHERE ?';
   connection.query(sql, {prob_id: req.prob.prob_id}, function(err, result) {

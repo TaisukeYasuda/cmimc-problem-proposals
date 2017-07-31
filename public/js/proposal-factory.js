@@ -13,7 +13,7 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
     }).success(function(res){
       angular.copy(res, o.probs);
       o.probs = o.probs.map(p => {
-        p.subject = o.subjects[p.subject];
+        p.subject = o.subjects[p.subject-1];
         if (!p.subject) p.subject = 'Invalid';
         return p;
       })
@@ -26,7 +26,7 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
     }).success(function(res){
       angular.copy(res, o.bank);
       o.bank = o.bank.map(p => {
-        p.subject = o.subjects[p.subject];
+        p.subject = o.subjects[p.subject-1];
         if (!p.subject) p.subject = 'Invalid';
         return p;
       })
@@ -60,28 +60,40 @@ app.factory('proposals', ['$http', 'auth', function($http, auth) {
   };
 
   o.get = function(prob_id) {
-    return $http.get('/proposals/problem/'+prob_id, {
+    return $http.get('/proposals/problem/'+prob_id.toString(), {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).then(function(res) {
       angular.copy(res.data, o.prob);
-      o.prob.subject = o.subjects[o.prob.subject];
-      if (!o.prob.subject) o.prob.subject = 'Invalid';
+      o.prob.subjectName = o.subjects[o.prob.subject];
+      o.prob.subject = o.prob.subject.toString();
+      if (!o.prob.subjectName) o.prob.subjectName = 'Invalid';
     })
   }
 
   o.put = function(prob_id, prob) {
-    return $http.put('/proposals/problem/'+prob_id, prob, {
+    return $http.put('/proposals/problem/'+prob_id.toString(), prob, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
-    }).success(function(data){
+    }).success(function(res) {
       //
+    }).error(function(res) {
+      alert(res.message);
     });
   }
 
-  o.delete = function (probid) {
-    return $http.delete('/proposals/problem/'+probid, {
-        headers: {Authorization: 'Bearer '+auth.getToken()}
-      }).success(function(data){
-      //
+  o.delete = function (prob_id) {
+    return $http.delete('/proposals/problem/'+prob_id.toString(), {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).success(function(res) {
+      // remove the problem from the factory copy
+      o.probs = o.probs.filter(prob => {
+        return prob.prob_id.toString() !== prob_id.toString()
+      });
+      o.bank = o.bank.filter(prob => {
+        return prob.prob_id.toString() !== prob_id.toString()
+      });
+      // notify everyone via sockets
+    }).error(function(res) {
+      alert(res.message);
     });
   }
 
