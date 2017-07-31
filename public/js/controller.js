@@ -1,8 +1,9 @@
 app.controller('authCtrl', [
 '$scope',
 '$state',
+'$http',
 'auth',
-function($scope, $state, auth){
+function($scope, $state, $http, auth){
   $scope.signup = function () {
     if (!$scope.user.name || !$scope.user.email || 
         !$scope.user.password || !$scope.user.passwordConfirm) {
@@ -12,11 +13,19 @@ function($scope, $state, auth){
       $scope.error = {message: 'Passwords do not match.'};
       return
     }
-    auth.signup($scope.user).error(function(error){
-      $scope.error = error;
-    }).then(function() {
-      $state.go('proposals');
-    });
+    var andrew_url = 'https://apis.scottylabs.org/directory/v1/andrewID/';
+    $http.get(andrew_url + $scope.user.andrewid.toLowerCase()).then(
+        function(res) {
+          // andrew id found
+          auth.signup($scope.user).error(function(error){
+            $scope.error = error;
+          }).then(function() {
+            $state.go('proposals');
+          });
+        }, function(res) {
+          // andrew id not found
+          $scope.error = {message: 'Invalid Andrew ID.'};
+        });
   };
 
   $scope.login = function () {
