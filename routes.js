@@ -88,6 +88,7 @@ router.post('/signup', function(req, res, next){
     name: req.body.name,
     password: crypto.pbkdf2Sync(req.body.password, salt, 1000, 64).toString('hex'),
     email: req.body.email,
+    andrewid: req.body.andrewid,
     privilege: 'member',
     joined: new Date().toMySQL(),
     salt: salt
