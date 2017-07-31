@@ -45,13 +45,18 @@ app.controller('navCtrl', [
 '$scope',
 'auth',
 'socket',
-function($scope, auth){
+function($scope, auth, socket){
   // get info by calling isLoggedIn() and currentUser()
   $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
   $scope.privilege = auth.privilege;
   $scope.staffId = auth.staffId;
   $scope.logOut = auth.logOut;
+
+  // socket.io
+  $scope.tester = function() {
+    socket.emit('ailee', {ailee: 10});
+  }
 }]);
 
 app.controller('proposeCtrl', [

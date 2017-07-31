@@ -8,20 +8,10 @@ app.factory('socket', function($rootScope) {
 
   return {
     on: function(eventName, callback) {
-      socket.on(eventName, function() {  
-        var args = arguments;
-        $rootScope.$apply(function() {
-          callback.apply(socket, args);
-        });
-      });
+      socket.on(eventName, calback);
     },
     emit: function(eventName, data, callback) {
-    var args = arguments;
-      $rootScope.$apply(function () {
-        if (callback) {
-          callback.apply(socket, args);
-        }
-      });
+      socket.emit(eventName, data, callback);
     }
   };
 });
