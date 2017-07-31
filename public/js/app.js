@@ -73,6 +73,9 @@ function($stateProvider, $urlRouterProvider) {
         prob: ['$stateParams', 'proposals', function($stateParams, proposals) {
           return proposals.get($stateParams.prob_id);
         }],
+        staffPromise: ['staff', function(staff) {
+          return staff.getAll();
+        }],
         commentsPromise: ['$stateParams', 'comments', function($stateParams, comments) {
           return comments.get($stateParams.prob_id);
         }],

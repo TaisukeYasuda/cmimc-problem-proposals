@@ -17,8 +17,8 @@ app.factory('comments', ['$http', 'auth', function($http, auth) {
     );
   };
 
-  o.get = function (probid) {
-    return $http.get('/comments/problem/'+probid, {
+  o.get = function (prob_id) {
+    return $http.get('/comments/problem/'+prob_id.toString(), {
         headers: {Authorization: 'Bearer '+auth.getToken()}
       }).success(function(data){
       angular.copy(data, o.comments);

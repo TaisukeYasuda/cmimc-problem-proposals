@@ -8,7 +8,6 @@ app.factory('solutions', ['$http', 'auth', function($http, auth) {
         headers: {Authorization: 'Bearer '+auth.getToken()}
       }).then(
       function (res) {
-        // success callback
         o.solutions.push(angular.copy(solution));
       },
       function (res) {
@@ -17,8 +16,8 @@ app.factory('solutions', ['$http', 'auth', function($http, auth) {
     );
   };
 
-  o.get = function (probid) {
-    return $http.get('/solutions/problem/'+probid, {
+  o.get = function (prob_id) {
+    return $http.get('/solutions/problem/'+prob_id.toString(), {
         headers: {Authorization: 'Bearer '+auth.getToken()}
       }).success(function(data){
       angular.copy(data, o.solutions);

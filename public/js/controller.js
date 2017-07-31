@@ -105,7 +105,10 @@ app.controller('viewProbCtrl', [
 'comments',
 'solutions',
 function ($scope, $state, auth, staff, proposals, comments, solutions) {
-  $scope.comments = comments.comments;
+  $scope.comments = comments.comments.map(comment => {
+    comment.staffName = staff.staffNames[comment.staff_id];
+    return comment;
+  });
   $scope.solutions = solutions.solutions;
   $scope.author = '';
 

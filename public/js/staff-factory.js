@@ -1,14 +1,18 @@
 app.factory('staff', ['$http', 'auth', function($http, auth) {
   var o = {
     staff: [],
-    author: null
+    staffNames: {}
   };
 
   o.getAll = function() {
     return $http.get('/staff', {
         headers: {Authorization: 'Bearer '+auth.getToken()}
-      }).success(function(data){
-      angular.copy(data, o.staff);
+      }).success(function(res) {
+      angular.copy(res, o.staff);
+      for (i in res) {
+        var staff = res[i];
+        o.staffNames[staff.staff_id] = staff.name;
+      }
     });
   }
 
