@@ -124,7 +124,10 @@ function ($scope, $state, auth, staff, proposals, comments, solutions) {
     comment.staffName = staff.staffNames[comment.staff_id];
     return comment;
   });
-  $scope.solutions = solutions.solutions;
+  $scope.solutions = solutions.solutions.map(solution => {
+    solution.staffName = staff.staffNames[solution.staff_id];
+    return solution;
+  });
   $scope.author = '';
 
   var p = proposals.prob;
@@ -148,8 +151,8 @@ function ($scope, $state, auth, staff, proposals, comments, solutions) {
   };
 
   $scope.submitSolution = function () {
-    $scope.solution.staffid = auth.staffId();
-    $scope.solution.probid = $scope.prob.probid;
+    $scope.solution.staff_id = auth.staffId();
+    $scope.solution.prob_id = $scope.prob.prob_id;
     solutions.create(angular.copy($scope.solution));
     $scope.solutions.push(angular.copy($scope.solution));
     $scope.solution.solution = '';

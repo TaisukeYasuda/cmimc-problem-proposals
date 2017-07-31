@@ -12,7 +12,10 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       cookieParser = require('cookie-parser'),
       crypto = require('crypto'),
-      jwt = require('jsonwebtoken');
+      jwt = require('jsonwebtoken'),
+      morgan = require('morgan');
+
+app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -26,12 +29,18 @@ app.get('/', function (req, res) {
 
 /* start database connection and route endpoints */
 const connection = require('./config/database'),
-      routes = require('./routes')(connection),
-      staffRoutes = require('./routes/staff')(connection),
-      subjectsRoutes = require('./routes/subjects')(connection);
-app.use('/', routes);
-app.use('/staff', staffRoutes);
-app.use('/subjects', subjectsRoutes);
+      authRouter = require('./routes/auth')(connection),
+      proposalsRouter = require('./routes/proposals')(connection),
+      commentsRouter = require('./routes/comments')(connection),
+      solutionsRouter = require('./routes/solutions')(connection),
+      staffRouter = require('./routes/staff')(connection),
+      subjectsRouter = require('./routes/subjects')(connection);
+app.use('/', authRouter);
+app.use('/proposals', proposalsRouter);
+app.use('/comments', commentsRouter);
+app.use('/solutions', solutionsRouter);
+app.use('/staff', staffRouter);
+app.use('/subjects', subjectsRouter);
 
 /* start http server */
 server.listen(process.env.PORT || 8000, function () {
