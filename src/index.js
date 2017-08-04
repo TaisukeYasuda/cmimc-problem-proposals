@@ -3,19 +3,12 @@ import $ from 'jquery';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import Routes from './routes';
 
-import Header from './components/header';
+import Root from './components/root';
 
 $(document).ready(() => {
   ReactDOM.render(
-    <BrowserRouter>
-      <div>
-        <Header />
-        <Routes />
-      </div>
-    </BrowserRouter>,
+    <Root />,
     document.getElementById('root')
   );
 });
