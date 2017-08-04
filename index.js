@@ -39,7 +39,7 @@ app.use('/subjects', subjectsRouter);
 
 /* serve home page */
 app.get('/*', function (req, res) {
-   res.sendFile( __dirname + '/' + 'home.html' );
+   res.sendFile( __dirname + '/public/index.html' );
 });
 
 /* start http server */
