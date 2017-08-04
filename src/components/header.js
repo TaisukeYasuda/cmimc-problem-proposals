@@ -20,7 +20,7 @@ class Header extends React.Component {
             <li><Link to='/'>{message}</Link></li>
           </ul>
         </nav>
-        <br classname="clearfloat" />
+        <br className="clearfloat" />
       </header>
     );
   }

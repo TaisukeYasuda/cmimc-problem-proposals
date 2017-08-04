@@ -5,7 +5,7 @@ import {
   PROTECTED_TEST 
 } from '../actions/types';
 
-export const INITIAL_STATE = { 
+const INITIAL_STATE = { 
   error: '', 
   message: '', 
   content: '', 
@@ -22,7 +22,7 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, error: action.payload };
     case PROTECTED_TEST:
       return { ...state, content: action.payload };
+    default:
+      return state;
   }
-
-  return state;
 }

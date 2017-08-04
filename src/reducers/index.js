@@ -3,9 +3,10 @@ import {
   AUTH_USER,
   UNAUTH_USER,
 } from '../actions/types';
-import authReducer from './auth_reducer.js';
+import authReducer from './auth-reducer.js';
 
-const rootReducer = combineReducers({  
+const rootReducer = combineReducers({
+  /* state appears in this form */
   auth: authReducer,
   // form: formReducer
 });
