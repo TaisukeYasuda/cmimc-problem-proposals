@@ -22,11 +22,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* serve home page */
-app.get('/', function (req, res) {
-   res.sendFile( __dirname + '/' + 'index.html' );
-})
-
 /* start database connection and route endpoints */
 const connection = require('./config/database'),
       authRouter = require('./routes/auth')(connection),
@@ -41,6 +36,11 @@ app.use('/comments', commentsRouter);
 app.use('/solutions', solutionsRouter);
 app.use('/staff', staffRouter);
 app.use('/subjects', subjectsRouter);
+
+/* serve home page */
+app.get('/*', function (req, res) {
+   res.sendFile( __dirname + '/' + 'home.html' );
+});
 
 /* start http server */
 server.listen(process.env.PORT || 8000, function () {

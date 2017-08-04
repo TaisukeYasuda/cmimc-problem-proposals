@@ -1,14 +1,68 @@
+/*******************************************************************************
+ *
+ * Routing problem proposals.
+ *
+ ******************************************************************************/
+
 module.exports = function(connection) {
   const router = require('express').Router(),
         auth = require('../config/auth')(connection),
         datetimeUtil = require('../utils/datetime'),
         mysql = require('mysql');
 
-  router.get('/bank', auth.verifyJWT, function(req, res, next) {
+  /*****************************************************************************
+   * URL params.
+   ****************************************************************************/
+
+  /* select proposals by problem id */
+  router.param('prob_id', function(req, res, next, prob_id) {
+    var sql = 'SELECT * FROM proposals WHERE ?';
+    connection.query(sql, {prob_id: prob_id}, function(err, result) {
+      if (err) {
+        return res.status(503).json({
+          message: 'Database failed to load proposal'
+        });
+      }
+      if (!result) return res.status(400).json({message: 'Proposal not found.'});
+      else req.prob = result[0];
+
+      return next();
+    });
+  });
+
+  /* select proposals by author staff id */
+  router.param('staff_id', function(req, res, next, staff_id) {
+    var sql = 'SELECT * FROM proposals WHERE ? ORDER BY updated';
+    connection.query(sql, {staff_id: staff_id}, function(err, result) {
+      if(err) {
+        return res.status(503).json({
+          message: 'Database failed to load proposals.'
+        });
+      }
+
+      req.proposals = {
+        proposals: result,
+        staff_id: staff_id
+      };
+      return next();
+    });
+  });
+
+  /*****************************************************************************
+   * Routes.
+   ****************************************************************************/
+
+  /* get entire problem database
+   *
+   * @TODO
+   *  - paginate the request
+   */
+  router.get('/', auth.verifyJWT, function(req, res, next) {
     // must be admin or secure member
-    if (req.payload.privilege !== 'admin' && req.payload.privilege !== 'secure') {
+    if (req.payload.privilege !== 'admin' && 
+        req.payload.privilege !== 'secure') {
       return res.status(401).json({
-        message: 'Problem bank can only be accessed by admin and secure members.'
+        message: 'Problem bank is only accessible to admin and secure members.'
       });
     }
     var sql = 'SELECT * FROM proposals';
@@ -18,11 +72,11 @@ module.exports = function(connection) {
           message: 'Database failed to load problem bank.'
         });
       }
-
       return res.status(200).json(result);
     });
   });
 
+  /* post a problem proposal */
   router.post('/', auth.verifyJWT, function(req, res, next) {
     if (req.payload.staff_id != req.body.staff_id) {
       return res.status(401).json({
@@ -45,44 +99,12 @@ module.exports = function(connection) {
           message: 'Database failed to insert the problem proposal.'
         });
       }
-
-      res.status(200).json(result[0]);
+      return res.status(200);
     });
   });
 
-  router.param('prob_staff_id', function(req, res, next, staff_id) {
-    var sql = 'SELECT * FROM proposals WHERE ? ORDER BY updated';
-    var query = connection.query(sql, {staff_id: staff_id}, function(err, result) {
-      if(err) {
-        return res.status(503).json({
-          message: 'Database failed to load proposals.'
-        });
-      }
 
-      req.proposals = {
-        proposals: result,
-        staff_id: staff_id
-      };
-      return next();
-    });
-  });
-
-  router.param('prob_id', function(req, res, next, prob_id) {
-    var sql = 'SELECT * FROM proposals WHERE ?';
-    var query = connection.query(sql, {prob_id: prob_id}, function(err, result) {
-      if (err) {
-        return res.status(503).json({
-          message: 'Database failed to load proposal'
-        });
-      }
-      if (!result) return res.status(400).json({message: 'Proposal not found.'});
-      else req.prob = result[0];
-
-      return next();
-    });
-  });
-
-  router.get('/:prob_staff_id', auth.verifyJWT, function(req, res, next) {
+  router.get('/:staff_id', auth.verifyJWT, function(req, res, next) {
     if (req.payload.staff_id != req.proposals.staff_id) {
       return res.status(401).json({
         message: 'Request for proposals must be from the original author.'

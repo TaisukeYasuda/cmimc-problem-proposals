@@ -1,0 +1,8 @@
+React Router v4:
+https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf
+
+Redux:
+http://redux.js.org/
+
+Redux Authentication:
+http://blog.slatepeak.com/build-a-react-redux-app-with-json-web-token-jwt-authentication/
