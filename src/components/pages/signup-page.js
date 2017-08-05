@@ -43,7 +43,7 @@ class SignupPage extends React.Component {
 
   render = () =>  (
     <section>
-      <Error error={this.props.error} message={this.props.message} />
+      { this.props.error && <Error message={this.props.message} /> }
       <h1>Sign Up</h1>
       <p>Already have an account? Try <Link to='/login'>logging in</Link>.</p>
       <SignupForm onSubmit={this.submit} />

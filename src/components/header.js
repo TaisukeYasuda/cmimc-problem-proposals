@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 
 import { logoutUser } from '../actions';
 
-const Header = (props) => (
+const Header = ({ logout, authenticated }) => (
   <header>
     <img src='img/cmimc-logo-huge.png' height='28px' />
-    <Link to='/login' className='logout' onClick={props.logout}>
-      {props.authenticated ? 'Logout' : 'Login'}
+    <Link to='/login' className='logout' onClick={logout}
+      {authenticated ? 'Logout' : 'Login'}
     </Link>
     <nav>
       <ul>

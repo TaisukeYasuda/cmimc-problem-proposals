@@ -8,9 +8,9 @@ import LoginPage from './pages/login-page';
 import Dashboard from './dashboard.js';
 import NotFoundPage from './pages/not-found-page';
 
-const Routes = (props) => (  
+const Routes = ({ authenticated }) => (  
   <Switch>
-    <Route exact path='/' component={props.authenticated ? Dashboard : SignupPage} />
+    <Route exact path='/' component={authenticated ? Dashboard : SignupPage} />
     <Route exact path='/login' component={LoginPage}/>
 
     <Route path='*' component={NotFoundPage} />

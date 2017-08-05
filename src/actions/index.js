@@ -76,7 +76,6 @@ export function registerUser({ email, name, andrewid, password }) {
   }
 }
 
-
 export function protectedTest() {
   return dispatch => {
     let token = localStorage.getItem('token');
