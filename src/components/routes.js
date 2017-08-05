@@ -1,15 +1,28 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-import HomePage from './pages/home-page';  
+import SignupPage from './pages/signup-page';
+import LoginPage from './pages/login-page';
+import Dashboard from './dashboard.js';
 import NotFoundPage from './pages/not-found-page';
 
-const Routes = () => (  
+const Routes = (props) => (  
   <Switch>
-    <Route exact path='/' component={HomePage} />
+    <Route exact path='/' component={props.authenticated ? Dashboard : SignupPage} />
+    <Route exact path='/login' component={LoginPage}/>
 
     <Route path='*' component={NotFoundPage} />
   </Switch>
 );
 
-export default Routes;
+Routes.propTypes = {
+  authenticated: PropTypes.bool.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  authenticated: state.auth.authenticated
+});
+
+export default withRouter(connect(mapStateToProps)(Routes));

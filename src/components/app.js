@@ -21,30 +21,16 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <div>
-          <Header authenticated={this.props.authenticated} />
-          <Routes />
+          <Header />
+          <Routes authenticated={this.props.authenticated} />
         </div>
       </BrowserRouter>
     );
   }
 }
 
-App.propTypes = {
-  authenticated: PropTypes.bool.isRequired
-};
+const mapStateToProps = (state) => ({
+  authenticated: state.auth.authenticated
+});
 
-const mapStateToProps = state => {
-  return { authenticated: state.auth.authenticated };
-}
-const mapDispatchToProps = dispatch => {
-  return {
-    login: loginUser,
-    register: registerUser,
-    logout: logoutUser
-  };
-}
-
-export default connect(
-  mapStateToProps, 
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps)(App);

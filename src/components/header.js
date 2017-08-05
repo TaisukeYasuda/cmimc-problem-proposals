@@ -1,33 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-class Header extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+import { logoutUser } from '../actions';
 
-  render() {
-    var message = this.props.authenticated ? 'hi!' : 'oops!';
-    return (
-      <header>
-        <img src="img/cmimc-logo-huge.png" height="28px" />
-        <nav>
-          <ul>
-            <li><Link to='/'>home</Link></li>
-            <li><Link to='/roster'>roster</Link></li>
-            <li><Link to='/schedule'>schedule</Link></li>
-            <li><Link to='/'>{message}</Link></li>
-          </ul>
-        </nav>
-        <br className="clearfloat" />
-      </header>
-    );
-  }
-}
+const Header = (props) => (
+  <header>
+    <img src='img/cmimc-logo-huge.png' height='28px' />
+    <Link to='/login' className='logout' onClick={props.logout}>
+      {props.authenticated ? 'Logout' : 'Login'}
+    </Link>
+    <nav>
+      <ul>
+        <li><Link to='/'>Home</Link></li>
+        <li><Link to='/login'>Login</Link></li>
+        <li><Link to='/ailee'>Ailee</Link></li>
+      </ul>
+    </nav>
+    <br className="clearfloat" />
+  </header>
+);
 
 Header.propTypes = {
-  authenticated: PropTypes.bool.isRequired
+  authenticated: PropTypes.bool.isRequired,
+  logout: PropTypes.func.isRequired
 };
 
-export default Header;
+const mapStateToProps = state => ({
+  authenticated: state.auth.authenticated
+});
+
+const mapDispatchToProps = dispatch => ({
+  logout: () => logoutUser(dispatch)
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header);

@@ -147,7 +147,11 @@ textarea	{
 	overflow: auto;
 }
 
-input[type="submit"], .form-btn	{
+/*******************************************************************************
+ * Form submit button
+ ******************************************************************************/
+
+button[type="submit"], input[type="submit"], .form-btn	{
 	font-size: 18px !important;
 	background-color: #D33434;
 	color: #ffffff;
@@ -161,7 +165,7 @@ input[type="submit"], .form-btn	{
 	-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
 }
 
-input[type="submit"]	{
+button[type="submit"], input[type="submit"]	{
 	padding: 8px 16px 8px !important;
 }
 
@@ -169,13 +173,14 @@ input[type="submit"]	{
 	padding: 6px 16px 7px !important;
 }
 
-input[type="submit"]:link, input[type="submit"]:visited, .form-btn:link, .form-btn:visited	{
+button[type="submit"], input[type="submit"]:link, input[type="submit"]:visited, .form-btn:link, .form-btn:visited	{
 	background-color: #D33434;
 }
 
-input[type="submit"]:hover, input[type="submit"]:active, .form-btn:hover, .form-btn:active	{
+button[type="submit"], input[type="submit"]:hover, input[type="submit"]:active, .form-btn:hover, .form-btn:active	{
 	background-color: #E24646;
 }
+/******************************************************************************/
 
 table	{
 	border-collapse: collapse;

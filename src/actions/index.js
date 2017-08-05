@@ -8,56 +8,80 @@ const API_URL = 'http://localhost:8000',
       CLIENT_ROOT_URL = 'http://localhost:8000';
 
 /*******************************************************************************
+ * Synchronous actions.
+ ******************************************************************************/
+
+export function errorHandler(dispatch, errorMessage) {
+  dispatch({ type: AUTH_ERROR, payload: errorMessage });
+}
+
+export function logoutUser(dispatch) {
+  localStorage.removeItem('token');
+  dispatch({ type: UNAUTH_USER });
+}
+
+/*******************************************************************************
  * Async thunk actions.
  ******************************************************************************/
 
-export function errorHandler(dispatch, error, type) {
-  dispatch({ type: type, payload: error.message });
-}
-
 export function loginUser({ email, password }) {
   return dispatch => {
-    fetch.post(`${API_URL}/login`, { email, password })
+    fetch(`${API_URL}/login`, {
+      method: 'post',
+      body: JSON.stringify({ email, password }),
+      headers: { 'Content-Type': 'application/json' }
+    })
     .then(
       response => {
-        localStorage['token'] = response.data.token;
-        dispatch({ type: AUTH_USER });
-        window.location.href = `${CLIENT_ROOT_URL}/dashboard`;
+        return response.json()
+        .then(data => {
+          if (data.error) errorHandler(dispatch, data.message);
+          else {
+            localStorage.setItem('token', data.token);
+            dispatch({ type: AUTH_USER });
+          }
+        });
       }, 
       error => {
-        errorHandler(dispatch, error, type);
+        errorMessage = error.message || 'Failed to communicate with server.';
+        errorHandler(dispatch, errorMessage);
       }
     );
   }
 }
 
-export function registerUser({ email, name, password }) {
+export function registerUser({ email, name, andrewid, password }) {
   return dispatch => {
-    fetch.post(`${API_URL}/signup`, { email, name, password })
+    fetch(`${API_URL}/signup`, {
+      method: 'post',
+      body: JSON.stringify({ email, name, andrewid, password }),
+      headers: { 'Content-Type': 'application/json' }
+    })
     .then(
       response => {
-        localStorage['token'] = response.data.token;
-        dispatch({ type: AUTH_USER });
-        window.location.href = `${CLIENT_ROOT_URL}/dashboard`;
+        return response.json()
+        .then(data => {
+          if (data.error) errorHandler(dispatch, data.message);
+          else {
+            localStorage.setItem('token', data.token);
+            dispatch({ type: AUTH_USER });
+          }
+        });
       },
       error => {
-        errorHandler(dispatch, error, type);
+        errorMessage = error.message || 'Failed to communicate with server.';
+        errorHandler(dispatch, errorMessage);
       }
     );
   }
 }
 
-export function logoutUser({ email, password }) {
-  return dispatch => {
-    dispatch({ type: UNAUTH_USER });
-    localStorage.remove('token');
-    window.location.href = `${CLIENT_ROOT_URL}/login`;
-  }
-}
 
 export function protectedTest() {
   return dispatch => {
-    fetch.get(`${API_URL}/proposals`, {
+    let token = localStorage.getItem('token');
+    fetch(`${API_URL}/proposals`, {
+      method: 'get',
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(
@@ -68,7 +92,8 @@ export function protectedTest() {
         });
       },
       error => {
-        errorHandler(dispatch, error, type);
+        errorMessage = error.message || 'Test failed.';
+        errorHandler(dispatch, errorMessage);
       }
     );
   }

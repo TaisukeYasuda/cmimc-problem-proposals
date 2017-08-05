@@ -6,22 +6,22 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = { 
-  error: '', 
+  error: false, 
   message: '', 
   content: '', 
-  authenticated: false 
+  authenticated: false
 };
 
 export default function (state = INITIAL_STATE, action) {  
   switch(action.type) {
     case AUTH_USER:
-      return { ...state, error: '', message: '', authenticated: true };
+      return { ...state, error: false, message: '', authenticated: true };
     case UNAUTH_USER:
-      return { ...state, authenticated: false };
+      return { ...state, error: false, authenticated: false };
     case AUTH_ERROR:
-      return { ...state, error: action.payload };
+      return { ...state, error: true, message: action.payload };
     case PROTECTED_TEST:
-      return { ...state, content: action.payload };
+      return { ...state, error: false, content: action.payload };
     default:
       return state;
   }
