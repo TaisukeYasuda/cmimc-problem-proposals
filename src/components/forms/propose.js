@@ -5,7 +5,7 @@ import { Field, reduxForm, formValueSelector } from 'redux-form';
 
 const selector = formValueSelector('propose');
 
-const ProposeForm = ({ subjects, handleSubmit }) => {
+const ProposeForm  = ({ subjects, handleSubmit }) => {
   let subjectsView = Object.keys(subjects).map((subject_id, key) => {
         let subject = subjects[subject_id]; 
         return (
