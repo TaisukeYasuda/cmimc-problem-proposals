@@ -22,7 +22,6 @@ class LoginPage extends React.Component {
   }
 
   submit = values => {
-    console.log(values);
     if (!values.email ||
         !values.password) {
       this.props.errorHandler('Please fill out all fields.');

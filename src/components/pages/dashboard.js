@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 
 import {
   fetchMyProposals
-} from '../actions';
+} from '../../actions';
 
-import ProposalsList from './proposals-list';
+import ProposalsList from '../proposals-list';
 
 class Dashboard extends React.Component {
   constructor(props) {

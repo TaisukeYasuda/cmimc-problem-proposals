@@ -14,8 +14,10 @@ const Header = ({ logout, authenticated }) => (
     <nav>
       <ul>
         <li><Link to='/'>Home</Link></li>
-        <li><Link to='/login'>Login</Link></li>
-        <li><Link to='/ailee'>Ailee</Link></li>
+        { authenticated && (
+            <li><Link to='/propose'>Propose</Link></li>
+          )
+        }
       </ul>
     </nav>
     <br className="clearfloat" />

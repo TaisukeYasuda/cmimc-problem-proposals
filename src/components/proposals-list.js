@@ -24,7 +24,7 @@ const ProposalsList = ({ subjects, proposals }) => {
           <th>View</th>
           <th>Edit</th>
         </tr>
-        {proposalsView}
+        { proposalsView }
       </tbody>
     </table>
   );
