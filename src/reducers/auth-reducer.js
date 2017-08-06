@@ -8,7 +8,6 @@ import {
 const INITIAL_STATE = { 
   error: false, 
   message: '', 
-  content: '', 
   authenticated: false
 };
 

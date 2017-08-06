@@ -31,11 +31,11 @@ const connection = require('./config/database'),
       staffRouter = require('./routes/staff')(connection),
       subjectsRouter = require('./routes/subjects')(connection);
 app.use('/', authRouter);
-app.use('/proposals', proposalsRouter);
-app.use('/comments', commentsRouter);
-app.use('/solutions', solutionsRouter);
-app.use('/staff', staffRouter);
-app.use('/subjects', subjectsRouter);
+app.use('/api/proposals', proposalsRouter);
+app.use('/api/comments', commentsRouter);
+app.use('/api/solutions', solutionsRouter);
+app.use('/api/staff', staffRouter);
+app.use('/api/subjects', subjectsRouter);
 
 /* serve home page */
 app.get('/*', function (req, res) {

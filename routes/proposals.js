@@ -20,6 +20,7 @@ module.exports = function(connection) {
     connection.query(sql, {prob_id: prob_id}, function(err, result) {
       if (err) {
         return res.status(503).json({
+          error: true,
           message: 'Database failed to load proposal'
         });
       }
@@ -36,6 +37,7 @@ module.exports = function(connection) {
     connection.query(sql, {staff_id: staff_id}, function(err, result) {
       if(err) {
         return res.status(503).json({
+          error: true,
           message: 'Database failed to load proposals.'
         });
       }
@@ -62,6 +64,7 @@ module.exports = function(connection) {
     if (req.payload.privilege !== 'admin' && 
         req.payload.privilege !== 'secure') {
       return res.status(401).json({
+        error: true,
         message: 'Problem bank is only accessible to admin and secure members.'
       });
     }
@@ -69,10 +72,14 @@ module.exports = function(connection) {
     connection.query(sql, function(err, result) {
       if(err) {
         return res.status(503).json({
+          error: true,
           message: 'Database failed to load problem bank.'
         });
       }
-      return res.status(200).json(result);
+      return res.status(200).json({
+        error: false,
+        content: result
+      });
     });
   });
 
@@ -80,6 +87,7 @@ module.exports = function(connection) {
   router.post('/', auth.verifyJWT, function(req, res, next) {
     if (req.payload.staff_id != req.body.staff_id) {
       return res.status(401).json({
+        error: true,
         message: 'Problem proposal author doesn\'t match the request owner.'
       });
     }
@@ -96,10 +104,11 @@ module.exports = function(connection) {
     connection.query(sql, proposal, function(err, result) {
       if(err) { 
         return res.status(503).json({
+          error: true,
           message: 'Database failed to insert the problem proposal.'
         });
       }
-      return res.status(200);
+      return res.status(200).json({ error: false });
     });
   });
 
@@ -107,10 +116,14 @@ module.exports = function(connection) {
   router.get('/:staff_id', auth.verifyJWT, function(req, res, next) {
     if (req.payload.staff_id != req.proposals.staff_id) {
       return res.status(401).json({
+        error: true,
         message: 'Request for proposals must be from the original author.'
       });
     }
-    res.status(200).json(req.proposals.proposals);
+    res.status(200).json({
+      error: false,
+      content: req.proposals.proposals
+    });
   });
 
   router.get('/problem/:prob_id', auth.verifyJWT, function(req, res, next) {
@@ -119,16 +132,23 @@ module.exports = function(connection) {
         req.payload.privilege != 'secure' &&
         req.payload.staff_id != req.prob.staff_id) {
       return res.status(401).json({
+        error: true,
         message: 'Must be admin, secure member, or author.'
       });
     }
-    res.status(200).json(req.prob);
+    res.status(200).json({
+      error: false,
+      content: req.prob
+    });
   });
 
   router.put('/problem/:prob_id', auth.verifyJWT, function(req, res, next) {
     // must be proposer
     if (req.payload.staff_id != req.prob.staff_id) {
-      return res.status(401).json({message: 'Must be the author.'});
+      return res.status(401).json({
+        error: true,
+        message: 'Must be the author.'
+      });
     }
 
     var sql = 'UPDATE proposals SET ? WHERE prob_id=' + 
@@ -136,12 +156,16 @@ module.exports = function(connection) {
     connection.query(sql, req.body, function(err, result) {
       if (err) {
         return res.status(503).json({
+          error: true,
           message: 'Database failed to update proposal.'
         });
       }
-      if (!result) return res.status(400).json({message: 'Proposal not found.'});
+      if (!result) return res.status(400).json({
+        error: true,
+        message: 'Proposal not found.'
+      });
 
-      res.status(200);
+      res.status(200).json({ error: false });
     });
   });
 

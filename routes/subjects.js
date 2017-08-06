@@ -6,10 +6,14 @@ module.exports = function(connection) {
     connection.query(sql, function(err, result) {
       if (err) {
         return res.status(503).json({
+          error: true,
           message: 'Database failed to load subjects.'
         });
       }
-      res.status(200).json(result);
+      return res.status(200).json({
+        error: false,
+        content: result
+      });
     });
   });
 

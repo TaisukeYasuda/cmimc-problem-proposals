@@ -4,12 +4,15 @@ import { BrowserRouter } from 'react-router-dom';
 
 import App from './app';
 import configureStore from '../configureStore';
+import { initApp } from '../actions';
 import { AUTH_USER } from '../actions/types';
 
-const store = configureStore(),
-      token = localStorage.getItem('token');
+import auth from '../auth';
 
-if (token) {
+const store = configureStore();
+
+initApp()(store.dispatch);
+if (auth.isLoggedIn()) {
   store.dispatch({ type: AUTH_USER });
 }
 

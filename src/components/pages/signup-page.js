@@ -16,7 +16,6 @@ const ANDREW_URL = 'https://apis.scottylabs.org/directory/v1/andrewID/';
 
 class SignupPage extends React.Component {
   submit = values => {
-    console.log(values);
     if (!values.name ||
         !values.email ||
         !values.andrewid ||
