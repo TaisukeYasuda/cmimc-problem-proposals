@@ -43,7 +43,11 @@ class ProposePage extends React.Component {
       /* can propose only if authenticated */
       this.props.authenticated ? (
         /* show spinner if submitting */
-        this.props.proposalSubmitting ? ( <Spinner /> ) : (
+        this.props.proposalSubmitting ? ( 
+          <section>
+            <Spinner /> 
+          </section>
+        ) : (
           <section>
             { this.props.error && <Error message={this.props.message} /> }
             <h1>Submit Proposal</h1>

@@ -1,8 +1,8 @@
 import React from 'react';
 
 export default () => (
-  <section className='spinner'>
+  <div className='spinner'>
     <i className='fa fa-spinner fa-spin fa-3x fa-fw'></i>
     <span className='sr-only'>Loading...</span>
-  </section>
+  </div>
 );
