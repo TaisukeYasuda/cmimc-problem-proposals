@@ -11,6 +11,7 @@ import {
 
 import ProposeForm from '../forms/propose';
 import Error from '../error';
+import Spinner from '../spinner';
 
 class ProposePage extends React.Component {
   submit = values =>  {
@@ -32,18 +33,23 @@ class ProposePage extends React.Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    if (this.props.proposalSubmitted && !nextProps.proposalSubmitted) {
+    if (this.props.proposalSubmitting && !nextProps.proposalSubmitting) {
       this.props.history.push('/');
     }
   }
 
   render() {
-    return ( this.props.authenticated ? (
-        <section>
-          { this.props.error && <Error message={this.props.message} /> }
-          <h1>Submit Proposal</h1>
-          <ProposeForm onSubmit={this.submit} />
-        </section>
+    return ( 
+      /* can propose only if authenticated */
+      this.props.authenticated ? (
+        /* show spinner if submitting */
+        this.props.proposalSubmitting ? ( <Spinner /> ) : (
+          <section>
+            { this.props.error && <Error message={this.props.message} /> }
+            <h1>Submit Proposal</h1>
+            <ProposeForm onSubmit={this.submit} />
+          </section>
+        )
       ) : (
         <section>
           <h1>You aren't logged in yet!</h1>
@@ -57,7 +63,7 @@ class ProposePage extends React.Component {
 ProposePage.propTypes = {
   error: PropTypes.bool.isRequired,
   message: PropTypes.string,
-  proposalSubmitted: PropTypes.bool.isRequired,
+  proposalSubmitting: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
   errorHandler: PropTypes.func.isRequired,
   postProposal: PropTypes.func.isRequired
@@ -67,7 +73,7 @@ const mapStateToProps = state => ({
   authenticated: state.auth.authenticated,
   error: state.proposals.error,
   message: state.proposals.message,
-  proposalSubmitted: state.proposals.proposalSubmitted
+  proposalSubmitting: state.proposals.proposalSubmitting
 });
 
 const mapDispatchToProps = dispatch => ({

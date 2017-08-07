@@ -1,3 +1,3 @@
 export * from './init-actions';
 export * from './auth-actions';
-export * from './proposal-actions';
+export * from './proposals-actions';

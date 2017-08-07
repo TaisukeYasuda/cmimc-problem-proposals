@@ -10,6 +10,9 @@ import auth from '../auth';
 const API_URL = 'http://localhost:8000/api/proposals',
       CLIENT_ROOT_URL = 'http://localhost:8000';
 
+export const PENDING = 'pending',
+             SUCCESS = 'success';
+
 /*******************************************************************************
  * Synchronous actions.
  ******************************************************************************/
@@ -29,7 +32,7 @@ export function fetchMyProposals() {
   return dispatch => {
     dispatch({ 
       type: FETCH_MY_PROPOSALS, 
-      payload: { status: 'pending' }
+      payload: { status: PENDING }
     });
     let token = localStorage.getItem('token'),
         staffId = auth.staffId();
@@ -47,7 +50,7 @@ export function fetchMyProposals() {
           else {
             dispatch({ 
               type: FETCH_MY_PROPOSALS,
-              payload: { status: 'success', content: data.content }
+              payload: { status: SUCCESS, content: data.content }
             });
           }
         });
@@ -64,7 +67,7 @@ export function postProposal(proposal) {
   return dispatch => {
     dispatch({
       type: POST_PROPOSAL,
-      payload: { status: 'pending' }
+      payload: { status: PENDING }
     });
     let token = localStorage.getItem('token'),
         staffId = auth.staffId();
@@ -85,7 +88,7 @@ export function postProposal(proposal) {
           else {
             dispatch({ 
               type: POST_PROPOSAL,
-              payload: { status: 'success' }
+              payload: { status: SUCCESS }
             });
           }
         });
