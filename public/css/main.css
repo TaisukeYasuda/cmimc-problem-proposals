@@ -226,3 +226,7 @@ table tr:first-child td	{
 .spinner {
   text-align: center;
 }
+
+.preview {
+  padding: 20px;
+}
