@@ -1,26 +1,10 @@
-/*******************************************************************************
- *
- * Configure database.
- *
- ******************************************************************************/
-
-const mysql = require('mysql');
-
-if (process.env.NODE_ENV!='production') {
-  var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: process.env.MYSQL_PASSWORD,
-    database: 'cmimcdb'
-  });
-} else {
-  var connection = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
-  });
-}
+const mysql = require('mysql'),
+      connection = mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME
+      });
 
 connection.connect();
 
