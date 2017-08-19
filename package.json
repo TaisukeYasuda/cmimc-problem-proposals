@@ -1,15 +1,12 @@
 {
-  "name": "cmimc-website",
+  "name": "problem-proposals",
   "version": "1.0.0",
-  "description": "Official Carnegie Mellon Informatics and Mathematics Competition website",
+  "description": "Problem proposals page for the United States Mathematics Competition Association.",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "body-parser": "^1.15.2",
-    "client-sessions": "^0.7.0",
-    "cookie-parser": "^1.4.3",
-    "crypto": "0.0.3",
+    "dotenv": "^4.0.0",
     "express": "^4.14.0",
-    "http": "0.0.0",
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.17.4",
     "mysql": "^2.11.1",
@@ -37,20 +34,20 @@
     "redux-thunk": "^2.2.0",
     "webpack": "^3.4.1"
   },
-  "scripts": {
+  "scripts": { 
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack -d --watch",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build": "webpack -p",
+    "watch": "webpack -d --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codercody/cmimc-website.git"
+    "url": "git+https://github.com/USMCA/problem-proposals.git"
   },
-  "author": "Cody Johnson, Taisuke Yasuda, Ethan Gruman",
+  "author": "Cody Johnson, Taisuke Yasuda",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/codercody/cmimc-website/issues"
+    "url": "https://github.com/USMCA/problem-proposals/issues"
   },
-  "homepage": "https://github.com/codercody/cmimc-website#readme"
+  "homepage": "https://github.com/USMCA/problem-proposals#readme"
 }
