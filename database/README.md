@@ -8,7 +8,11 @@
   university: String,
   password: String,
   salt: String,
-  joined: Date
+  unread: [ Announcement ],
+  read: [ Announcement ],
+  urgent: [ Announcement ],
+  created: Date,
+  updated: Date,
 }
 ```
 
@@ -18,11 +22,22 @@
   name: String,
   location: String,
   contests: [ Contest ],
+  active_contest: Contest,
   directors: [ User ],
-  secure_members: [ User ],
   members: [ User ],
+  announcements: [ Announcement ],
   created: Date,
-  updated: Date,
+  updated: Date
+}
+```
+
+## Announcement
+```
+{
+  title: String,
+  body: String,
+  created: Date,
+  updated: Date
 }
 ```
 
@@ -34,6 +49,7 @@
   date: Date,
   tests: [ Tests ],
   test_solvers: [ User ],
+  czars: [ User ],
   created: Date,
   updated: Date
 }
@@ -77,7 +93,7 @@
 ## Comment
 {
   author: User,
-  comment: String,
+  body: String,
   created: Date,
   updated: Date
 }
