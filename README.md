@@ -1,5 +1,5 @@
 # USMCA Problem Proposals
-Web app for problem proposals for the (United States Math Competition Association)[usmath.org].
+Web app for problem proposals for the [United States Math Competition Association](usmath.org).
 
 ## Project Structure
 This project runs a node server and a MySQL database and serves a frontend based on React/Redux and Materialize. 
