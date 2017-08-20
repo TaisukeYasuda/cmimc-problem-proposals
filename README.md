@@ -10,7 +10,7 @@ Web app for the [United States Math Competition Association](usmath.org).
 * **User**: A single person who carries out certain roles to contests. Users have various privileges with respect to competitions and contests:
   * **Director** (of a competition): Manages members of a competition. A Director is also a Czar.
   * **Member** (of a competition): Proposes problems to the active contests.
-  * **Czar** (of a contest): Manages the problems of the contest and appoints Test Solvers. A Czar is also a Member and a Test Solver. 
+  * **Czar** (of a contest): Manages the problems of the contest (including claiming shared pool problems) and appoints Test Solvers. A Czar is also a Member and a Test Solver. 
   * **Test Solver** (of a contest): Accesses problems of the contest and verifies its problems.
 
 | | Director | Member | Czar | Test Solver |
@@ -19,7 +19,7 @@ Web app for the [United States Math Competition Association](usmath.org).
 | View/Verify Problems | :heavy_check_mark: | | :heavy_check_mark: | :heavy_check_mark: |
 
 ### Problem Proposal and Sharing
-A member of a competition can propose problems to the active contest. 
+A member of a competition can propose problems to the active contest or to the shared pool of problems. A problem in a contest (not necessarily active) that does not belong to a test can be released to the shared pool of problems at any time. Problems belonging to a test of a contest (not necessarily active) cannot be released to the shared pool. Problems in the shared pool can be claimed by an active contest by one of its Czars, up to a contest quota. A claimed problem cannot be used by any other contest until the Czar who claimed it releases it back to the shared pool. 
 
 ## For Developers
 
