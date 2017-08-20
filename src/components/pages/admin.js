@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Row, Col, Card, CardTitle, Modal } from "react-materialize";
 
 function listify (directors) {

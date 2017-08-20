@@ -1,6 +1,7 @@
 import React from "react";
-
 import { Row, Col, Table, Modal, Button } from "react-materialize";
+
+import renderKaTeX from "../../katex";
 
 const LoadMore = () => (
   <a href="#" className="load-more teal-text text-darken-3 underline-hover">Load more...</a>
@@ -30,7 +31,7 @@ const Proposal = ({ votes, solves, views, contest, probid, statement }) => (
     <Col s={9}>
       <Row>
         <Col s={12}>
-          <a href={"view-problem/" + probid} className="black-text underline-hover">{ statement }</a>
+          <a href={"view-problem/" + probid} className="black-text underline-hover" ref={ renderKaTeX }>{ statement }</a>
         </Col>
       </Row>
     </Col>
@@ -61,7 +62,7 @@ const Announcement = ({ label, compName, title, message }) => {
 };
 
 const proposals = [
-  {votes: 0, solves: 1, views: 2, contest: "CMIMC 2017", probid: 123, statement: "hi"},
+  {votes: 0, solves: 1, views: 2, contest: "CMIMC 2017", probid: 123, statement: "hi, but $\\int_0^t x~dx$"},
   {votes: 1, solves: 15, views: 20, contest: "CMIMC 2017", probid: 123, statement: "hi"}
 ]
 
