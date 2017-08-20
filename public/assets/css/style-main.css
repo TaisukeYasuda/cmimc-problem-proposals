@@ -23,12 +23,20 @@ h4  {
   font-size: 12px;
 }
 
+.modal-content h4 {
+  font-size: 20px;
+}
+
 h5  {
   font-size: 10px;
 }
 
 h6  {
   font-size: 8px;
+}
+
+.clear-top  {
+  margin-top: 0;
 }
 
 nav {
@@ -144,6 +152,18 @@ nav {
   margin-right: 48px;
 }
 
-.votes  {
-  margin-top: 5px;
+.placeholder-form .input-field  {
+  margin-top: 0;
+}
+
+.feedback {
+  border-bottom: 1px solid #cfd8dc;
+}
+
+.feedback span  {
+  font-size: 12px;
+}
+
+.feedback:last-child  {
+  border-bottom: none;
 }

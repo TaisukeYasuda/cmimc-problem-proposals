@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Row, Col, Table } from "react-materialize";
+import { Row, Col, Table, Modal, Button } from "react-materialize";
 
 const LoadMore = () => (
   <a href="#" className="load-more teal-text text-darken-3 underline-hover">Load more...</a>
@@ -30,19 +30,34 @@ const Proposal = ({ votes, solves, views, contest, probid, statement }) => (
     <Col s={9}>
       <Row>
         <Col s={12}>
-          <a href="view-problem" className="black-text underline-hover">{ statement }</a>
+          <a href={"view-problem/" + probid} className="black-text underline-hover">{ statement }</a>
         </Col>
       </Row>
     </Col>
   </Row>
 );
 
-const Announcement = ({ label, compName, message }) => {
-  if (label === "new")
-    return <li className="new-announcement"><a href="#"><span className="filled-circle"></span></a> <a href="#" className="teal-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { message }</a></li>;
+const Announcement = ({ label, compName, title, message }) => {
+/*  if (label === "new")
+    return <li className="new-announcement">
+          <a href="#"><span className="filled-circle"></span></a>
+          <Modal header={compName + " - " + title} trigger={
+            <a href className="teal-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { title }</a>
+          }>{message}</Modal>
+        </li>;
   if (label === "urgent")
-    return <li className="urgent-announcement"><a href="#"><span className="filled-circle"></span></a> <a href="#" className="red-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { message }</a></li>;
-  return <li><a href="#"><span className="unfilled-circle"></span></a> <a href="#" className="teal-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { message }</a></li>;
+    return <li className="urgent-announcement">
+          <a href="#"><span className="filled-circle"></span></a>
+          <Modal header={compName + " - " + title} trigger={
+            <a href className="red-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { title }</a>
+          }>{message}</Modal>
+        </li>;*/
+  return <li>
+        <a href="#"><span className="unfilled-circle"></span></a>
+        <Modal header={compName + " - " + title} trigger={
+          <a href className="teal-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { title }</a>
+        }>{message}</Modal>
+      </li>;
 };
 
 const proposals = [
@@ -51,9 +66,9 @@ const proposals = [
 ]
 
 const announcements = [
-  {label: "urgent", compName: "CMIMC", message: "You piece of shit, do your work"},
-  {label: "new", compName: "CMIMC", message: "You piece of shit, do your work (srsly)"},
-  {compName: "CMIMC", message: "You piece of shit, plz do your work"}
+  {label: "urgent", compName: "CMIMC", title: "You piece of shit, do your work", message: "Hello please do this shit blah blah"},
+  {label: "new", compName: "CMIMC", title: "You piece of shit, do your work (srsly)", message: "Hello please do this shit blah blah"},
+  {compName: "CMIMC", title: "You piece of shit, plz do your work", message: "Hello please do this shit blah blah"}
 ]
 
 const user = {
@@ -84,13 +99,13 @@ const AccountPage = ({ message }) => (
         <ul>
           {
             announcements.map((announcement, key) => (
-              <Announcement label={announcement.label} compName={announcement.compName} message={announcement.message} key={key} />
+              <Announcement label={announcement.label} compName={announcement.compName} message={announcement.message} title={announcement.title} key={key} />
             ))
           }
           <li><LoadMore /></li>
         </ul>
       </div>
-      <h3>My Account <a href="#" className="teal-text text-darken-3 right"><i className="fa fa-pencil" aria-hidden="true"></i></a></h3>
+      <h3>My Account <a href="edit-account" className="teal-text text-darken-3 right"><i className="fa fa-pencil" aria-hidden="true"></i></a></h3>
       <ul>
         <li>Name: {user.name}</li>
         <li>University: {user.university}</li>
