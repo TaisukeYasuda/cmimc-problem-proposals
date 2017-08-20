@@ -1,109 +1,56 @@
-module.exports = function(connection) {
-  const router = require('express').Router(),
-        auth = require('../config/auth')(connection),
-        crypto = require('crypto'),
-        datetimeUtil = require('../utils/datetime');
+const router = require('express').Router(),
+      auth = require('../config/auth'),
+      handler = require('../utils/handler');
 
-  router.post('/signup', function(req, res, next){
-    if (!req.body.email) 
-      return res.status(400).json({
-        error: true,
-        message: 'Email is missing.'
-      });
-    if (!req.body.name) 
-      return res.status(400).json({
-        error: true,
-        message: 'Name is missing.'
-      });
-    if (!req.body.andrewid) 
-      return res.status(400).json({
-        error: true,
-        message: 'Andrew ID is missing.'
-      });
-    if (!req.body.password) 
-      return res.status(400).json({
-        error: true,
-        message: 'Password is missing.'
-      });
+const User = require('../database/user');
 
-    // encrypt password with salt
-    var salt = crypto.randomBytes(16).toString('hex');
-    var user = {
-      name: req.body.name,
-      password: crypto.pbkdf2Sync(req.body.password, salt, 1000, 64).toString('hex'),
-      email: req.body.email,
-      andrewid: req.body.andrewid,
-      privilege: 'member',
-      joined: new Date().toMySQL(),
-      salt: salt
-    };
-
-    var sql = 'SELECT * FROM staff WHERE ?';
-    connection.query(sql, {email: user.email}, function(err, result) {
-      if (err) return next(err);
-
-      if (result.length > 0)
-        return res.status(400).json({
-          error: true,
-          message: 'Email is already taken.'
-        });
-
-      var sql = 'INSERT INTO staff SET ?';
-      connection.query(sql, user, function(err, result) {
-        if (err) 
-          return res.status(503).json({
-            error: true,
-            message: 'Database failed to add user.'
-          });
-        // query again to get staff_id
-        var sql = 'SELECT * FROM staff WHERE ?';
-        connection.query(sql, {
-          email: user.email
-        }, function(err, result) {
-          var user = result[0];
-          return res.status(200).json({
-            error: false,
-            token: auth.signJWT(user.email, user.privilege, user.staff_id),
-            name: user.name,
-            andrewid: user.andrewid,
-            joined: user.joined
-          });
-        });
-      }); // end sending response to user
-    }); // end inserting user into database
-  });
-
-  router.post('/login', function(req, res, next){
-    if (!req.body.email) 
-      return res.status(400).json({
-        error: true,
-        message: 'Email is missing.'
-      });
-    if (!req.body.password) 
-      return res.status(400).json({
-        error: true,
-        message: 'Password is missing.'
-      });
-
-    auth.authenticate(req.body.email, req.body.password, function(result) {
-      if (result.success) {
-        var user = result.user;
-        return res.status(200).json({
-          error: false,
-          token: auth.signJWT(user.email, user.privilege, user.staff_id),
-          name: user.name,
-          andrewid: user.andrewid,
-          joined: user.joined
-        });
+router.post('/signup', (req, res) => {
+  const { name, email, password, university } = req.body;
+  if (!name || !email || !password || !university) {
+    handler(false, 'Please fill out all fields.', 400);
+  } else { 
+    User.findOne({ email }, (err, user) => {
+      if (err) {
+        handler(false, 'Database failed to find email.', 503);
+      } else if (user) {
+        handler(false, 'Email exists already.', 400);
       } else {
-        return res.status(403).json({
-          error: true,
-          message: result.message
-        });
+        User.save({ name, email, password, university }, err => {
+          if (err) {
+            handler(false, 'Failed to save user.', 503);
+          } else {
+            handler(true, 'User registered successfully.', 200, {
+              token: auth.signJWT(email)
+            });
+          }
+        }); 
       }
     });
-  });
+  }
+});
 
-  return router;
-}
+router.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    handler(false, 'Please fill out al fields.', 400);
+  } else {
+    User.findOne({ email }, (err, user) => {
+      if (err) {
+        handler(false, 'Database failed to find email.', 503);
+      } else if (!user) {
+        handler(false, 'Account does not exist.', 400);
+      } else {
+        user.checkPassword(password, (err, result) => {
+          return result.authenticated ? 
+            handler(true, 'User authenticated.', 200, {
+              token: auth.signJWT(user.email)
+            }) : 
+            handler(false, 'Authentication failed.', 401);
+        });         
+      }
+    });
+  }
+});
+
+module.exports = router;
 

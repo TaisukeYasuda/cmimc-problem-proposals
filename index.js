@@ -1,41 +1,30 @@
-/*******************************************************************************
- *
- * Run server.
- *
- ******************************************************************************/
+/* import environmental variables */
+require('dotenv').config();
 
 const express = require('express'),
       app = express(),
       server = require('http').Server(app),
       path = require('path'),
-      favicon = require('serve-favicon'),
       bodyParser = require('body-parser'),
-      cookieParser = require('cookie-parser'),
-      crypto = require('crypto'),
-      jwt = require('jsonwebtoken'),
-      morgan = require('morgan');
+      morgan = require('morgan'),
+      mongoose = require('mongoose');
 
 app.use(morgan('dev'));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* start database connection and route endpoints */
-const connection = require('./config/database'),
-      authRouter = require('./routes/auth')(connection),
-      proposalsRouter = require('./routes/proposals')(connection),
-      commentsRouter = require('./routes/comments')(connection),
-      solutionsRouter = require('./routes/solutions')(connection),
-      staffRouter = require('./routes/staff')(connection),
-      subjectsRouter = require('./routes/subjects')(connection);
+/* start database connection */
+mongoose.connect(process.env.DB_URL);
+
+/* route endpoints */
+const authRouter = require('./routes/auth');
 app.use('/', authRouter);
-app.use('/api/proposals', proposalsRouter);
+/*app.use('/api/proposals', proposalsRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/solutions', solutionsRouter);
 app.use('/api/staff', staffRouter);
-app.use('/api/subjects', subjectsRouter);
+app.use('/api/subjects', subjectsRouter);*/
 
 /* serve home page */
 app.get('/*', function (req, res) {
@@ -43,9 +32,9 @@ app.get('/*', function (req, res) {
 });
 
 /* start http server */
-server.listen(process.env.PORT || 8000, function () {
-  var port = server.address().port;
-  console.log('CMIMC problem proposals running on port', port);
+server.listen(process.env.PORT, () => {
+  const port = server.address().port;
+  console.log('USMCA running on port', port);
 });
 
 /* start socket.io server */
