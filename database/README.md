@@ -7,6 +7,7 @@
   email: String,
   university: String,
   password: String,
+  admin: Boolean,
   salt: String,
   unread: [ Announcement ],
   read: [ Announcement ],

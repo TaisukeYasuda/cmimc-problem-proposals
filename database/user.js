@@ -9,6 +9,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   university: { type: String, required: true },
   password: { type: String, required: true },
+  admin: { type: Boolean, required: true, default: true },
   salt: { type: String, required: true },
   unread: [ { type: Schema.Types.ObjectId, ref: 'Announcement' } ],
   read: [ { type: Schema.Types.ObjectId, ref: 'Announcement' } ],
