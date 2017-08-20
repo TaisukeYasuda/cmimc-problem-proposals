@@ -7,23 +7,26 @@ const User = require('../database/user');
 router.post('/signup', (req, res) => {
   const { name, email, password, university } = req.body;
   if (!name || !email || !password || !university) {
-    handler(false, 'Please fill out all fields.', 400);
+    handler(false, 'Please fill out all fields.', 400)(req, res);
   } else { 
     User.findOne({ email }, (err, user) => {
       if (err) {
-        handler(false, 'Database failed to find email.', 503);
+        handler(false, 'Database failed to find email.', 503)(req, res);
       } else if (user) {
-        handler(false, 'Email exists already.', 400);
+        handler(false, 'Email exists already.', 400)(req, res);
       } else {
-        User.save({ name, email, password, university }, err => {
+        const user = Object.assign(new User(), {
+          name, email, password, university
+        });
+        user.save(err => {
           if (err) {
-            handler(false, 'Failed to save user.', 503);
+            handler(false, 'Database failed to save user.', 503)(req, res);
           } else {
-            handler(true, 'User registered successfully.', 200, {
+            handler(true, 'User signed up successfully.', 200, {
               token: auth.signJWT(email)
-            });
+            })(req, res);
           }
-        }); 
+        });
       }
     });
   }
@@ -32,21 +35,25 @@ router.post('/signup', (req, res) => {
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    handler(false, 'Please fill out al fields.', 400);
+    handler(false, 'Please fill out all fields.', 400)(req, res);
   } else {
     User.findOne({ email }, (err, user) => {
       if (err) {
-        handler(false, 'Database failed to find email.', 503);
+        handler(false, 'Database failed to find email.', 503)(req, res);
       } else if (!user) {
-        handler(false, 'Account does not exist.', 400);
+        handler(false, 'Account does not exist.', 400)(req, res);
       } else {
         user.checkPassword(password, (err, result) => {
-          return result.authenticated ? 
-            handler(true, 'User authenticated.', 200, {
-              token: auth.signJWT(user.email)
-            }) : 
-            handler(false, 'Authentication failed.', 401);
-        });         
+          if (err) {
+            handler(false, 'Database failed to authenticate.', 503)(req, res);
+          } else {
+            return result.authenticated ? 
+              handler(true, 'User authenticated.', 200, {
+                token: auth.signJWT(user.email)
+              })(req, res) :
+              handler(false, 'Authentication failed.', 401)(req, res);
+          }
+        });
       }
     });
   }

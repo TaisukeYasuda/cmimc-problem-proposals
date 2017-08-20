@@ -46,11 +46,11 @@ export function loginUser({ email, password }) {
   }
 }
 
-export function registerUser({ email, name, password, university }) {
+export function signupUser({ name, email, password, university }) {
   return dispatch => {
     fetch('/signup', {
       method: 'post',
-      body: JSON.stringify({ email, name, password, university }),
+      body: JSON.stringify({ name, email, password, university }),
       headers: { 'Content-Type': 'application/json' }
     })
     .then(

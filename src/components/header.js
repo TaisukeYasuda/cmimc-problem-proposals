@@ -5,22 +5,18 @@ import { Link } from 'react-router-dom';
 
 import { logoutUser } from '../actions';
 
-const Header = ({ logout, authenticated }) => (
+const Header = ({ authenticated, logout }) => (
   <header>
-    <img src='img/cmimc-logo-huge.png' height='28px' />
-    <Link to='/login' className='logout' onClick={logout}>
-      {authenticated ? 'Logout' : 'Login'}
-    </Link>
-    <nav>
-      <ul>
-        <li><Link to='/'>Home</Link></li>
-        { authenticated && (
-            <li><Link to='/propose'>Propose</Link></li>
-          )
-        }
+    <nav className="teal darken-4">
+      <Link to="/" className="brand-logo">USMCA</Link>
+      <ul id="nav-mobile" className="right hide-on-med-and-down">
+        { authenticated && (<li><Link to="propose">Propose</Link></li>) }
+        { authenticated && (<li><Link to="database">Database</Link></li>) }
+        { authenticated && (<li><Link to="account">Account</Link></li>) }
+        { authenticated && (<li><Link to="/" onClick={ logoutUser }>Log Out</Link></li>) }
+        { !authenticated && (<li><Link to="login">Log In</Link></li>) }
       </ul>
     </nav>
-    <br className="clearfloat" />
   </header>
 );
 

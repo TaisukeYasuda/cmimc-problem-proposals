@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* start database connection */
-mongoose.connect(process.env.DB_URL);
+mongoose.connect(process.env.DB_URL, { promiseLibrary: require('bluebird') });
 
 /* route endpoints */
 const authRouter = require('./routes/auth');

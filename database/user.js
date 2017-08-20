@@ -17,7 +17,8 @@ const userSchema = new Schema({
   updated: { type: Date, required: true }
 });
 
-userSchema.methods.checkPassword = (password, callback) => {
+/* don't use arrow function for the callback */
+userSchema.methods.checkPassword = function(password, callback) {
   let user = this;
   bcrypt.hash(password, user.salt, (err, hash) => {
     if (err) return callback(err, null);
@@ -25,25 +26,27 @@ userSchema.methods.checkPassword = (password, callback) => {
   });
 };
 
-userSchema.pre('save', next => {
+/* don't use arrow function for the callback */
+userSchema.pre('validate', function(next) {
   let user = this;
+
+  /* set created and/or updated */
+  const now = new Date();
+  if (!user.created) user.created = now;
+  user.updated = now;
   
   if (!user.isModified('password')) return next();
 
   bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
     if (err) return next(err);
+    user.salt = salt;
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) return next(err);
       /* replace cleartext password with hash */
       user.password = hash;
+      return next();
     });
   });
-
-  /* set created and/or updated */
-  const now = new Date();
-  if (!user.created) user.created = now;
-  if (!user.updated) user.updated = now;
-  next();
 });
 
 const User = mongoose.model('User', userSchema);
