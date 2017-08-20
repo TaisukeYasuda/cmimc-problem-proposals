@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { Row, Col, Input, Button } from 'react-materialize';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
+import Error from "../error";
 import { authErrorHandler, loginUser } from "../../actions";
 
 const EmailInput = ({ input, meta, ...rest }) => (
@@ -14,6 +16,14 @@ const EmailInput = ({ input, meta, ...rest }) => (
       );
 
 class LoginForm extends React.Component {
+  componentWillMount = () => {
+    if (this.props.authenticated) this.props.history.push('/');
+  }
+
+  componentWillUpdate = (nextProps) => {
+    if (nextProps.authenticated) this.props.history.push('/');
+  }
+
   onSubmit = ({ email, password }) => {
     if (!email || !password) {
       this.props.authErrorHandler("Please fill out all fields.");
@@ -23,7 +33,7 @@ class LoginForm extends React.Component {
   };
 
   render() {
-    const { handleSubmit, authError, authMessage } = this.props;
+    const { handleSubmit, authenticated, authError, authMessage } = this.props;
     return (
       <form onSubmit={ handleSubmit(this.onSubmit) }>
         <Row className="placeholder-form">
@@ -33,8 +43,12 @@ class LoginForm extends React.Component {
           <div>
             <Field name="password" component={ PasswordInput } />
           </div>
+          <Error s={12} error={ authenticated } message="You are already logged in." />
+          <Error s={12} error={ authError } message={ authMessage } />
           <Col s={12}>
-            <Button waves="light" className="teal darken-4 right">Log In</Button>
+            <Button waves="light" className="teal darken-4 right" disabled={ authenticated }>
+              Log In
+            </Button>
           </Col>
         </Row>
       </form>
@@ -43,13 +57,16 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
+  authenticated: PropTypes.bool.isRequired,
   authError: PropTypes.bool.isRequired,
   authMessage: PropTypes.string,
   authErrorHandler: PropTypes.func.isRequired,
-  loginUser: PropTypes.func.isRequired
+  loginUser: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+  authenticated: state.auth.authenticated,
   authError: state.auth.error,
   authMessage: state.auth.message
 });
@@ -63,12 +80,14 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default reduxForm({
-  /* unique name for form */
-  form: 'login'
-})(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(LoginForm)
+export default withRouter(
+  reduxForm({
+    /* unique name for form */
+    form: 'login'
+  })(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(LoginForm)
+  )
 );

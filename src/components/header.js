@@ -1,8 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Card, Modal } from "react-materialize";
 
+import LoginForm from "./forms/login";
 import { logoutUser } from '../actions';
 
 const Header = ({ authenticated, logout }) => (
@@ -10,11 +12,11 @@ const Header = ({ authenticated, logout }) => (
     <nav className="teal darken-4">
       <Link to="/" className="brand-logo">USMCA</Link>
       <ul id="nav-mobile" className="right hide-on-med-and-down">
-        { authenticated && (<li><Link to="propose">Propose</Link></li>) }
-        { authenticated && (<li><Link to="database">Database</Link></li>) }
-        { authenticated && (<li><Link to="account">Account</Link></li>) }
+        { authenticated && (<li><Link to="/">Home</Link></li>) }
+        { authenticated && (<li><Link to="/propose">Propose</Link></li>) }
+        { authenticated && (<li><Link to="/database">Database</Link></li>) }
         { authenticated && (<li><Link to="/" onClick={ logoutUser }>Log Out</Link></li>) }
-        { !authenticated && (<li><Link to="login">Log In</Link></li>) }
+        { !authenticated && (<li><Link to="/login">Log In</Link></li>) }
       </ul>
     </nav>
   </header>

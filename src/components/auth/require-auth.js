@@ -1,15 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import ForbiddenPage from '../pages/forbidden-page';
+import ForbiddenPage from "../pages/forbidden-page";
 
 export default function(ClassifiedComponent) {
-  const AuthenticatedComponent = (props) => (
+  const AuthenticatedComponent = props => (
     props.authenticated ? (
-      <ForbiddenPage />
+      <ClassifiedComponent { ...props } />
     ) : (
-      <ClassifiedComponent {...props} />
+      <ForbiddenPage />
     )
   );
 
@@ -17,9 +17,9 @@ export default function(ClassifiedComponent) {
     authenticated: PropTypes.bool.isRequired
   };
 
-  const mapStatesToAuth = state => ({
+  const mapStateToProps = state => ({
     authenticated: state.auth.authenticated
   });
   
-  return connect(mapStatesToAuth)(AuthenticatedComponent);
+  return connect(mapStateToProps)(AuthenticatedComponent);
 }

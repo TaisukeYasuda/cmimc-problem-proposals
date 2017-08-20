@@ -4,6 +4,7 @@ import { Row, Col, Input, Button } from 'react-materialize';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 
+import Error from "../error";
 import { authErrorHandler, signupUser } from "../../actions";
 
 const NameInput = ({ input, meta, ...rest }) => (
@@ -53,6 +54,7 @@ class SignupForm extends React.Component {
           <div>
             <Field name="university" component={ UniversityInput } />
           </div>
+          <Error s={12} error={ authError } message={ authMessage } />
           <Col s={12}>
             <Button waves="light" className="teal darken-4 right">Sign Up</Button>
           </Col>
