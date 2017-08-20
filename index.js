@@ -27,8 +27,8 @@ app.use('/api/staff', staffRouter);
 app.use('/api/subjects', subjectsRouter);*/
 
 /* serve home page */
-app.get('/*', function (req, res) {
-   res.sendFile( __dirname + '/public/index.html' );
+app.get('/*', (req, res) => {
+   res.sendFile(path.resolve(__dirname, 'public/index.html'));
 });
 
 /* start http server */
