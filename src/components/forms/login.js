@@ -1,15 +1,27 @@
 import React from 'react';
+import { Row, Col, Input, Button } from 'react-materialize';
 import { Field, reduxForm } from 'redux-form';
 
+const EmailInput = ({ input, meta, ...rest }) => (
+        <Input type="email" placeholder="Email" s={12} { ...input } { ...rest } />
+      ),
+      PasswordInput = ({ input, meta, ...rest }) => (
+        <Input type="password" placeholder="Password" s={12} { ...input } { ...rest } />
+      );
+
 const LoginForm = ({ handleSubmit }) => (
-  <form onSubmit={handleSubmit}>
-    <div>
-      <Field name='email' component='input' type='text' placeholder='Email' />
-    </div>
-    <div>
-      <Field name='password' component='input' type='password' placeholder='Password' />
-    </div>
-    <button type='submit'>Submit</button>
+  <form onSubmit={ handleSubmit }>
+    <Row className="placeholder-form">
+      <div>
+        <Field name="email" component={ EmailInput } />
+      </div>
+      <div>
+        <Field name="password" component={ PasswordInput } />
+      </div>
+      <Col s={12}>
+        <Button waves="light" className="teal darken-4 right">Log In</Button>
+      </Col>
+    </Row>
   </form>
 )
 

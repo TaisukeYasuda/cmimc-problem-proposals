@@ -9,4 +9,5 @@ export const AUTH_USER = 'auth_user', // set user to be authenticated
 /* problem proposals */
 export const PROPOSAL_ERROR = 'proposal_error', // notify a proposal error
              FETCH_MY_PROPOSALS = 'fetch_my_proposals', // fetch proposals written by user
-             POST_PROPOSAL = 'make_proposal'; // post a proposal
+             POST_PROPOSAL = 'post_proposal', // post a proposal
+             GET_PROPPOSAL = 'get_proposal';

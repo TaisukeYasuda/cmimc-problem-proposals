@@ -11,7 +11,7 @@ import auth from '../auth';
 
 const store = configureStore();
 
-initApp()(store.dispatch);
+/*initApp()(store.dispatch);*/
 if (auth.isLoggedIn()) {
   store.dispatch({ type: AUTH_USER });
 }

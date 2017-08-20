@@ -3,14 +3,11 @@ import { AUTH_USER,
          AUTH_ERROR, 
          UNAUTH_USER } from './types';
 
-const API_URL = 'http://localhost:8000',
-      CLIENT_ROOT_URL = 'http://localhost:8000';
-
 /*******************************************************************************
  * Synchronous actions.
  ******************************************************************************/
 
-export function errorHandler(dispatch, errorMessage) {
+export function authErrorHandler(dispatch, errorMessage) {
   dispatch({ type: AUTH_ERROR, payload: errorMessage });
 }
 
@@ -25,7 +22,7 @@ export function logoutUser(dispatch) {
 
 export function loginUser({ email, password }) {
   return dispatch => {
-    fetch(`${API_URL}/login`, {
+    fetch('/login', {
       method: 'post',
       body: JSON.stringify({ email, password }),
       headers: { 'Content-Type': 'application/json' }
@@ -34,7 +31,7 @@ export function loginUser({ email, password }) {
       response => {
         return response.json()
         .then(data => {
-          if (data.error) errorHandler(dispatch, data.message);
+          if (!data.success) authErrorHandler(dispatch, data.message);
           else {
             localStorage.setItem('token', data.token);
             dispatch({ type: AUTH_USER });
@@ -43,24 +40,24 @@ export function loginUser({ email, password }) {
       }, 
       error => {
         errorMessage = error.message || 'Failed to communicate with server.';
-        errorHandler(dispatch, errorMessage);
+        authErrorHandler(dispatch, errorMessage);
       }
     );
   }
 }
 
-export function registerUser({ email, name, andrewid, password }) {
+export function registerUser({ email, name, password, university }) {
   return dispatch => {
-    fetch(`${API_URL}/signup`, {
+    fetch('/signup', {
       method: 'post',
-      body: JSON.stringify({ email, name, andrewid, password }),
+      body: JSON.stringify({ email, name, password, university }),
       headers: { 'Content-Type': 'application/json' }
     })
     .then(
       response => {
         return response.json()
         .then(data => {
-          if (data.error) errorHandler(dispatch, data.message);
+          if (!data.success) authErrorHandler(dispatch, data.message);
           else {
             localStorage.setItem('token', data.token);
             dispatch({ type: AUTH_USER });
@@ -69,7 +66,7 @@ export function registerUser({ email, name, andrewid, password }) {
       },
       error => {
         errorMessage = error.message || 'Failed to communicate with server.';
-        errorHandler(dispatch, errorMessage);
+        authErrorHandler(dispatch, errorMessage);
       }
     );
   }
