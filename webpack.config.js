@@ -1,11 +1,11 @@
 const webpack = require('webpack'),
       path = require('path'),
       SRC_DIR = path.resolve(__dirname, 'src')
-      BUILD_DIR = path.resolve(__dirname, 'public/js'),
+      BUILD_DIR = path.resolve(__dirname, 'public/assets/js'),
 
 module.exports = {
   entry: {
-    index: SRC_DIR + '/index.js'
+    index: path.resolve(SRC_DIR, 'index.js')
   },
   output: {
     path: BUILD_DIR,
