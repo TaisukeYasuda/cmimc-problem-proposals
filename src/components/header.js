@@ -13,6 +13,7 @@ const Header = ({ authenticated, logout }) => (
       <Link to="/" className="brand-logo">USMCA</Link>
       <ul id="nav-mobile" className="right hide-on-med-and-down">
         { authenticated && (<li><Link to="/">Home</Link></li>) }
+        { authenticated && (<li><Link to="admin">Admin</Link></li>) }
         { authenticated && (<li><Link to="/propose">Propose</Link></li>) }
         { authenticated && (<li><Link to="/database">Database</Link></li>) }
         { authenticated && (<li><Link to="/" onClick={ logoutUser }>Log Out</Link></li>) }
