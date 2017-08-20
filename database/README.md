@@ -20,6 +20,7 @@
 ```
 { 
   name: String,
+  website: String,
   location: String,
   contests: [ Contest ],
   active_contest: Contest,
@@ -59,8 +60,9 @@
 ```
 {
   contest: Contest,
+  name: String,
+  num_problems: Integer,
   problems: [ Problems ],
-  subject: Subject,
   created: Date,
   updated: Date
 }
@@ -75,7 +77,8 @@
   official_soln: [ Solution ],
   alternate_soln: [ Solution ],
   difficulty: Enum(EASY, MEDIUM, HARD),
-  votes: [ Vote ],
+  upvotes: [ User ],
+  downvotes: [ User ],
   views: [ User ],
   comments: [ Comment ],
   created: Date,
