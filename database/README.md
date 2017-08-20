@@ -94,9 +94,11 @@
 ```
 
 ## Comment
+```
 {
   author: User,
   body: String,
   created: Date,
   updated: Date
 }
+```
