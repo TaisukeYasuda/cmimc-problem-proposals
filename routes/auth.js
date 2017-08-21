@@ -16,14 +16,15 @@ router.post('/signup', (req, res) => {
         handler(false, 'Email exists already.', 400)(req, res);
       } else {
         const user = Object.assign(new User(), {
-          name, email, password, university
-        });
+                name, email, password, university
+              }),
+              admin = false;
         user.save(err => {
           if (err) {
             handler(false, 'Database failed to save user.', 503)(req, res);
           } else {
             handler(true, 'User signed up successfully.', 200, {
-              token: auth.signJWT(email)
+              token: auth.signJWT(email, admin)
             })(req, res);
           }
         });
@@ -49,7 +50,7 @@ router.post('/login', (req, res) => {
           } else {
             return result.authenticated ? 
               handler(true, 'User authenticated.', 200, {
-                token: auth.signJWT(user.email)
+                token: auth.signJWT(user.email, user.admin)
               })(req, res) :
               handler(false, 'Authentication failed.', 401)(req, res);
           }

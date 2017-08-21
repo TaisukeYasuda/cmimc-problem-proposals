@@ -39,7 +39,7 @@ module.exports = {
   /***************************************************************************
    * signJWT: helper function for creating the token
    **************************************************************************/
-  signJWT: email => {
+  signJWT: (email, admin) => {
     // set expiration to 60 days
     let today = new Date(),
         exp = new Date(today);
@@ -47,6 +47,7 @@ module.exports = {
 
     return jwt.sign({
       email: email,
+      admin: admin,
       exp: parseInt(exp.getTime() / 1000),
     }, process.env.JWT_SECRET);
   }, 
