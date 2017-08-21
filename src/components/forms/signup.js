@@ -5,7 +5,16 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 
 import Error from "../error";
+import Autocomplete from "../react-materialize-custom/Autocomplete";
 import { authErrorHandler, signupUser } from "../../actions";
+
+const universities = {
+  "Carnegie Mellon University": null,
+  "Harvard University": null,
+  "Massachusetts Institute of Technology": null,
+  "Princeton University": null,
+  "University of California Berkeley": null
+}
 
 const NameInput = ({ input, meta, ...rest }) => (
         <Input type="text" placeholder="Name" s={12} { ...input } { ...rest } />
@@ -20,7 +29,9 @@ const NameInput = ({ input, meta, ...rest }) => (
         <Input type="password" placeholder="Password (confirm)" s={12} { ...input } { ...rest } />
       ),
       UniversityInput = ({ input, meta, ...rest }) => (
-        <Input type="text" placeholder="University" s={12} { ...input } { ...rest } />
+        <Autocomplete
+          s={12} placeholder="University" { ...input } { ...rest } 
+          data={ universities } limit={5} />
       );
 
 class SignupForm extends React.Component {
