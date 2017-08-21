@@ -1,102 +1,98 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import React from "react";
+import PropTypes from "prop-types";
+import { Row, Col, Input, Button } from "react-materialize";
+import { connect } from "react-redux";
+import { Field, reduxForm, formValueSelector } from "redux-form";
 
-import renderKaTeX from '../../katex';
+import renderKaTeX from "../../katex";
+import { katexOptions } from "../../katex";
+
+const myContests = [
+  {name : "Public database", subjects : ["Algebra", "Combinatorics", "Geometry", "Number Theory", "Other"]},
+  {name : "CMIMC 2017", subjects : ["Algebra", "Combinatorics", "Computer Science", "Geometry", "Number Theory"]}
+]
 
 class ProposeForm extends React.Component {
   previewKaTeX = () => {
-    let problem = this.problemField.value,
-        answer = this.answerField.value,
-        solution = this.solutionField.value,
-        problemPreview = document.getElementById('problem-preview'),
-        answerPreview = document.getElementById('answer-preview'),
-        solutionPreview = document.getElementById('solution-preview');
-    if (problem) {
-      problemPreview.innerHTML = problem;
-      renderKaTeX(problemPreview);
+    if (this.statementField && this.statementField.value) {
+      this.statementPreview.innerHTML = this.statementField.value;
+      renderKaTeX(this.statementPreview);
     }
-    if (answer) {
-      answerPreview.innerHTML = answer;
-      renderKaTeX(answerPreview);
+    if (this.answerField && this.answerField.state.value) {
+      this.answerPreview.innerHTML = this.answerField.state.value;
+      renderKaTeX(this.answerPreview);
     }
-    if (solution) {
-      solutionPreview.innerHTML = solution;
-      renderKaTeX(solutonPreview);
+    if (this.solutionField && this.solutionField.value) {
+      this.solutionPreview.innerHTML = this.solutionField.value;
+      renderKaTeX(this.solutionPreview);
     }
   }
 
   render() {
-    let subjects = this.props.subjects,
-        subjectsView = Object.keys(subjects).map((subject_id, key) => {
-          let subject = subjects[subject_id]; 
-          return (
-            <option key={key} value={subject_id}>{subject.title}</option>
-          );
-        }),
-        difficultyView = [1,2,3,4,5,6,7,8,9,10].map((difficulty, key) => (
-          <option key={key} value={difficulty}>{difficulty}</option>
-        ));
     return (
-      <form onSubmit={this.props.handleSubmit}>
-        <div>
-          <Field name='subject' component='select'>
-            <option value=''>Subject</option>
-            { subjectsView }
-          </Field>
-        </div>
-        <div>
-          <Field name='difficulty' component='select'>
-            <option value=''>Difficulty</option>
-            { difficultyView }
-          </Field>
-        </div>
-        <div>
-          <Field 
-            name='problem' 
-            component='textarea' 
-            placeholder='Problem Statement'
-            ref={input => this.problemField = input} />
-        </div>
-        <div id='problem-preview' className='preview'></div>
-        <div>
-          <Field 
-            name='answer' 
-            component='input' 
-            type='text' 
-            placeholder='Answer'
-            ref={input => this.answerField = input} />
-        </div>
-        <div id='answer-preview' className='preview'></div>
-        <div>
-          <Field 
-            name='solution' 
-            component='textarea' 
-            placeholder='Solution'
-            ref={input => this.solutionField = input} />
-        </div>
-        <div id='solution-preview' className='preview'></div>
-        <div>
-          <a className='form-btn' onClick={this.previewKaTeX}>Preview</a>
-          <button type='submit'>Submit</button>
-        </div>
+      <form className="col s12">
+        <Row>
+          <Input type="select" label="Contest" s={4}>{
+            myContests.map((contest, key) => (
+              <option value={contest.name} key={key}>{contest.name}</option>
+            ))
+          }</Input>
+          <Input type="select" label="Subject" multiple s={4}>
+            <option value="unspecified">Select a subject</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </Input>
+          <Input type="select" label="Difficulty" s={4}>
+            <option value="unspecified">Select a difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </Input>
+        </Row>
+        <Row>
+          <Col s={6} className="input-field">
+            <textarea 
+              id="statement" 
+              className="materialize-textarea"
+              ref={ elem => { this.statementField = elem; } } />
+            <label htmlFor="statement">Problem</label>
+          </Col>
+          <Col s={6}>
+            <div ref={ elem => { this.statementPreview = elem; } }></div>
+          </Col>
+        </Row>
+        <Row>
+          <Input 
+            s={6} type="text" label="Answer" 
+            ref={ elem => { this.answerField = elem; } } />
+          <Col s={6}>
+            <div ref={ elem => { this.answerPreview = elem; } }></div>
+          </Col>
+        </Row>
+        <Row>
+          <Col s={6} className="input-field">
+            <textarea 
+              id="solution" 
+              className="materialize-textarea"
+              ref={ elem => { this.solutionField = elem; } }></textarea>
+            <label htmlFor="solution">Solution</label>
+          </Col>
+          <Col s={6}>
+            <div ref={ elem => { this.solutionPreview = elem; } }></div>
+          </Col>
+        </Row>
+        <Row>
+          <Col s={2} offset={"s8"}>
+            <a className="waves-effect waves-light btn teal darken-3" onClick={ this.previewKaTeX }>Preview</a>
+          </Col>
+          <Col s={2}>
+            <Button waves="light" className="teal darken-3" type="submit">Submit</Button>
+          </Col>
+        </Row>
       </form>
     );
   }
-};
+}
 
-ProposeForm.propTypes = {
-  subjects: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({
-  subjects: state.init.subjects
-});
-
-export default connect(mapStateToProps)(
-  reduxForm({ 
-    /* unique name for form */
-    form: 'propose'
-  })(ProposeForm)
-);
+export default ProposeForm;

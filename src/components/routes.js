@@ -5,7 +5,7 @@ import { withRouter, Switch, Route, Redirect } from "react-router-dom";
 
 import IndexPage from "./pages/index-page";
 import LoginPage from "./pages/login-page";
-import AdminPage from './pages/admin';
+import AdminPage from "./pages/admin";
 import ProposePage from "./pages/propose-prob-page";
 import DatabasePage from "./pages/database-page";
 import AccountPage from "./pages/account-page";
@@ -18,7 +18,7 @@ const Routes = ({ authenticated }) => (
   <Switch>
     <Route exact path="/" component={ authenticated ? AccountPage : IndexPage } />
     <Route exact path="/login" component={ LoginPage }/>
-    <Route exact path='/admin' component={ AdminPage }/>
+    <Route exact path='/admin' component={ requireAuth(AdminPage) }/>
     <Route exact path="/propose" component={ requireAuth(ProposePage) }/>
     <Route exact path="/database" component={ requireAuth(DatabasePage) }/>
     <Route exact path="/view-problem" component={ requireAuth(ViewProbPage) }/>
