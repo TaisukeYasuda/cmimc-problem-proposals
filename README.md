@@ -4,8 +4,9 @@ Web app for the [United States Math Competition Association](usmath.org).
 ## For Users
 
 ### Terms
+* **Admin**: An administrator of USMCA. The Admin has the privilege of declaring competitions and its directors. The directors then take over the administration of the competition.
 * **Competition**: A single organization that runs contests, e.g. CMIMC.
-* **Contest**: An event run by competitions, e.g. CMIMC 2017. A competition has at most one active contest and that is the only contest that can be modified. 
+* **Contest**: An event run by competitions, e.g. CMIMC 2017. A competition specifies a set of active contests and those are the only contests that can be modified. 
 * **Test**: A collection of problems belonging to a contest. 
 * **User**: A single person who carries out certain roles to contests. Users have various privileges with respect to competitions and contests:
   * **Director** (of a competition): Manages members of a competition. A Director is also a Czar.
@@ -13,13 +14,55 @@ Web app for the [United States Math Competition Association](usmath.org).
   * **Czar** (of a contest): Manages the problems of the contest (including claiming shared pool problems) and appoints Test Solvers. A Czar is also a Member and a Test Solver. 
   * **Test Solver** (of a contest): Accesses problems of the contest and verifies its problems.
 
-| | Director | Member | Czar | Test Solver |
-| - | - | - | - | - |
-| Write Problems | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
-| View/Verify Problems | :heavy_check_mark: | | :heavy_check_mark: | :heavy_check_mark: |
+| | Director |  Czar | Member |Test Solver | Anyone |
+| - | - | - | - | - | - |
+| Propose to a Contest | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | |
+| View/Verify Problems | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: | |
+| Propose to Shared Pool | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| View Shared Pool | :heavy_check_mark: | :heavy_check_mark: | | | |
 
-### Problem Proposal and Sharing
-A member of a competition can propose problems to the active contest or to the shared pool of problems. A problem in a contest (not necessarily active) that does not belong to a test can be released to the shared pool of problems at any time. Problems belonging to a test of a contest (not necessarily active) cannot be released to the shared pool. Problems in the shared pool can be claimed by an active contest by one of its Czars, up to a contest quota. A claimed problem cannot be used by any other contest until the Czar who claimed it releases it back to the shared pool. 
+### Obtaining Privileges
+* Becoming an Admin
+  * Anyone can request an Admin to become an Admin
+  * An Admin can invite anyone to become an Admin
+* Becoming a Director
+  * Anyone can request an Admin to start a competition and become its first Director or become the Director of a competition without (active) Directors
+  * A Member can request a Director to become a Director
+  * A Director can invite a Member to become a Director
+* Becoming a Czar
+  * A Member can request a Director to become a Czar
+  * A Director can invite a Member to become a Czar
+* Becoming a Member
+  * Anyone can request a Director to become a Member
+  * A Director can invite anyone to become a Member
+* Becoming a Test Solver
+  * Anyone can request a Czar to become a Test Solver
+  * A Czar can invite anyone to become a Test Solver
+
+### Leaving/Removing Privileges
+Anyone can leave a privilege. 
+* Removing an Admin
+  * An Admin can remove another Admin
+* Removing a Director
+  * A Director can remove another Director
+* Removing a Czar
+  * A Director can remove a Czar
+* Removing a Member
+  * A Director can remove a Member
+* Removing a Test Solver
+  * A Czar can remove a Test Solver
+
+### Problem Proposal and Sharing (Alex Katz, current implementation)
+A member of a competition can propose problems to any of its active contests. Anyone can propose to the shared pool of problems. A problem in a contest (not necessarily active) that does not belong to a test can be released to the shared pool of problems at any time by its author. Problems belonging to a test of a contest (not necessarily active) cannot be released to the shared pool. Problems in the shared pool can be claimed by an active contest by one of its Czars, up to a contest quota. A claimed problem cannot be used by any other contest until the Czar who claimed it releases it back to the shared pool. A claimed problem cannot be unshared, but an unclaim shared problem can be unshared. 
+
+#### Quota System
+A contest can take problems from the shared pool as long as after taking a problem from the pool, the tests of the contest are not composed of more than 30% of shared problems. 
+
+#### Issues
+Hack around quota system by creating dummy tests with dummy problems to claim a lot from shared pool.
+
+### Problem Proposal and Sharing (Cody Johnson, better implementation)
+A competition starts off with an initial amount of credits and gains credits by doing favors for other competitions and uses credits as bounty for access to shared problems and requesting favors from other competitions. 
 
 ## For Developers
 
