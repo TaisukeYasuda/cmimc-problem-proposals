@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Row, Col, Button, Collapsible, CollapsibleItem, Input } from "react-materialize";
+import { Row, Col, Button, Collapsible, CollapsibleItem, Input, Tabs, Tab } from "react-materialize";
 
 const Feedback = ({feedbackType, author, message}) => (
   <Row className="feedback">
@@ -45,70 +45,46 @@ const ViewProbPage = ({ message }) => (
       <h3 className="clear-top">Problem</h3>
       <p>{problem.statement}</p>
     </Col>
-    <Col s={12}>
-      <Collapsible>
-        <CollapsibleItem header={(
-          <div><i className="fa fa-plus-circle" aria-hidden="true"></i><span className="bold-text">Answer</span></div>
-        )}>
-          <p>{problem.answer}</p>
-        </CollapsibleItem>
-        <CollapsibleItem header={(
-          <div><i className="fa fa-plus-circle" aria-hidden="true"></i><span className="bold-text">Solutions</span> <span className="counter">{problem.solutions.length}</span></div>
-        )}>
-        {
-          problem.solutions.map((soln, key) => (
-            <Feedback feedbackType="Solution" message={soln.solution} author={soln.author} key={key} />
-          ))
-        }
-        </CollapsibleItem>
-        <CollapsibleItem header={(
-          <div><i className="fa fa-plus-circle" aria-hidden="true"></i><span className="bold-text">Comments</span> <span className="counter">{problem.comments.length}</span></div>
-        )}>
-          {
-            problem.comments.map((cmt, key) => (
-              <Feedback feedbackType="Comment" message={cmt.comment} author={cmt.author} key={key} />
-            ))
-          }
-        </CollapsibleItem>
-        <CollapsibleItem header={(
-          <div><i className="fa fa-plus-circle" aria-hidden="true"></i><span className="bold-text">Information</span></div>
-        )}>
-          <ul>
-            <li>Subject: {problem.subject}</li>
-            <li>Author: {problem.author}</li>
-            <li>ID: {problem.probid}</li>
-          </ul>
-        </CollapsibleItem>
-      </Collapsible>
-    </Col>
-    <Col s={12}>
-      <form className="row">
-        <h2 className="col s12 teal-text text-darken-4">Give Feedback</h2>
-        <Col s={12}>
-          <ul className="inline-list">
-            <li>This is a:</li>
-            <li>
-              <Input name="feedback-type" type="radio" label="comment" defaultChecked="checked" />
-            </li>
-            <li>
-              <Input name="feedback-type" type="radio" label="alternate solution" />
-            </li>
-          </ul>
-        </Col>
-        <Col s={6} className="input-field">
-          <textarea id="feedback" className="materialize-textarea"></textarea>
-          <label htmlFor="feedback">Comment</label>
-        </Col>
-        <Col s={6}>
-        </Col>
-        <Col s={2} className="offset-s8">
-          <Button waves="light" className="teal darken-3">Preview</Button>
-        </Col>
-        <Col s={2}>
-          <Button waves="light" className="teal darken-3">Submit</Button>
-        </Col>
-      </form>
-    </Col>
+    <Tabs>
+      <Tab className="blue-text" title="Respond" active>
+        <form className="row">
+          <Col s={12}>
+            <ul className="inline-list">
+              <li>This is a:</li>
+              <li>
+                <Input name="feedback-type" type="radio" label="comment" defaultChecked="checked" />
+              </li>
+              <li>
+                <Input name="feedback-type" type="radio" label="alternate solution" />
+              </li>
+            </ul>
+          </Col>
+          <Col s={6} className="input-field">
+            <textarea id="feedback" className="materialize-textarea"></textarea>
+            <label htmlFor="feedback">Comment</label>
+          </Col>
+          <Col s={6}>
+          </Col>
+          <Col s={2} className="offset-s8">
+            <Button waves="light" className="teal darken-3">Preview</Button>
+          </Col>
+          <Col s={2}>
+            <Button waves="light" className="teal darken-3">Submit</Button>
+          </Col>
+        </form>
+      </Tab>
+      <Tab title="Answer">{problem.answer}</Tab>
+      <Tab title={"Solutions (" + problem.solutions.length + ")"}>{
+        problem.solutions.map((soln, key) => (
+          <Feedback feedbackType="Solution" message={soln.solution} author={soln.author} key={key} />
+        ))
+      }</Tab>
+      <Tab title={"Comments (" + problem.comments.length + ")"}>{
+        problem.comments.map((cmt, key) => (
+          <Feedback feedbackType="Comment" message={cmt.comment} author={cmt.author} key={key} />
+        ))
+      }</Tab>
+    </Tabs>
   </Row>
 );
 

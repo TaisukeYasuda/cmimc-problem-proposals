@@ -1,0 +1,81 @@
+NOTIFICATIONS TAB
+
+<Col s={12} style={{marginTop: "36px"}}>
+  <Row>
+    <Col s={3}>
+      <ul className="vertical-nav" style={{marginTop: "0"}}>
+        <li><a href="#">All</a></li>
+        <li><a href="#" className="active-tab">Urgent <Counter count="10" /></a></li>
+        <li><a href="#">Unread</a></li>
+        <li><a href="#">Requests</a></li>
+        <li><a href="#">Invites</a></li>
+      </ul>
+    </Col>
+    <Col s={9}>
+      <div className="notifications-container">
+        <ul className="notifications-list">
+          <Notification className="urgent-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+          <li className="transparent"><LoadMore /></li>
+        </ul>
+      </div>
+    </Col>
+  </Row>
+</Col>
+
+NOTIFICATIONS
+
+<Col s={9}>
+  <div className="notifications-container">
+    <ul className="notifications-list">
+      <li className="transparent">No notifications found.</li>
+      <Notification className="urgent-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+      <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+      <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+      <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+      <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+      <li className="transparent center-align"><a href className="underline-text">Load more...</a></li>
+    </ul>
+  </div>
+</Col>
+
+REQUESTS/INVITES
+
+<Col s={9}>
+  <div className="notifications-container">
+    <ul className="notifications-list">
+      <li className="transparent">No requests found.</li>
+      <li className="white">Cody Johnson requests you to create the competition "CMIMC."<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a><a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a></li>
+      <li className="transparent center-align"><a href className="underline-text">Load more...</a></li>
+    </ul>
+  </div>
+</Col>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PROBLEMS TAB
+
+<Col s={12} style={{marginTop: "36px"}}>
+  {
+    proposals.map((proposal, key) => (
+      <ProblemPreview problem={proposal} key={key} />
+    ))
+  }
+  <LoadMore />
+</Col>

@@ -1,16 +1,13 @@
 import React from "react";
-import { Row, Col, Card, CardTitle, Modal } from "react-materialize";
-
-function listify (directors) {
-  return (directors.reduce((a, b) => (a + b.name + " (" + b.email + "), "), "")).slice(0, -2);
-}
+import { Row, Col, Card, CardTitle, Modal, Input } from "react-materialize";
+import { listify } from "../utilities";
 
 const Competition = ({ name, compid, directors }) => (
   <li className="col s4">
     <div className="card teal darken-3 white-text">
       <div className="card-content">
         <span className="card-title">{ name }</span>
-        <p>Directors: { listify(directors) }</p>
+        <p>Directors: { listify(directors, x => (x.name + " (" + x.email + ")")) }</p>
       </div>
       <div className="card-action">
         <a href className="right"><i className="fa fa-trash" aria-hidden="true"></i></a>
@@ -35,7 +32,18 @@ const AdminPage = ({ message }) => (
   <Row className="container">
     <h2 className="teal-text text-darken-4">Competitions
       <Modal header="New Competition" trigger={<a href className="right teal-text text-darken-4"><i className="fa fa-plus" aria-hidden="true"></i></a>}>
-        blah blah blah bull shit
+        <Row>
+          <form>
+            <Input s={6} label="Competition Name" />
+            <Input s={6} label="Location (city, state)" />
+            <Col s={2}>
+              Directors
+            </Col>
+            <Col s={10}>
+              <Input type="email" />
+            </Col>
+          </form>
+        </Row>
       </Modal></h2>
     <ul className="inline-list">
       {competitions.map((competition, key) => (

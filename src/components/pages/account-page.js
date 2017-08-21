@@ -1,69 +1,11 @@
 import React from "react";
-import { Row, Col, Table, Modal, Button } from "react-materialize";
-
+import { Row, Col, Table } from "react-materialize";
 import renderKaTeX from "../../katex";
-
-const LoadMore = () => (
-  <a href="#" className="load-more teal-text text-darken-3 underline-hover">Load more...</a>
-);
-
-const Proposal = ({ votes, solves, views, contest, probid, statement }) => (
-  <Row className="proposal">
-    <Col s={3} className="proposal-stats">
-      <Row>
-        <Col s={4}>
-          <span className="count">{ votes }</span><br />votes
-        </Col>
-        <Col s={4}>
-          <span className="count">{ solves }</span><br />solves
-        </Col>
-        <Col s={4}>
-          <span className="count">{ views }</span><br />views
-        </Col>
-        <Col s={12}>
-          <ul>
-            <li>Contest: { contest }</li>
-            <li>ID: { probid }</li>
-          </ul>
-        </Col>
-      </Row>
-    </Col>
-    <Col s={9}>
-      <Row>
-        <Col s={12}>
-          <a href={"view-problem/" + probid} className="black-text underline-hover" ref={ renderKaTeX }>{ statement }</a>
-        </Col>
-      </Row>
-    </Col>
-  </Row>
-);
-
-const Announcement = ({ label, compName, title, message }) => {
-/*  if (label === "new")
-    return <li className="new-announcement">
-          <a href="#"><span className="filled-circle"></span></a>
-          <Modal header={compName + " - " + title} trigger={
-            <a href className="teal-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { title }</a>
-          }>{message}</Modal>
-        </li>;
-  if (label === "urgent")
-    return <li className="urgent-announcement">
-          <a href="#"><span className="filled-circle"></span></a>
-          <Modal header={compName + " - " + title} trigger={
-            <a href className="red-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { title }</a>
-          }>{message}</Modal>
-        </li>;*/
-  return <li>
-        <a href="#"><span className="unfilled-circle"></span></a>
-        <Modal header={compName + " - " + title} trigger={
-          <a href className="teal-text text-darken-3 underline-hover"><span className="bold-text">{ compName }</span> - { title }</a>
-        }>{message}</Modal>
-      </li>;
-};
+import { Notification, LoadMore, ProblemPreview, Counter } from "../utilities";
 
 const proposals = [
-  {votes: 0, solves: 1, views: 2, contest: "CMIMC 2017", probid: 123, statement: "hi, but $\\int_0^t x~dx$"},
-  {votes: 1, solves: 15, views: 20, contest: "CMIMC 2017", probid: 123, statement: "hi"}
+  {probid: 123, votes: 0, solves: 1, views: 2, subject: "Algebra", contest: "CMIMC 2017", statement: "hi, but $\\int_0^t x~dx$"},
+  {probid: 123, votes: 1, solves: 15, views: 20, subject: "Calculus", contest: "CMIMC 2017", statement: "hi"}
 ]
 
 const announcements = [
@@ -84,52 +26,36 @@ const user = {
 
 const AccountPage = ({ message }) => (
   <Row className="container">
-    <Col m={7} s={12}>
-      <h2 className="teal-text text-darken-4">My Proposals</h2>
-      {
-        proposals.map((proposal, key) => (
-          <Proposal votes={proposal.votes} solves={proposal.solves} views={proposal.views} contest={proposal.contest} probid={proposal.probid} statement={proposal.statement} key={key} />
-        ))
-      }
-      <LoadMore />
+    <Col s={12} className="inner-nav">
+      <a href="#" className="left active-tab"><i className="fa fa-bell" aria-hidden="true"></i> Notifications</a>
+      <a href="#" className="left"><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</a>
+      <a href="#" className="left"><i className="fa fa-pencil-square" aria-hidden="true"></i> Problems</a>
+      <a href="#" className="left"><i className="fa fa-user" aria-hidden="true"></i> Account</a>
     </Col>
-
-    <Col m={5} s={12}>
-      <div className="news-feed">
-        <h3>Announcements <span className="counter">{announcements.filter(({ label }) => ( label === "urgent" || label === "new" )).length}</span></h3>
-        <ul>
-          {
-            announcements.map((announcement, key) => (
-              <Announcement label={announcement.label} compName={announcement.compName} message={announcement.message} title={announcement.title} key={key} />
-            ))
-          }
-          <li><LoadMore /></li>
-        </ul>
-      </div>
-      <h3>My Account <a href="edit-account" className="teal-text text-darken-3 right"><i className="fa fa-pencil" aria-hidden="true"></i></a></h3>
-      <ul>
-        <li>Name: {user.name}</li>
-        <li>University: {user.university}</li>
-        <li>Email: {user.email}</li>
-      </ul>
-      <Table>
-        <thead>
-          <tr>
-            <th>Competition</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            user.comps.map((comp, key) => (
-              <tr key={key}>
-                <td>{comp.name}</td>
-                <td>{comp.status}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </Table>
+    <Col s={12} style={{marginTop: "36px"}}>
+      <Row>
+        <Col s={3}>
+          <ul className="vertical-nav" style={{marginTop: "0"}}>
+            <li><a href="#">All</a></li>
+            <li><a href="#" className="active-tab">Urgent <Counter count="10" /></a></li>
+            <li><a href="#">Unread</a></li>
+            <li><a href="#">Requests</a></li>
+            <li><a href="#">Invites</a></li>
+          </ul>
+        </Col>
+        <Col s={9}>
+          <div className="notifications-container">
+            <ul className="notifications-list">
+              <Notification className="urgent-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+              <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+              <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+              <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+              <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+              <li className="transparent"><LoadMore /></li>
+            </ul>
+          </div>
+        </Col>
+      </Row>
     </Col>
   </Row>
 );
