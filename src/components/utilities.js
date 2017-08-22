@@ -15,14 +15,21 @@ const Counter = ({ count }) => (
   <span className="counter">{count}</span>
 );
 
-const Notification = ({ className, label, compName, title, message }) => {
+const Notification = ({ className, label, author, title, message }) => {
   return <li className={className}>
         <a href="#"><span className="select-circle"></span></a>
-        <Modal header={compName + " - " + title} trigger={
-          <a href className="underline-hover"><span className="bold-text">{ compName }</span> - { title }</a>
+        <Modal header={author + ": " + title} trigger={
+          <a href className="underline-hover"><span className="bold-text">{ author }</span>: { title }</a>
         }>{message}</Modal>
       </li>;
 };
+
+const Request = ({ message }) => (
+  <li className="white">
+    { message }
+    <a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a><a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>
+  </li>
+);
 
 const ProblemPreview = ({ problem }) => (
   <Row className="problem-preview">
@@ -47,7 +54,7 @@ const ProblemPreview = ({ problem }) => (
       </Row>
     </Col>
     <Col s={9}>
-      <a href={"view-problem/" + problem.probid} className="black-text underline-hover" ref={ renderKaTeX }>
+      <a href={ "view-problem/" + problem.probid } className="black-text underline-hover" ref={ renderKaTeX }>
         { problem.statement }
       </a>
     </Col>
@@ -75,12 +82,12 @@ class HorizontalNav extends React.Component {
               const tab = tabs[key],
                     className = (key === active) ? "left active-tab" : "left";
               return (
-                <a 
+                <a
                   key={idx} href="#" className={ className }
                   onClick={ evt =>  {this.setState({ active: key }); } }>
                   { tab.title }
                 </a>
-              ); 
+              );
             })
           }
         </Col>
@@ -114,8 +121,8 @@ class VerticalNav extends React.Component {
                       className = (key === active) ? "active-tab" : "";
                 return (
                   <li key={idx}>
-                    <a 
-                      href="#" className={ className } 
+                    <a
+                      href="#" className={ className }
                       onClick={ evt =>  {this.setState({ active: key }); } }>
                       { tab.title }
                     </a>
@@ -133,12 +140,13 @@ class VerticalNav extends React.Component {
   }
 }
 
-export { 
-  listify, 
-  Notification, 
-  ProblemPreview, 
-  LoadMore, 
-  Counter, 
+export {
+  listify,
+  Notification,
+  ProblemPreview,
+  LoadMore,
+  Counter,
   HorizontalNav,
-  VerticalNav
+  VerticalNav,
+  Request
 };

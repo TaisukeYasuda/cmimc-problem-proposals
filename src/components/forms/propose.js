@@ -36,14 +36,14 @@ class ProposeForm extends React.Component {
               <option value={contest.name} key={key}>{contest.name}</option>
             ))
           }</Input>
-          <Input type="select" label="Subject" multiple s={4}>
-            <option value="unspecified">Select a subject</option>
+          <Input type="select" label="Subject" s={4}>
+            <option value="none">Select a subject</option>
             <option value="1">Option 1</option>
             <option value="2">Option 2</option>
             <option value="3">Option 3</option>
           </Input>
           <Input type="select" label="Difficulty" s={4}>
-            <option value="unspecified">Select a difficulty</option>
+            <option value="none">Select a difficulty</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
@@ -51,8 +51,8 @@ class ProposeForm extends React.Component {
         </Row>
         <Row>
           <Col s={6} className="input-field">
-            <textarea 
-              id="statement" 
+            <textarea
+              id="statement"
               className="materialize-textarea"
               ref={ elem => { this.statementField = elem; } } />
             <label htmlFor="statement">Problem</label>
@@ -62,8 +62,8 @@ class ProposeForm extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Input 
-            s={6} type="text" label="Answer" 
+          <Input
+            s={6} type="text" label="Answer"
             ref={ elem => { this.answerField = elem; } } />
           <Col s={6}>
             <div ref={ elem => { this.answerPreview = elem; } }></div>
@@ -71,8 +71,8 @@ class ProposeForm extends React.Component {
         </Row>
         <Row>
           <Col s={6} className="input-field">
-            <textarea 
-              id="solution" 
+            <textarea
+              id="solution"
               className="materialize-textarea"
               ref={ elem => { this.solutionField = elem; } }></textarea>
             <label htmlFor="solution">Solution</label>
