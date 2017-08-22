@@ -22,6 +22,7 @@
 ```
 { 
   name: String,
+  short_name: String,
   website: String,
   location: String,
   contests: [ Contest ],
