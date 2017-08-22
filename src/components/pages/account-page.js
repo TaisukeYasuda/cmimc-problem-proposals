@@ -238,7 +238,7 @@ const accountTabs = {
                 )
               }
             </tbody>
-          </Table><br />
+          </Table>
           <Modal header="Join a Competition" trigger={<Button className="teal darken-3 right">Join a Competition</Button>}>
             <form>
               <Input label="Search competitions" />

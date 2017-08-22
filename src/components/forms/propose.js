@@ -15,15 +15,27 @@ class ProposeForm extends React.Component {
   previewKaTeX = () => {
     if (this.statementField && this.statementField.value) {
       this.statementPreview.innerHTML = this.statementField.value;
+      this.statementPreview.className = "katex-preview";
       renderKaTeX(this.statementPreview);
+    } else {
+      this.statementPreview.innerHTML = "";
+      this.statementPreview.className = "";
     }
     if (this.answerField && this.answerField.state.value) {
       this.answerPreview.innerHTML = this.answerField.state.value;
+      this.answerPreview.className = "katex-preview";
       renderKaTeX(this.answerPreview);
+    } else {
+      this.answerPreview.innerHTML = "";
+      this.answerPreview.className = "";
     }
     if (this.solutionField && this.solutionField.value) {
       this.solutionPreview.innerHTML = this.solutionField.value;
+      this.solutionPreview.className = "katex-preview";
       renderKaTeX(this.solutionPreview);
+    } else {
+      this.solutionPreview.innerHTML = "";
+      this.solutionPreview.className = "";
     }
   }
 
