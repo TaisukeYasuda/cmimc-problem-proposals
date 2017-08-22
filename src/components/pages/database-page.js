@@ -15,19 +15,19 @@ const DatabasePage = ({ message }) => (
         <form className="col s12">
           <Row>
             <Input s={4} type="select" label="Contest" multiple>
-                <option value="" disabled selected>Choose your option</option>
+                <option value="" disabled>Choose your option</option>
                 <option value="1">Option 1</option>
                 <option value="2">Option 2</option>
                 <option value="3">Option 3</option>
             </Input>
             <Input s={4} type="select" label="Subject" multiple>
-                <option value="" disabled selected>Choose your option</option>
+                <option value="">Choose your option</option>
                 <option value="1">Option 1</option>
                 <option value="2">Option 2</option>
                 <option value="3">Option 3</option>
             </Input>
             <Input s={4} type="select" label="Sort by" multiple>
-                <option value="" disabled selected>Choose your option</option>
+                <option value="">Choose your option</option>
                 <option value="1">Option 1</option>
                 <option value="2">Option 2</option>
                 <option value="3">Option 3</option>
@@ -38,7 +38,16 @@ const DatabasePage = ({ message }) => (
                   <Input type="checkbox" label="original problems" defaultChecked="checked" />
                 </li>
                 <li>
-                  <Input type="checkbox" label="borrowed problems" defaultChecked="checked" />
+                  <Input type="checkbox" label="borrowed problems" />
+                </li>
+                <li>
+                  <Input type="checkbox" label="easy" defaultChecked="checked" />
+                </li>
+                <li>
+                  <Input type="checkbox" label="medium" defaultChecked="checked" />
+                </li>
+                <li>
+                  <Input type="checkbox" label="hard" defaultChecked="checked" />
                 </li>
               </ul>
             </Col>
