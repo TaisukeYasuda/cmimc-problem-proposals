@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 
 import renderKaTeX from "../../katex";
-import { katexOptions } from "../../katex";
 
 const myContests = [
   {name : "Public database", subjects : ["Algebra", "Combinatorics", "Geometry", "Number Theory", "Other"]},
