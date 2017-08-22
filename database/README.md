@@ -9,9 +9,10 @@
   university: String,
   admin: Boolean,
   salt: String,
-  unread: [ Announcement ],
-  read: [ Announcement ],
-  urgent: [ Announcement ],
+  unread: [ Notification ],
+  read: [ Notification ],
+  urgent: [ Notification ],
+  requests: [ Request ],
   created: Date,
   updated: Date,
 }
@@ -27,17 +28,29 @@
   active_contests: [ Contest ],
   directors: [ User ],
   members: [ User ],
-  announcements: [ Announcement ],
+  announcements: [ Notification ],
   created: Date,
   updated: Date
 }
 ```
 
-## Announcement
+## Notification
 ```
 {
+  author: User,
   title: String,
   body: String,
+  created: Date,
+  updated: Date
+}
+```
+
+## Request
+```
+{
+  author: User,
+  body: String,
+  type: Enum(REQUEST, INVITE), 
   created: Date,
   updated: Date
 }

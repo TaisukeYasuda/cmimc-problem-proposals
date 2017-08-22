@@ -11,9 +11,10 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   admin: { type: Boolean, required: true, default: false },
   salt: { type: String, required: true },
-  unread: [ { type: Schema.Types.ObjectId, ref: 'Announcement' } ],
-  read: [ { type: Schema.Types.ObjectId, ref: 'Announcement' } ],
-  urgent: [ { type: Schema.Types.ObjectId, ref: 'Announcement' } ],
+  unread: [ { type: Schema.Types.ObjectId, ref: 'Notification' } ],
+  read: [ { type: Schema.Types.ObjectId, ref: 'Notification' } ],
+  urgent: [ { type: Schema.Types.ObjectId, ref: 'Notification' } ],
+  requests: [ { type: Schema.Types.ObjectId, ref: 'Request' } ],
   created: { type: Date, required: true },
   updated: { type: Date, required: true }
 });
