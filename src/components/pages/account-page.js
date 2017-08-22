@@ -1,7 +1,13 @@
 import React from "react";
 import { Row, Col, Table } from "react-materialize";
 import renderKaTeX from "../../katex";
-import { Notification, LoadMore, ProblemPreview, Counter } from "../utilities";
+import { 
+  Notification, 
+  LoadMore, 
+  ProblemPreview, 
+  Counter, 
+  VerticalNav
+} from "../utilities";
 
 const proposals = [
   {probid: 123, votes: 0, solves: 1, views: 2, subject: "Algebra", contest: "CMIMC 2017", statement: "hi, but $\\int_0^t x~dx$"},
@@ -24,6 +30,40 @@ const user = {
   ]
 }
 
+const tabs = {
+  "all": {
+    title: "All",
+    view: <h1>All</h1>
+  },
+  "urgent": {
+    title: <div>Urgent <Counter count="10" /></div>,
+    view: (
+      <div className="notifications-container">
+        <ul className="notifications-list">
+          <Notification className="urgent-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification compName="CMIMC" title="Do this" message="Plz do this" />
+          <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
+          <li className="transparent"><LoadMore /></li>
+        </ul>
+      </div>
+    )
+  },
+  "unread": {
+    title: "Unread",
+    view: <h1>Unread</h1>
+  },
+  "requests": {
+    title: "Requests",
+    view: <h1>Requests</h1>
+  },
+  "invites": {
+    title: "Invites",
+    view: <h1>Invites</h1>
+  }
+};
+
 const AccountPage = ({ message }) => (
   <Row className="container">
     <Col s={12} className="inner-nav">
@@ -33,29 +73,7 @@ const AccountPage = ({ message }) => (
       <a href="#" className="left"><i className="fa fa-user" aria-hidden="true"></i> Account</a>
     </Col>
     <Col s={12} style={{marginTop: "36px"}}>
-      <Row>
-        <Col s={3}>
-          <ul className="vertical-nav" style={{marginTop: "0"}}>
-            <li><a href="#">All</a></li>
-            <li><a href="#" className="active-tab">Urgent <Counter count="10" /></a></li>
-            <li><a href="#">Unread</a></li>
-            <li><a href="#">Requests</a></li>
-            <li><a href="#">Invites</a></li>
-          </ul>
-        </Col>
-        <Col s={9}>
-          <div className="notifications-container">
-            <ul className="notifications-list">
-              <Notification className="urgent-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
-              <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
-              <Notification compName="CMIMC" title="Do this" message="Plz do this" />
-              <Notification compName="CMIMC" title="Do this" message="Plz do this" />
-              <Notification className="new-announcement" compName="CMIMC" title="Do this" message="Plz do this" />
-              <li className="transparent"><LoadMore /></li>
-            </ul>
-          </div>
-        </Col>
-      </Row>
+      <VerticalNav tabs={ tabs } active="urgent" />
     </Col>
   </Row>
 );

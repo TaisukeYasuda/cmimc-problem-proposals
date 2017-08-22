@@ -52,4 +52,52 @@ const ProblemPreview = ({ problem }) => (
   </Row>
 );
 
-export { listify, Notification, ProblemPreview, LoadMore, Counter };
+class VerticalNav extends React.Component {
+  constructor(props) {
+    super(props);
+
+
+    this.state = {
+      tabs: props.tabs,
+      active: props.active
+    };
+  }
+
+  render() {
+    return (
+      <Row>
+        <Col s={3}>
+          <ul className="vertical-nav" style={{marginTop: "0"}}>
+            {
+              Object.keys(this.state.tabs).map((key, idx) => {
+                const tab = this.state.tabs[key],
+                      className = (key === this.state.active) ? "active-tab" : "";
+                return (
+                  <li key={idx}>
+                    <a 
+                      href="#" className={ className } 
+                      onClick={ evt =>  {this.setState({ active: key }); } }>
+                      { tab.title }
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </Col>
+        <Col s={9}>
+          <div>{ this.state.tabs[this.state.active].view }</div>
+        </Col>
+      </Row>
+    );
+  }
+}
+
+export { 
+  listify, 
+  Notification, 
+  ProblemPreview, 
+  LoadMore, 
+  Counter, 
+  VerticalNav
+};
