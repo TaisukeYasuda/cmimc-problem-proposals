@@ -4,7 +4,7 @@ import { Col } from "react-materialize";
 
 const Error = ({ error, message, ...rest }) => {
   return error ? (
-    <Col { ...rest } className="alert alert-danger row">
+    <Col { ...rest } className="alert">
       <span className="form-error-msg">{ message }</span>
     </Col>
   ) : ( <div></div> );

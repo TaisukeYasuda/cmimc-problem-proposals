@@ -21,13 +21,10 @@ mongoose.connect(process.env.DB_URL, {
 });
 
 /* route endpoints */
-const authRouter = require('./routes/auth');
+const authRouter = require('./routes/auth'),
+      compRouter = require('./routes/competitions');
 app.use('/', authRouter);
-/*app.use('/api/proposals', proposalsRouter);
-app.use('/api/comments', commentsRouter);
-app.use('/api/solutions', solutionsRouter);
-app.use('/api/staff', staffRouter);
-app.use('/api/subjects', subjectsRouter);*/
+app.use('/api/competitions', compRouter);
 
 /* serve home page */
 app.get('/*', (req, res) => {

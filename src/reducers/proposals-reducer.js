@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   proposalsLoading: false,
   proposalSubmitting: false,
   myProposals: [], 
+  proposal: {}
 };
 
 export default function (state = INITIAL_STATE, action) {  

@@ -1,5 +1,7 @@
 import React from "react";
 import { Row, Col, Table, Input, Button, Modal } from "react-materialize";
+
+import CreateCompetitionForm from "../forms/create-competition";
 import renderKaTeX from "../../katex";
 import {
   Notification,
@@ -244,12 +246,7 @@ const accountTabs = {
             </form>
           </Modal><br /><br />
           <p className="right">Does your competition want to join USMCA? <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3">Form a new competition</a>}>
-            <form>
-              <Input label="Competition name" className="clear-top" />
-              <Input label="Website (optional)" className="clear-top" />
-              <Input label="Competition location (city, state)" className="clear-top" />
-              Your request to create a competition will be reviewed by an admin. <Button className="right teal darken-3">Create</Button>
-            </form>
+            <CreateCompetitionForm />
           </Modal>.</p>
         </Row>
       </Col>

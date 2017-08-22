@@ -1,10 +1,21 @@
 /* initialization */
 export const INIT_APP = 'init_app'; // fetch initialization data from server
 
+export const requestStatuses = {
+  SUCESS: 'success',
+  PENDING: 'pending',
+  SUBMITTED: 'submitted',
+  IDLE: 'idle'
+};
+
 /* authorization */
 export const AUTH_USER = 'auth_user', // set user to be authenticated
              UNAUTH_USER = 'unauth_user', // set user to be unauthenticated
              AUTH_ERROR = 'auth_error'; // notify an authentication error
+
+/* competitions */
+export const COMP_ERROR = 'comp_error', // notify a competition error
+             COMP_REQ = 'comp_req'; // request to create competition
 
 /* problem proposals */
 export const PROPOSAL_ERROR = 'proposal_error', // notify a proposal error

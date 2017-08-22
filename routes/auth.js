@@ -24,7 +24,7 @@ router.post('/signup', (req, res) => {
             handler(false, 'Database failed to save user.', 503)(req, res);
           } else {
             handler(true, 'User signed up successfully.', 200, {
-              token: auth.signJWT(email, admin)
+              token: auth.signJWT(email, user._id, admin)
             })(req, res);
           }
         });
@@ -50,7 +50,7 @@ router.post('/login', (req, res) => {
           } else {
             return result.authenticated ? 
               handler(true, 'User authenticated.', 200, {
-                token: auth.signJWT(user.email, user.admin)
+                token: auth.signJWT(user.email, user._id, user.admin)
               })(req, res) :
               handler(false, 'Authentication failed.', 401)(req, res);
           }
