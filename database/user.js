@@ -19,7 +19,6 @@ const userSchema = new Schema({
   updated: { type: Date, required: true }
 });
 
-/* don't use arrow function for the callback */
 userSchema.methods.checkPassword = function(password, callback) {
   let user = this;
   bcrypt.hash(password, user.salt, (err, hash) => {
@@ -28,7 +27,6 @@ userSchema.methods.checkPassword = function(password, callback) {
   });
 };
 
-/* don't use arrow function for the callback */
 userSchema.pre('validate', function(next) {
   let user = this;
 

@@ -8,7 +8,7 @@ const notificationSchema = new Schema({
   updated: { type: Date, required: true }
 });
 
-notificationSchema.pre('save', next => {
+notificationSchema.pre('save', function(next) {
   const now = new Date();
   if (!this.created) this.created = now;
   if (!this.updated) this.updated = now;

@@ -3,8 +3,8 @@ const mongoose = require('mongoose'),
 
 const competitionSchema = new Schema({
   name: { type: String, required: true, unique: true },
+  short_name: { type: String, required: true },
   website: String,
-  location: { type: String, required: true },
   active_contests: [ { type: Schema.Types.ObjectId, ref: 'Contest' } ],
   contests: [ { type: Schema.Types.ObjectId, ref: 'Contest' } ],
   directors: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
@@ -14,7 +14,11 @@ const competitionSchema = new Schema({
   updated: { type: Date, required: true },
 });
 
-competitionSchema.pre('save', next => {
+competitionSchema.pre('save', function(name) {
+  if (!this.short_name) {
+    this.short_name = this.name;
+  }
+
   const now = new Date();
   if (!this.created) this.created = now;
   if (!this.updated) this.updated = now;

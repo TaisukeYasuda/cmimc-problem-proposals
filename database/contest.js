@@ -3,6 +3,10 @@ const mongoose = require('mongoose'),
 
 const contestSchema = new Schema({
   competition: { type: Schema.Types.ObjectId, ref: 'Competition' },
+  location: {
+    site: { type: String, required: true },
+    address: String
+  },
   name: { type: String, required: true },
   date: { type: Date, required: true },
   tests: [ { type: Schema.Types.ObjectId, ref: 'Test' } ],
@@ -12,7 +16,7 @@ const contestSchema = new Schema({
   updated: { type: Date, required: true },
 });
 
-contestSchema.pre('save', next => {
+contestSchema.pre('save', function(next) {
   const now = new Date();
   if (!this.created) this.created = now;
   if (!this.updated) this.updated = now;

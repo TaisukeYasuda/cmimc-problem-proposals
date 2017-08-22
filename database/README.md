@@ -22,8 +22,8 @@
 ```
 { 
   name: String,
+  short_name: String,
   website: String,
-  location: String,
   contests: [ Contest ],
   active_contests: [ Contest ],
   directors: [ User ],
@@ -60,6 +60,10 @@
 ```
 {
   competition: Competition,
+  location: {
+    site: String,
+    address: String
+  },
   name: String,
   date: Date,
   tests: [ Tests ],
