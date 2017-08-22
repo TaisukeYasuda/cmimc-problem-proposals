@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'),
-      Schema = mongoose.Schema;
+      Schema = mongoose.Schema,
+      { difficultyEnum } = require('../constants');
 
 const problemSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -7,7 +8,7 @@ const problemSchema = new Schema({
   answer: String,
   official_soln: [ { type: Schema.Types.ObjectId, ref: 'Solution' } ],
   alternate_soln: [ { type: Schema.Types.ObjectId, ref: 'Solution' } ],
-  difficulty: { type: String, enum: [ 'EASY', 'MEDIUM', 'HARD' ] },
+  difficulty: { type: String, enum: Object.keys(difficultyEnum) },
   upvotes: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
   downvotes: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
   views: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
