@@ -190,9 +190,14 @@ const notificationTabs = {
 
 const statusOptions = {
   "Member": <div><li><a href="#" className="teal-text text-darken-3">Leave competition</a></li></div>,
-  "Director": <div><li><a href="#" className="teal-text text-darken-3">Leave competition</a></li>
-            <li><a href="#" className="teal-text text-darken-3">Add new directors</a></li>
-            <li><a href="#" className="teal-text text-darken-3">Step down as director</a></li></div>,
+  "Director": (
+    <div>
+      <li><a href="#" className="teal-text text-darken-3">Leave competition</a></li>
+      <li><a href="#" className="teal-text text-darken-3">Add new members</a></li>
+      <li><a href="#" className="teal-text text-darken-3">Add new directors</a></li>
+      <li><a href="#" className="teal-text text-darken-3">Step down as director</a></li>
+    </div>
+  ),
   "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
 };
 
