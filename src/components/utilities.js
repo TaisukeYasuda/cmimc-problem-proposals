@@ -47,15 +47,17 @@ const ProblemPreview = ({ problem }) => (
       </Row>
     </Col>
     <Col s={9}>
-      <a href={"view-problem/" + problem.probid} className="black-text underline-hover" ref={ renderKaTeX }>{ problem.statement }</a>
+      <a href={"view-problem/" + problem.probid} className="black-text underline-hover" ref={ renderKaTeX }>
+        { problem.statement }
+      </a>
     </Col>
   </Row>
 );
 
-class VerticalNav extends React.Component {
+
+class HorizontalNav extends React.Component {
   constructor(props) {
     super(props);
-
 
     this.state = {
       tabs: props.tabs,
@@ -64,14 +66,52 @@ class VerticalNav extends React.Component {
   }
 
   render() {
+    const { tabs, active } = this.state;
+    return (
+      <div>
+        <Col s={12} className="horizontal-nav">
+          {
+            Object.keys(tabs).map((key, idx) => {
+              const tab = tabs[key],
+                    className = (key === active) ? "left active-tab" : "left";
+              return (
+                <a 
+                  key={idx} href="#" className={ className }
+                  onClick={ evt =>  {this.setState({ active: key }); } }>
+                  { tab.title }
+                </a>
+              ); 
+            })
+          }
+        </Col>
+        <Col s={12} style={{marginTop: "36px"}}>
+          <div>{ tabs[active].view }</div>
+        </Col>
+      </div>
+    );
+  }
+}
+
+class VerticalNav extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      tabs: props.tabs,
+      active: props.active
+    };
+  }
+
+  render() {
+    const { tabs, active } = this.state;
     return (
       <Row>
         <Col s={3}>
           <ul className="vertical-nav" style={{marginTop: "0"}}>
             {
-              Object.keys(this.state.tabs).map((key, idx) => {
-                const tab = this.state.tabs[key],
-                      className = (key === this.state.active) ? "active-tab" : "";
+              Object.keys(tabs).map((key, idx) => {
+                const tab = tabs[key],
+                      className = (key === active) ? "active-tab" : "";
                 return (
                   <li key={idx}>
                     <a 
@@ -86,7 +126,7 @@ class VerticalNav extends React.Component {
           </ul>
         </Col>
         <Col s={9}>
-          <div>{ this.state.tabs[this.state.active].view }</div>
+          <div>{ tabs[active].view }</div>
         </Col>
       </Row>
     );
@@ -99,5 +139,6 @@ export {
   ProblemPreview, 
   LoadMore, 
   Counter, 
+  HorizontalNav,
   VerticalNav
 };

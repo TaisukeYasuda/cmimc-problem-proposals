@@ -6,6 +6,7 @@ import {
   LoadMore, 
   ProblemPreview, 
   Counter, 
+  HorizontalNav,
   VerticalNav
 } from "../utilities";
 
@@ -30,7 +31,7 @@ const user = {
   ]
 }
 
-const tabs = {
+const notificationTabs = {
   "all": {
     title: "All",
     view: <h1>All</h1>
@@ -64,17 +65,28 @@ const tabs = {
   }
 };
 
+const accountTabs = {
+  "notifications": {
+    title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
+    view: <VerticalNav tabs={ notificationTabs } active="urgent" />
+  },
+  "competitions": {
+    title: <div><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</div>,
+    view: <h1>Competitions</h1>
+  },
+  "problems": {
+    title: <div><i className="fa fa-pencil-square" aria-hidden="true"></i> Problems</div>,
+    view: <h1>Problems</h1>
+  },
+  "account": {
+    title: <div><i className="fa fa-user" aria-hidden="true"></i> Account</div>,
+    view: <h1>Account</h1>
+  }
+}
+
 const AccountPage = ({ message }) => (
   <Row className="container">
-    <Col s={12} className="inner-nav">
-      <a href="#" className="left active-tab"><i className="fa fa-bell" aria-hidden="true"></i> Notifications</a>
-      <a href="#" className="left"><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</a>
-      <a href="#" className="left"><i className="fa fa-pencil-square" aria-hidden="true"></i> Problems</a>
-      <a href="#" className="left"><i className="fa fa-user" aria-hidden="true"></i> Account</a>
-    </Col>
-    <Col s={12} style={{marginTop: "36px"}}>
-      <VerticalNav tabs={ tabs } active="urgent" />
-    </Col>
+    <HorizontalNav tabs={ accountTabs } active="notifications" />
   </Row>
 );
 
