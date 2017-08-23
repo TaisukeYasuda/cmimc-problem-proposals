@@ -2,7 +2,8 @@ const router = require('express').Router(),
       auth = require('../config/auth'),
       handler = require('../utils/handler');
 
-const User = require('../database/user');
+const User = require('../database/user'),
+      Problems = require('../database/problem');
 
 router.get('/', auth.verifyJWT, (req, res) => {
   const { id } = req.query;
@@ -32,10 +33,22 @@ router.get('/', auth.verifyJWT, (req, res) => {
 router.get('/admin', (req, res) => {
   User.find({ admin: true }, 'name email', (err, admins) => {
     if (err) {
-      handler(false, 'Database failed to load admins.', 503)(req, res);
-    } else {
-      handler(true, 'Successfully loaded admins info.', 200, {
+      return handler(false, 'Database failed to load admins.', 503)(req, res); } else {
+      return handler(true, 'Successfully loaded admins info.', 200, {
         admins: admins
+      })(req, res);
+    }
+  });
+});
+
+/* get problems of the user */
+router.get('/problems', auth.verifyJWT, (req, res) => {
+  Problem.find({ user: req.payload.user_id }, (err, problems) => {
+    if (err) {
+      return handler(false, 'Database failed to load user\'s problems.', 503)(req, res);
+    } else {
+      return handler(true, 'Successfully loaded admins info.', 200, {
+        problems: problems
       })(req, res);
     }
   });

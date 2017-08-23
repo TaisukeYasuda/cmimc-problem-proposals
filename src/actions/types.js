@@ -26,7 +26,7 @@ export const COMP_ERROR = 'comp_error', // notify a competition error
              COMP_RES = 'comp_res'; // respond to create competition
 
 /* problem proposals */
-export const PROPOSAL_ERROR = 'proposal_error', // notify a proposal error
-             FETCH_MY_PROPOSALS = 'fetch_my_proposals', // fetch proposals written by user
-             POST_PROPOSAL = 'post_proposal', // post a proposal
-             GET_PROPPOSAL = 'get_proposal';
+export const PROB_ERROR = 'prob_error', // notify a proposal error
+             PROB_FETCH_MINE = 'prob_fetch_mine', // fetch proposals written by user
+             PROB_POST = 'prob_post', // post a proposal
+             PROB_GET = 'prob_get';

@@ -5,7 +5,7 @@ import initReducer from './init-reducer.js';
 import usersReducer from './users-reducer.js';
 import authReducer from './auth-reducer.js';
 import competitionsReducer from './competitions-reducer.js';
-import proposalsReducer from './proposals-reducer.js';
+import problemsReducer from './problems-reducer.js';
 
 const rootReducer = combineReducers({
   /* state appears in this form */
@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   users: usersReducer,
   auth: authReducer,
   competitions: competitionsReducer,
-  proposals: proposalsReducer,
+  problems: problemsReducer,
   form: formReducer
 });
 
