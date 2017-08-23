@@ -30,7 +30,7 @@ export function userInfo() {
     });
     const userId = auth.userId();
     if (userId) {
-      fetch(`/api/user?${$.param({ id: userId })}`, { 
+      fetch(`/api/users?${$.param({ id: userId })}`, { 
         method: 'get',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -70,7 +70,7 @@ export function adminInfo() {
         requestStatus: requestStatuses.PENDING
       }
     });
-    fetch('/api/user/admin', { method: 'get' })
+    fetch('/api/users/admin', { method: 'get' })
     .then(
       response => {
         return response.json()

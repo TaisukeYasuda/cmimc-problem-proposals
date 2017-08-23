@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Row, Col, Table, Input, Button, Modal } from "react-materialize";
 
+import AccountTab from "./account-page/account-tab";
+import NotificationList from "./account-page/notification-list";
+import RequestList from "./account-page/request-list";
 import CreateCompetitionForm from "../forms/create-competition";
 import renderKaTeX from "../../katex";
 import {
@@ -49,135 +52,23 @@ const proposals = [
 const notificationTabs = {
   "all": {
     title: "All",
-    view: (
-      <div className="notifications-container">
-        <ul className="notifications-list">
-          {
-            (notifications.length == 0) ? <li className="transparent">No notifications found.</li>
-            : <div>
-                {
-                  notifications.map((notification, key) => {
-                    let label;
-                    switch (notification.label) {
-                      case "new":
-                        label = "new-announcement";
-                        break;
-                      case "urgent":
-                        label = "urgent-announcement";
-                        break;
-                      default:
-                        label = "";
-                        break;
-                    }
-                    return <Notification className={label} author={notification.author} title={notification.title} message={notification.message} key={key} />
-                  })
-                }
-                <li className="transparent center-align"><LoadMore /></li>
-              </div>
-          }
-        </ul>
-      </div>
-    )
+    view: <NotificationList notifications={ notifications } />
   },
   "urgent": {
     title: <div>Urgent <Counter count={urgentNotifications.length} /></div>,
-    view: (
-      <div className="notifications-container">
-        <ul className="notifications-list">
-        {
-          (urgentNotifications.length == 0) ? <li className="transparent">No notifications found.</li>
-          : <div>
-              {
-                urgentNotifications.map((notification, key) => {
-                  let label;
-                  switch (notification.label) {
-                    case "new":
-                      label = "new-announcement";
-                      break;
-                    case "urgent":
-                      label = "urgent-announcement";
-                      break;
-                    default:
-                      label = "";
-                      break;
-                  }
-                  return <Notification className={label} author={notification.author} title={notification.title} message={notification.message} key={key} />
-                })
-              }
-              <li className="transparent center-align"><LoadMore /></li>
-            </div>
-        }
-        </ul>
-      </div>
-    )
+    view: <NotificationList notifications={ urgentNotifications } />
   },
   "unread": {
     title: <div>New <Counter count={newNotifications.length} /></div>,
-    view: (
-      <div className="notifications-container">
-        <ul className="notifications-list">
-        {
-          (newNotifications.length == 0) ? <li className="transparent">No notifications found.</li>
-          : <div>
-              {
-                newNotifications.map((notification, key) => {
-                  let label;
-                  switch (notification.label) {
-                    case "new":
-                      label = "new-announcement";
-                      break;
-                    case "urgent":
-                      label = "urgent-announcement";
-                      break;
-                    default:
-                      label = "";
-                      break;
-                  }
-                  return <Notification className={label} author={notification.author} title={notification.title} message={notification.message} key={key} />
-                })
-              }
-              <li className="transparent center-align"><LoadMore /></li>
-            </div>
-        }
-        </ul>
-      </div>
-    )
+    view: <NotificationList notifications={ newNotifications } />
   },
   "requests": {
     title: <div>Requests <Counter count={requests.length} /></div>,
-    view: (
-      <div className="notifications-container">
-        <ul className="notifications-list">
-          {
-            (requests.length == 0) ? <li className="transparent">No requests found.</li>
-            : <div>
-                {
-                  requests.map((request, key) => <Request message={request.message} key={key} />)
-                }
-                <li className="transparent center-align"><LoadMore /></li>
-              </div>
-          }
-        </ul>
-      </div>
-    )
+    view: <RequestList requests={ requests } />
   },
   "invites": {
     title: <div>Invites <Counter count={invites.length} /></div>,
-    view: (
-      <div className="notifications-container">
-        <ul className="notifications-list">
-          {
-            (invites.length == 0) ? <li className="transparent">No invites found.</li>
-            : <div>
-                {
-                  invites.map((invite, key) => <Request message={invite.message} key={key} />)
-                }
-                <li className="transparent center-align"><LoadMore /></li>
-              </div>
-          }
-        </ul>
-      </div>
-    )
+    view: <RequestList requests={ invites } />
   }
 };
 
@@ -194,64 +85,6 @@ const statusOptions = {
   "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
 };
 
-class AccountTab extends React.Component {
-  render() {
-    const { user, admins } = this.props,
-          { name, email, university } = user;
-    return (
-      <Col s={12}>
-        <h2 className="teal-text text-darken-4" style={{marginTop: "0"}}>Account
-          <Modal header="Edit Account" trigger={<a href="#" className="teal-text text-darken-4 right"><i className="fa fa-pencil" aria-hidden="true"></i></a>}>
-            <form>
-              <Input s={12} label="Name" value={name} />
-              <Input s={12} label="Email" value={email} />
-              <Input s={12} label="University" value={university} />
-              <RightButtonPanel>
-                <Button className="teal darken-3">Save</Button>
-              </RightButtonPanel>
-            </form>
-          </Modal>
-          </h2>
-        <ul>
-          <li>Name: {name}</li>
-          <li>Email: {email}</li>
-          <li>University: {university}</li>
-          <li><Modal header="Change Password" trigger={<a href className="teal-text text-darken-3">Change password</a>}>
-            <form className="row">
-              <Input s={12} type="password" placeholder="Current password" />
-              <Input s={12} type="password" placeholder="New password" />
-              <Input s={12} type="password" placeholder="New password (confirm)" />
-              <RightButtonPanel><Button className="teal darken-3">Confirm</Button></RightButtonPanel>
-            </form>
-          </Modal></li>
-        </ul>
-
-        <h2 className="teal-text text-darken-4">Admins</h2>
-        <p>If you have any problems, these are the contacts of the admins of USMCA:</p>
-        <ul>
-        {
-          admins.map((admin, key) =>
-            <li key={key}>{admin.name} ({admin.email})<a href="#" className="teal-text text-darken-3 right"><i className="fa fa-times" aria-hidden="true"></i></a></li>
-          )
-        }
-        </ul>
-        <RightButtonPanel><Button className="teal darken-3">Add Admin</Button><Button className="teal darken-3">Step Down</Button></RightButtonPanel>
-      </Col>
-    );
-  }
-}
-
-AccountTab.propTypes = {
-  user: PropTypes.object.isRequired,
-  admins: PropTypes.array.isRequired
-};
-
-const mapStateToProps = state => ({
-  user: state.users.user,
-  admins: state.users.admins
-});
-
-AccountTab = connect(mapStateToProps)(AccountTab);
 
 
 const accountTabs = {
