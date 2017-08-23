@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Button, Table } from "react-materialize";
+import { Row, Col, Button, Table, Modal, Input } from "react-materialize";
 import { RightButtonPanel, VerticalNav } from "../utilities";
 
 const contestTabs = ({ name, date, locations, status, tests, czars, testSolvers }) => ({
@@ -103,7 +103,18 @@ const ContestsPage = () => (
     <h2 className="teal-text text-darken-4">Contests</h2>
     <RightButtonPanel marginBottom="24px">
       <a href="/view-database" className="btn teal darken-3">Shared Database</a>
-      <Button className="teal darken-3">New Contest</Button>
+      <Modal header="Create New Contest" trigger={<Button className="teal darken-3">New Contest</Button>}>
+        <form>
+          <Row>
+            <Input s={12} label="Competition" />
+            <Input s={12} label="Name" />
+            <Input s={12} label="Date" />
+            <RightButtonPanel>
+              <Button className="teal darken-3">Create</Button>
+            </RightButtonPanel>
+          </Row>
+        </form>
+      </Modal>
     </RightButtonPanel>
     <ContestPreview name="CMIMC 2018" date="January 28th, 2018" locations={["Carnegie Mellon University", "CMU Qatar Campus"]} status="Active" tests={tests} czars={["Taisuke Yasuda", "Cody Johnson"]} testSolvers={["Taisuke Yasuda", "Cody Johnson"]} />
   </Row>
