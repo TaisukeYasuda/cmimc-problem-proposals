@@ -7,7 +7,7 @@ const requestSchema = new Schema({
   body: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   type: { type: String, enum: _.values(requestEnum) },
-  competititon: { type: Schema.Types.ObjectId, ref: 'Competition' },
+  competition: { type: Schema.Types.ObjectId, ref: 'Competition' },
   user_type: { type: String, enum: _.values(userTypeEnum) },
   created: { type: Date, required: true },
   updated: { type: Date, required: true }

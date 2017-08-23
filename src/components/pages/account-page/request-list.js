@@ -10,7 +10,7 @@ const RequestList = ({ requests }) => (
         (requests.length == 0) ? <li className="transparent">No requests found.</li>
         : <div>
             {
-              requests.map((request, key) => <Request message={request.body} key={key} />)
+              requests.map((request, key) => <Request request={request} key={key} />)
             }
             <li className="transparent center-align"><LoadMore /></li>
           </div>

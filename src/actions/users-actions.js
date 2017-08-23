@@ -43,6 +43,7 @@ export function userInfo() {
             const { error, message, user } = data;
             if (error) userErrorHandler(dispatch, message);
             else {
+              console.log(user);
               dispatch({
                 type: USER_INFO,
                 payload: {

@@ -33,9 +33,9 @@ const Notification = ({ className, label, author, title, message }) => {
       </li>;
 };
 
-const Request = ({ message }) => (
+const Request = ({ request }) => (
   <li className="white">
-    { message }
+    { request.body }
     <a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a><a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>
   </li>
 );
