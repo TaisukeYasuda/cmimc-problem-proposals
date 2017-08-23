@@ -69,19 +69,17 @@ const CompetitionsTab = () => (
     <Row>
       <CompetitionsTable competitions={ competitions } />
       <RightButtonPanel>
-        <Modal header="Join a Competition" trigger={<Button className="teal darken-3">Join a Competition</Button>}>
-          <form>
+        <form>
+          <Modal header="Join a Competition" trigger={<Button className="teal darken-3">Join a Competition</Button>} actions={<div>
+            <Button flat modal="close" waves="light">Cancel</Button>
+            <Button flat modal="close" waves="light">Join</Button>
+            </div>}>
+
             <Input label="Search competitions" />
             Your join request will be reviewed by the directors of (CMIMC).
-            <RightButtonPanel>
-              <Button className="teal darken-3">Join</Button>
-            </RightButtonPanel>
-          </form>
-        </Modal>
-      </RightButtonPanel>
-      <RightButtonPanel><p>Does your competition want to join USMCA? <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3">Form a new competition</a>}>
-        <CreateCompetitionForm />
-      </Modal>.</p></RightButtonPanel>
+          </Modal>
+        </form><br />
+        <CreateCompetitionForm /></RightButtonPanel>
     </Row>
   </Col>
 );
