@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Icon, Col } from 'react-materialize';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import constants from './constants';
+import { Col, Icon } from 'react-materialize';
 
 class Autocomplete extends Component {
   constructor (props) {
@@ -28,15 +28,10 @@ class Autocomplete extends Component {
       return null;
     }
 
-    /* fix inconsistent view on no matches */
-    let matches = Object.keys(data).filter(key => {
+    const matches = Object.keys(data).filter((key, idx) => {
       const index = key.toUpperCase().indexOf(value.toUpperCase());
-      return index !== -1 && value.length < key.length;
-    });
-    if (limit) matches = matches.slice(0, limit);
-    if (matches.length === 0) {
-      return null;
-    }
+      return (index !== -1 && value.length < key.length);
+    }).slice(0, limit);
 
     return (
       <div>
@@ -44,7 +39,7 @@ class Autocomplete extends Component {
           {matches.map((key, idx) => {
             const index = key.toUpperCase().indexOf(value.toUpperCase());
             return (
-              <li key={key + '_' + idx} onClick={(evt) => this.setState({ value: key })}>
+              <li key={key + '_' + idx} onClick={(evt) => { this.setState({ value: key }); this.props.onChange(key); }}>
                 {data[key] ? <img src={data[key]} className='right circle' /> : null}
                 <span>
                   {index !== 0 ? key.substring(0, index) : ''}
@@ -76,26 +71,24 @@ class Autocomplete extends Component {
       l,
       offset,
       minLength,
-      placeholder,
       limit,
+      placeholder,
       ...props
     } = this.props;
 
     const _id = 'autocomplete-input';
     const sizes = { s, m, l };
-    let classes = {
-      col: true
-    };
+    let classes = { col: true };
     constants.SIZES.forEach(size => {
       classes[size + sizes[size]] = sizes[size];
     });
 
     return (
-      <div offset={offset} className={cx('input-field', className, classes)} {...props}>
+      <Col offset={offset} className={cx('input-field', className, classes)} {...props}>
         {icon && this.renderIcon(icon, iconClassName)}
         <input
-          placeholder={ placeholder }
           className='autocomplete'
+          placeholder={ placeholder }
           id={_id}
           onChange={this._onChange}
           type='text'
@@ -103,7 +96,7 @@ class Autocomplete extends Component {
         />
         <label htmlFor={_id}>{title}</label>
         {this.renderDropdown(data, minLength, limit)}
-      </div>
+      </Col>
     );
   }
 }
@@ -131,11 +124,7 @@ Autocomplete.propTypes = {
   /*
    * Determine input length before dropdown
    */
-  minLength: PropTypes.number,
-  /* Limit on number of results to show */
-  limit: PropTypes.number,
-  /* Placeholder for the input */
-  placeholder: PropTypes.string
+  minLength: PropTypes.number
 };
 
 export default Autocomplete;
