@@ -10,7 +10,7 @@ const testSchema = new Schema({
   updated: { type: Date, required: true },
 });
 
-testSchema.pre('save', function(next) {
+testSchema.pre('validate', function(next) {
   const now = new Date();
   if (!this.created) this.created = now;
   if (!this.updated) this.updated = now;

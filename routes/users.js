@@ -11,8 +11,11 @@ router.get('/', auth.verifyJWT, (req, res) => {
   } else if (id !== req.payload.user_id) {
     return handler(false, 'Unauthorized request for user information.', 401)(req, res);
   } else { 
-    User.findById(id, (err, user) => {
+    User.findById(id)
+    .populate('urgent unread read requests')
+    .exec((err, user) => {
       if (err) {
+        console.log(err);
         return handler(false, 'Database failed to find user.', 503)(req, res);
       } else {
         const { name, email, university, unread, read, urgent, requests } = user;

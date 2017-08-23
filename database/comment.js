@@ -8,7 +8,7 @@ const commentSchema = new Schema({
   updated: { type: Date, required: true }
 });
 
-commentSchema.pre('save', function(next) {
+commentSchema.pre('validate', function(next) {
   const now = new Date();
   if (!this.created) this.created = now;
   if (!this.updated) this.updated = now;

@@ -9,6 +9,16 @@ const express = require('express'),
       morgan = require('morgan'),
       mongoose = require('mongoose');
 
+/* declare all models */
+const User = require('./database/user'),
+      Competition =  require('./database/competition'),
+      Notification =  require('./database/notification'),
+      Request =  require('./database/request'),
+      Test =  require('./database/test'),
+      Contest =  require('./database/contest'),
+      Problem =  require('./database/problem'),
+      Subject =  require('./database/subject');
+
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

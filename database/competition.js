@@ -15,7 +15,10 @@ const competitionSchema = new Schema({
   updated: { type: Date, required: true },
 });
 
-competitionSchema.pre('save', function(name) {
+competitionSchema.pre('validate', function(next) {
+  if (this.shortName) {
+    this.short_name = this.shortName;
+  }
   if (!this.short_name) {
     this.short_name = this.name;
   }

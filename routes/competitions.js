@@ -12,7 +12,7 @@ const User = require('../database/user'),
 router.post('/', auth.verifyJWT, (req, res) => {
   const { type, competition, userId } = req.body;
   if (!competition.name) {
-    handler(false, 'Competition name must exist.', 400)(req, res);
+    handler(false, 'Competition name must be filled out.', 400)(req, res);
   }
   switch(type) {
     case REQUEST:
@@ -50,6 +50,7 @@ router.post('/', auth.verifyJWT, (req, res) => {
                   });
                   request.save(err => {
                     if (err) {
+                      console.log(err);
                       return handler(false, 'Database failed to create the request.', 503)(req, res);
                     } else {
                       /* send request to admins of the site */
