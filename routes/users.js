@@ -3,7 +3,8 @@ const router = require('express').Router(),
       handler = require('../utils/handler');
 
 const User = require('../database/user'),
-      Problems = require('../database/problem');
+      Problem = require('../database/problem')
+      Competition = require('../database/competition');
 
 router.get('/', auth.verifyJWT, (req, res) => {
   const { id } = req.query;
@@ -49,6 +50,24 @@ router.get('/problems', auth.verifyJWT, (req, res) => {
     } else {
       return handler(true, 'Successfully loaded admins info.', 200, {
         problems: problems
+      })(req, res);
+    }
+  });
+});
+
+/* get competitions of the user */
+router.get('/competitions', auth.verifyJWT, (req, res) => {
+  Competition.find({ 
+    $or: [
+      { directors: req.payload.user_id },
+      { members: req.payload.user_id }
+    ]
+  }, (err, competitions) => {
+    if (err) {
+      return handler(false, 'Database failed to load user\'s competitions.', 503)(req, res);
+    } else {
+      return handler(true, 'Successfully loaded competitions info.', 200, {
+        competitions: competitions
       })(req, res);
     }
   });

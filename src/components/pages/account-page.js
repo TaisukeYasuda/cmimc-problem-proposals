@@ -7,12 +7,6 @@ import ProblemsTab from "./account-page/problems-tab";
 import AccountTab from "./account-page/account-tab";
 import { HorizontalNav } from "../utilities";
 
-const competitions = [
-  {name: "CMIMC", membershipStatus: "Member"},
-  {name: "PUMaC", membershipStatus: "Pending"},
-  {name: "HMMT", membershipStatus: "Director"}
-];
-
 const proposals = [
   {probid: 123, votes: 0, solves: 1, views: 2, subject: "Algebra", contest: "CMIMC 2017", statement: "hi, but $\\int_0^t x~dx$"},
   {probid: 123, votes: 1, solves: 15, views: 20, subject: "Calculus", contest: "CMIMC 2017", statement: "hi"}
@@ -26,7 +20,7 @@ const AccountPage = () => {
     },
     "competitions": {
       title: <div><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</div>,
-      view: <CompetitionsTab competitions={ competitions } />
+      view: <CompetitionsTab />
     },
     "problems": {
       title: <div><i className="fa fa-pencil-square" aria-hidden="true"></i> Problems</div>,

@@ -6,7 +6,7 @@ import { Row, Col, Table, Button, Modal, Input } from "react-materialize";
 import { RightButtonPanel } from "../../utilities";
 import CreateCompetitionForm from "../../forms/create-competition";
 
-const CompetitionsTable = ({ competitions }) => {
+const CompetitionsTableDumb = ({ competitions }) => { 
   const statusOptions = {
     "Member": <div><li><a href="#" className="teal-text text-darken-3">Leave competition</a></li></div>,
     "Director": (
@@ -20,7 +20,7 @@ const CompetitionsTable = ({ competitions }) => {
     "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
   };
 
-  return (
+  return (competitions.length > 0) ? (
     <Table>
       <thead>
         <tr>
@@ -34,7 +34,7 @@ const CompetitionsTable = ({ competitions }) => {
         {
           competitions.map((competition, key) =>
             <tr key={key}>
-              <td>{competition.name}</td>
+              <td>{competition.short_name}</td>
               <td>{competition.membershipStatus}</td>
               <td>
                 <ul>
@@ -46,13 +46,23 @@ const CompetitionsTable = ({ competitions }) => {
         }
       </tbody>
     </Table>
+  ) : (
+    <div><p>Not involved in any competitions.</p></div>
   );
 };
 
-const CompetitionsTab = ({ competitions }) => (
+CompetitionsTableDumb.propTypes = {
+  competitions: PropTypes.array.isRequired
+};
+const mapStateToProps = state => ({
+        competitions: state.competitions.myCompetitions
+      });
+const CompetitionsTable = connect(mapStateToProps)(CompetitionsTableDumb);
+
+const CompetitionsTab = () => (
   <Col s={12}>
     <Row>
-      <CompetitionsTable competitions={ competitions } />
+      <CompetitionsTable />
       <RightButtonPanel>
         <form>
           <Modal header="Join a Competition" trigger={<Button className="teal darken-3">Join a Competition</Button>} actions={<div>

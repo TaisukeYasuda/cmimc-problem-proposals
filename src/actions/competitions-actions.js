@@ -4,6 +4,7 @@ import {
   COMP_ERROR,
   COMP_REQ,
   COMP_RES,
+  COMP_FETCH_MINE,
   requestStatuses
 } from './types';
 import { requestTypes } from '../../constants';
@@ -61,9 +62,49 @@ export function requestCompetition({ name, shortName, website }) {
       }, 
       error => {
         errorMessage = error.message || 'Failed to communicate with server.';
-        compErrorHandler(dispatch, errorMessage);
+        return compErrorHandler(dispatch, errorMessage);
       }
     );
   }
 }
 
+export function fetchMyCompetitions() {
+  return dispatch => {
+    const userId = auth.userId();
+    if (!userId) {
+      return compErrorHandler(dispatch, 'User is not logged in.');
+    } else {
+      dispatch({
+        type: COMP_FETCH_MINE,
+        payload: { requestStatus: requestStatuses.PENDING }
+      });
+      fetch('/api/users/competitions', {
+        method: 'get',
+        headers: { 
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).then(
+        response => {
+          return response.json()
+          .then(data => {
+            if (!data.success) compErrorHandler(dispatch, data.message);
+            else {
+              console.log('aileeeeean', data);
+              dispatch({
+                type: COMP_FETCH_MINE,
+                payload: {
+                  requestStatus: requestStatuses.SUCCESS,
+                  competitions: data.competitions
+                }
+              });
+            }
+          });
+        },
+        error => {
+          errorMessage = error.message || 'Failed to communicate with server.';
+          return compErrorHandler(dispatch, errorMessage);
+        }
+      );
+    }
+  }
+}
