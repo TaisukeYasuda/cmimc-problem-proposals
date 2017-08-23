@@ -11,10 +11,10 @@ import auth from '../auth';
 
 const store = configureStore();
 
-/*initApp()(store.dispatch);*/
 if (auth.isLoggedIn()) {
   store.dispatch({ type: AUTH_USER });
 }
+initApp()(store.dispatch);
 
 const Root = () => (
   <Provider store={store}>

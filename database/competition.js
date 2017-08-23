@@ -10,6 +10,7 @@ const competitionSchema = new Schema({
   directors: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
   members: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
   announcements: [ { type: Schema.Types.ObjectId, ref: 'Announcement' } ],
+  valid: { type: Boolean, required: true, default: false },
   created: { type: Date, required: true },
   updated: { type: Date, required: true },
 });

@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { Row, Col, Table, Input, Button, Modal } from "react-materialize";
 
 import CreateCompetitionForm from "../forms/create-competition";
@@ -25,8 +27,7 @@ const notifications = [
 const urgentNotifications = notifications.filter(notification => notification.label === "urgent");
 const newNotifications = notifications.filter(notification => notification.label === "new");
 
-const requests = [
-  {message: "Cody Johnson requests you to create the competition \"CMIMC.\""},
+const requests = [ {message: "Cody Johnson requests you to create the competition \"CMIMC.\""},
   {message: "Cody Johnson requests to join the competition \"CMIMC\" as a member."}
 ]
 
@@ -44,12 +45,6 @@ const proposals = [
   {probid: 123, votes: 0, solves: 1, views: 2, subject: "Algebra", contest: "CMIMC 2017", statement: "hi, but $\\int_0^t x~dx$"},
   {probid: 123, votes: 1, solves: 15, views: 20, subject: "Calculus", contest: "CMIMC 2017", statement: "hi"}
 ]
-
-const user = {
-  name: "Cody Johnson",
-  email: "ctj@math.cmu.edu",
-  university: "Carnegie Mellon University"
-}
 
 const admins = [
   {name: "Cody Johnson", email: "ctj@math.cmu.edu"},
@@ -204,7 +199,74 @@ const statusOptions = {
   "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
 };
 
-const accountTabs = {
+class AccountTab extends React.Component {
+  render() {
+    const { name, email, university } = this.props.user;
+    return (
+      <Col s={12}>
+        <h2 className="teal-text text-darken-4" style={{marginTop: "0"}}>Account
+          <Modal header="Edit Account" trigger={<a href="#" className="teal-text text-darken-4 right"><i className="fa fa-pencil" aria-hidden="true"></i></a>}>
+            <form>
+              <Input s={12} label="Name" value={name} />
+              <Input s={12} label="Email" value={email} />
+              <Input s={12} label="University" value={university} />
+              <RightButtonPanel>
+                <Button className="teal darken-3">Save</Button>
+              </RightButtonPanel>
+            </form>
+          </Modal>
+          </h2>
+        <ul>
+          <li>Name: {name}</li>
+          <li>Email: {email}</li>
+          <li>University: {university}</li>
+          <li><Modal header="Change Password" trigger={<a href className="teal-text text-darken-3">Change password</a>}>
+            <form className="row">
+              <Input s={12} type="password" placeholder="Current password" />
+              <Input s={12} type="password" placeholder="New password" />
+              <Input s={12} type="password" placeholder="New password (confirm)" />
+              <RightButtonPanel><Button className="teal darken-3">Confirm</Button></RightButtonPanel>
+            </form>
+          </Modal></li>
+        </ul>
+
+        <h2 className="teal-text text-darken-4">Admins</h2>
+        <p>If you have any problems, these are the contacts of the admins of USMCA:</p>
+        <ul>
+        {
+          admins.map((admin, key) =>
+            <li key={key}>{admin.name} ({admin.email})<a href="#" className="teal-text text-darken-3 right"><i className="fa fa-times" aria-hidden="true"></i></a></li>
+          )
+        }
+        </ul>
+        <RightButtonPanel><Button className="teal darken-3">Add Admin</Button><Button className="teal darken-3">Step Down</Button></RightButtonPanel>
+      </Col>
+    );
+  }
+}
+
+AccountTab.propTypes = {
+  user: PropTypes.object.isRequired
+};
+
+const user = {
+  name: "Cody Johnson",
+  email: "ctj@math.cmu.edu",
+  university: "Carnegie Mellon University"
+};
+
+const mapStateToProps = state => ({
+  user: state.init.user
+});
+
+AccountTab = connect(mapStateToProps)(AccountTab);
+
+
+const accountTabs = () => {
+  const accountTabView = (
+    <AccountTab />
+  );
+  return ({
   "notifications": {
     title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
     view: <VerticalNav tabs={ notificationTabs } active="all" />
@@ -273,53 +335,19 @@ const accountTabs = {
   },
   "account": {
     title: <div><i className="fa fa-user" aria-hidden="true"></i> Account</div>,
-    view: (
-      <Col s={12}>
-        <h2 className="teal-text text-darken-4" style={{marginTop: "0"}}>Account
-          <Modal header="Edit Account" trigger={<a href="#" className="teal-text text-darken-4 right"><i className="fa fa-pencil" aria-hidden="true"></i></a>}>
-            <form>
-              <Input s={12} label="Name" value={user.name} />
-              <Input s={12} label="Email" value={user.email} />
-              <Input s={12} label="University" value={user.university} />
-              <RightButtonPanel>
-                <Button className="teal darken-3">Save</Button>
-              </RightButtonPanel>
-            </form>
-          </Modal>
-          </h2>
-        <ul>
-          <li>Name: {user.name}</li>
-          <li>Email: {user.email}</li>
-          <li>University: {user.university}</li>
-          <li><Modal header="Change Password" trigger={<a href className="teal-text text-darken-3">Change password</a>}>
-            <form className="row">
-              <Input s={12} type="password" placeholder="Current password" />
-              <Input s={12} type="password" placeholder="New password" />
-              <Input s={12} type="password" placeholder="New password (confirm)" />
-              <RightButtonPanel><Button className="teal darken-3">Confirm</Button></RightButtonPanel>
-            </form>
-          </Modal></li>
-        </ul>
-
-        <h2 className="teal-text text-darken-4">Admins</h2>
-        <p>If you have any problems, these are the contacts of the admins of USMCA:</p>
-        <ul>
-        {
-          admins.map((admin, key) =>
-            <li key={key}>{admin.name} ({admin.email})<a href="#" className="teal-text text-darken-3 right"><i className="fa fa-times" aria-hidden="true"></i></a></li>
-          )
-        }
-        </ul>
-        <RightButtonPanel><Button className="teal darken-3">Add Admin</Button><Button className="teal darken-3">Step Down</Button></RightButtonPanel>
-      </Col>
-    )
+    view: <AccountTab />
   }
+});
 }
 
-const AccountPage = ({ message }) => (
+const AccountPage = ({ user }) => {
+  return (
   <Row className="container">
-    <HorizontalNav tabs={ accountTabs } active="notifications" />
+    <HorizontalNav tabs={ accountTabs(user) } active="notifications" />
+    { JSON.stringify(user) }
   </Row>
-);
+)};
+
+
 
 export default AccountPage;

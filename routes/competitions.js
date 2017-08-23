@@ -35,35 +35,44 @@ router.post('/', auth.verifyJWT, (req, res) => {
             } else if (!user) {
               return handler(false, 'Author of competition request could not be found.', 400)(req, res);
             } else {
-              /* create request */
-              const request = Object.assign(new Request(), {
-                author: user._id,
-                body: `${user.name} requests to create the competition \"${competition.name}\".`,
-                type: requestEnum.REQUEST
-              });
-              request.save(err => {
+              /* create competition */
+              const newCompetition = Object.assign(new Competition(), competition);
+              newCompetition.save(err => {
                 if (err) {
-                  handler(false, 'Database failed to create the request.', 503)(req, res);
+                  return handler(false, 'Database failed to create the competition.', 503)(req, res);
                 } else {
-                  /* send request to admins of the site */
-                  User.find({ admin: true }, (err, admins) => {
-                    const tasks = admins.map(admin => {
-                      return callback => {
-                        admin.requests.push(request);
-                        admin.save(err => {
-                          if (err) callback(err, null);
-                          else callback(null, null);
+                  /* create request */
+                  const request = Object.assign(new Request(), {
+                    author: user._id,
+                    body: `${user.name} requests to create the competition \"${competition.name}\".`,
+                    type: requestEnum.REQUEST,
+                    competition: newCompetition._id
+                  });
+                  request.save(err => {
+                    if (err) {
+                      return handler(false, 'Database failed to create the request.', 503)(req, res);
+                    } else {
+                      /* send request to admins of the site */
+                      User.find({ admin: true }, (err, admins) => {
+                        const tasks = admins.map(admin => {
+                          return callback => {
+                            admin.requests.push(request);
+                            admin.save(err => {
+                              if (err) callback(err, null);
+                              else callback(null, null);
+                            });
+                          }
                         });
-                      }
-                    });
-                    async.parallel(tasks, (err, results) => {
-                      if (err) {
-                        handler(false, 'Database failed to send request to admins.', 503)(req, res);
-                      } else {
-                        /* success */
-                        handler(true, 'Successfully requested creation of competition.', 200)(req, res);
-                      }
-                    });
+                        async.parallel(tasks, (err, results) => {
+                          if (err) {
+                            return handler(false, 'Database failed to send request to admins.', 503)(req, res);
+                          } else {
+                            /* success */
+                            return handler(true, 'Successfully requested creation of competition.', 200)(req, res);
+                          }
+                        });
+                      });
+                    }
                   });
                 }
               });

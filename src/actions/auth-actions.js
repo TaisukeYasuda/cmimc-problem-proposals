@@ -1,4 +1,6 @@
 import fetch from 'isomorphic-fetch';
+
+import { initUser } from './init-actions';
 import { AUTH_USER,  
          AUTH_ERROR, 
          UNAUTH_USER } from './types';
@@ -33,8 +35,10 @@ export function loginUser({ email, password }) {
         .then(data => {
           if (!data.success) authErrorHandler(dispatch, data.message);
           else {
-            localStorage.setItem('token', data.token);
-            dispatch({ type: AUTH_USER });
+            const { token, user } = data;
+            localStorage.setItem('token', token);
+            dispatch({ type: AUTH_USER, payload: user });
+            initUser()(dispatch);
           }
         });
       }, 
@@ -59,8 +63,10 @@ export function signupUser({ name, email, password, university }) {
         .then(data => {
           if (!data.success) authErrorHandler(dispatch, data.message);
           else {
-            localStorage.setItem('token', data.token);
-            dispatch({ type: AUTH_USER });
+            const { token, user } = data;
+            localStorage.setItem('token', token);
+            dispatch({ type: AUTH_USER, payload: user });
+            initUser()(dispatch);
           }
         });
       },

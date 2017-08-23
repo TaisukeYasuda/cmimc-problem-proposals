@@ -1,58 +1,70 @@
 import fetch from 'isomorphic-fetch';
-import { normalize } from 'normalizr';
+import $ from 'jquery';
 
-import { subjectsSchema } from '../schema';
-
+import auth from '../auth';
 import {
+  requestStatuses,
+  INIT_ERROR,
+  INIT_USER,
   INIT_APP
 } from './types';
-
-const API_URL = 'http://localhost:8000/api',
-      CLIENT_ROOT_URL = 'http://localhost:8000';
 
 /*******************************************************************************
  * Synchronous actions.
  ******************************************************************************/
 
 export function initErrorHandler(dispatch, errorMessage) {
-  dispatch({
-    type: INIT_APP,
-    payload: {
-      error: true,
-      message: errorMessage
-    }
-  });
+  dispatch({ type: INIT_ERROR, payload: errorMessage});
 }
 
 /*******************************************************************************
  * Async thunk actions.
  ******************************************************************************/
+export function initUser() {
+  return dispatch => {
+    dispatch({ 
+      type: INIT_USER, 
+      payload: { 
+        requestStatus: requestStatuses.PENDING
+      }
+    });
+    const userId = auth.userId();
+    console.log('logged in:', userId);
+    if (userId) {
+      fetch(`/api/user?${$.param({ id: userId })}`, { 
+        method: 'get',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(
+        response => {
+          return response.json()
+          .then(data => {
+            const { error, message, user } = data;
+            if (error) initErrorHandler(dispatch, message);
+            else {
+              dispatch({
+                type: INIT_USER,
+                payload: {
+                  requestStatus: requestStatuses.SUCCESS,
+                  user: user
+                }
+              });
+            }
+          });
+        }, 
+        error => {
+          errorMessage = error.message || 'Failed to communicate with server.';
+          initErrorHandler(dispatch, errorMessage);
+        }
+      );
+    }
+  }
+}
 
 export function initApp() {
   return dispatch => {
-    dispatch({ 
-      type: INIT_APP, 
-      payload: { status: null }
-    });
-    fetch(`${API_URL}/subjects`, { method: 'get' })
-    .then(
-      response => {
-        return response.json()
-        .then(data => {
-          if (data.error) initErrorHandler(dispatch, data.message);
-          else {
-            let entities = normalize(data.content, [ subjectsSchema ]).entities;
-            dispatch({ 
-              type: INIT_APP,
-              payload: { status: 'success', subjects: entities.subjects }
-            });
-          }
-        });
-      }, 
-      error => {
-        errorMessage = error.message || 'Failed to communicate with server.';
-        initErrorHandler(dispatch, errorMessage);
-      }
-    );
+    initUser()(dispatch);
   }
 }

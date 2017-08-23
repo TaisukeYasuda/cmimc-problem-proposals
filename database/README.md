@@ -29,6 +29,7 @@
   directors: [ User ],
   members: [ User ],
   announcements: [ Notification ],
+  valid: Boolean,
   created: Date,
   updated: Date
 }
@@ -51,6 +52,8 @@
   author: User,
   body: String,
   type: Enum(REQUEST, INVITE), 
+  competition: Competition,
+  user_type: Enum(ADMIN, DIRECTOR, CZAR, MEMBER, TEST_SOLVER),
   created: Date,
   updated: Date
 }

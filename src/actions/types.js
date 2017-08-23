@@ -1,5 +1,7 @@
 /* initialization */
-export const INIT_APP = 'init_app'; // fetch initialization data from server
+export const INIT_ERROR = 'init_error', // notify initialization error
+             INIT_USER = 'init_user', // fetch user initialization data from server
+             INIT_APP = 'init_app'; // fetch initialization data from server
 
 export const requestStatuses = {
   SUCESS: 'success',
