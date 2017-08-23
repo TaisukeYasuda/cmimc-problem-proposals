@@ -36,7 +36,7 @@ export function requestCompetition({ name, shortName, website }) {
         competition: {
           name, shortName, website 
         },
-        user: userId
+        userId: userId
       }),
       headers: { 
         'Content-Type': 'application/json',
