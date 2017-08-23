@@ -8,7 +8,12 @@ import {
 const INITIAL_STATE = { 
   error: false, 
   message: '', 
-  user: {},
+  user: {
+    unread: [],
+    read: [],
+    urgent: [],
+    requests: []
+  },
   admins: [],
   requestStatus: requestStatuses.IDLE
 };

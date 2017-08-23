@@ -15,13 +15,37 @@ import {
 } from "../utilities";
 import { requestEnum } from "../../../constants";
 
-const notifications = [
-  {author: "CMIMC", title: "Looking for test solvers", message: "We only have one test solver on the Power Round, so ask around to see if anyone wants to test solve. Thanks!", label: "new"},
-  {author: "HMMT", title: "Meeting tomorrow", message: "Please come to the meeting tomorrow at 7:00 in McCosh 4.", label: "new"},
-  {author: "PUMaC", title: "Tell all your friends", message: "As the year is beginning, be sure to recommend any interesting freshman friends to join our contest.", label: "none"},
-  {author: "CMIMC", title: "Problems desperately needed", message: "The competition is only in 1 month and we're short 20 problems. Geometry is particularly lacking. Help!", label: "urgent"},
-  {author: "Admin", title: "Welcome to USMCA", message: "Congrats on making an account to the best website on earth!", label: "none"}
-];
+const urgent = [
+        {
+          author: "CMIMC", 
+          title: "Problems desperately needed", 
+          body: "The competition is only in 1 month and we're short 20 problems. Geometry is particularly lacking. Help!"
+        }
+      ],
+      read = [
+        {
+          author: "PUMaC", 
+          title: "Tell all your friends",
+          body: "As the year is beginning, be sure to recommend any interesting freshman friends to join our contest."
+        },
+        {
+          author: "Admin", 
+          title: "Welcome to USMCA",
+          body: "Congrats on making an account to the best website on earth!"
+        }
+      ],
+      unread = [
+        {
+          author: "CMIMC", 
+          title: "Looking for test solvers", 
+          body: "We only have one test solver on the Power Round, so ask around to see if anyone wants to test solve. Thanks!"
+        },
+        {
+          author: "HMMT", 
+          title: "Meeting tomorrow", 
+          body: "Please come to the meeting tomorrow at 7:00 in McCosh 4."
+        }
+      ];
 
 const requests = [ 
   {
@@ -131,7 +155,7 @@ const AccountPage = () => {
   const accountTabs = {
     "notifications": {
       title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
-      view: <NotificationsTab notifications={ notifications } requests={ requests } /> 
+      view: <NotificationsTab /> 
     },
     "competitions": {
       title: <div><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</div>,

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { Notification, LoadMore } from "../../utilities";
+import { requestEnum } from "../../../../constants";
 
 const NotificationList = ({ notifications }) => (
   <div className="notifications-container">
