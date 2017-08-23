@@ -46,11 +46,6 @@ const proposals = [
   {probid: 123, votes: 1, solves: 15, views: 20, subject: "Calculus", contest: "CMIMC 2017", statement: "hi"}
 ]
 
-const admins = [
-  {name: "Cody Johnson", email: "ctj@math.cmu.edu"},
-  {name: "Taisuke Yasuda", email: "taisukey@andrew.cmu.edu"}
-]
-
 const notificationTabs = {
   "all": {
     title: "All",
@@ -201,7 +196,8 @@ const statusOptions = {
 
 class AccountTab extends React.Component {
   render() {
-    const { name, email, university } = this.props.user;
+    const { user, admins } = this.props,
+          { name, email, university } = user;
     return (
       <Col s={12}>
         <h2 className="teal-text text-darken-4" style={{marginTop: "0"}}>Account
@@ -246,27 +242,19 @@ class AccountTab extends React.Component {
 }
 
 AccountTab.propTypes = {
-  user: PropTypes.object.isRequired
-};
-
-const user = {
-  name: "Cody Johnson",
-  email: "ctj@math.cmu.edu",
-  university: "Carnegie Mellon University"
+  user: PropTypes.object.isRequired,
+  admins: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
-  user: state.init.user
+  user: state.users.user,
+  admins: state.users.admins
 });
 
 AccountTab = connect(mapStateToProps)(AccountTab);
 
 
-const accountTabs = () => {
-  const accountTabView = (
-    <AccountTab />
-  );
-  return ({
+const accountTabs = {
   "notifications": {
     title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
     view: <VerticalNav tabs={ notificationTabs } active="all" />
@@ -337,16 +325,13 @@ const accountTabs = () => {
     title: <div><i className="fa fa-user" aria-hidden="true"></i> Account</div>,
     view: <AccountTab />
   }
-});
 }
 
-const AccountPage = ({ user }) => {
+const AccountPage = () => {
   return (
   <Row className="container">
-    <HorizontalNav tabs={ accountTabs(user) } active="notifications" />
+    <HorizontalNav tabs={ accountTabs } active="notifications" />
   </Row>
 )};
-
-
 
 export default AccountPage;

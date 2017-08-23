@@ -26,4 +26,16 @@ router.get('/', auth.verifyJWT, (req, res) => {
   }
 });
 
+router.get('/admin', (req, res) => {
+  User.find({ admin: true }, 'name email', (err, admins) => {
+    if (err) {
+      handler(false, 'Database failed to load admins.', 503)(req, res);
+    } else {
+      handler(true, 'Successfully loaded admins info.', 200, {
+        admins: admins
+      })(req, res);
+    }
+  });
+});
+
 module.exports = router;

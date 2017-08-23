@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-import { initUser } from './init-actions';
+import { userInfo } from './users-actions';
 import { AUTH_USER,  
          AUTH_ERROR, 
          UNAUTH_USER } from './types';
@@ -38,7 +38,7 @@ export function loginUser({ email, password }) {
             const { token, user } = data;
             localStorage.setItem('token', token);
             dispatch({ type: AUTH_USER, payload: user });
-            initUser()(dispatch);
+            userInfo()(dispatch);
           }
         });
       }, 
@@ -66,7 +66,7 @@ export function signupUser({ name, email, password, university }) {
             const { token, user } = data;
             localStorage.setItem('token', token);
             dispatch({ type: AUTH_USER, payload: user });
-            initUser()(dispatch);
+            userInfo()(dispatch);
           }
         });
       },
