@@ -17,7 +17,8 @@ const CompetitionsTableDumb = ({ competitions }) => {
         <li><a href="#" className="teal-text text-darken-3">Step down as director</a></li>
       </div>
     ),
-    "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
+    "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>,
+    "Pending Director": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
   };
 
   return (competitions.length > 0) ? (
@@ -73,9 +74,11 @@ const CompetitionsTab = () => (
             <Input label="Search competitions" />
             Your join request will be reviewed by the directors of (CMIMC).
           </Modal>
-        </form><br />
-        <CreateCompetitionForm />
+        </form>
       </RightButtonPanel>
+      <p className="right">Does your competition want to join USMCA? <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3">Form a new competition</a>}>
+        <CreateCompetitionForm />
+      </Modal>.</p>
     </Row>
   </Col>
 );

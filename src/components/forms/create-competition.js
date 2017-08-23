@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Input, Button, Modal } from "react-materialize";
+import { Input, Button } from "react-materialize";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 
@@ -10,21 +10,20 @@ import {
   compErrorHandler, requestCompetition
 } from "../../actions";
 import { requestStatuses } from "../../actions/types";
-import { RightButtonPanel } from "../utilities";
 
 const NameInput = ({ input, meta, ...rest }) => (
-        <Input
-          label="Competition name (e.g. Carnegie Mellon Informatics and Mathematics Competition)"
+        <Input 
+          label="Competition name (e.g. Carnegie Mellon Informatics and Mathematics Competition)" 
           className="clear-top" { ...input } { ...rest }/>
       ),
       ShortNameInput = ({ input, meta, ...rest }) => (
-        <Input
-          label="Short name (e.g. CMIMC)"
+        <Input 
+          label="Short name (e.g. CMIMC)" 
           className="clear-top" { ...input } { ...rest } />
       ),
       WebsiteInput = ({ input, meta, ...rest }) => (
-        <Input
-          label="Website (optional)"
+        <Input 
+          label="Website (optional)" 
           className="clear-top" { ...input } { ...rest } />
       );
 
@@ -43,32 +42,28 @@ class CreateCompetitionForm extends React.Component {
       );
     }
     return (
-      <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3 right">Form a new competition</a>}>
-        <form onSubmit={ handleSubmit(this.onSubmit) }>
-          <div>
-            <Field name="name" component={ NameInput } />
-          </div>
-          <div>
-            <Field name="shortName" component={ ShortNameInput } />
-          </div>
-          <div>
-            <Field name="website" component={ WebsiteInput } />
-          </div>
-          <p>
-            Your request to create a competition will be reviewed by an admin.
-          </p>
-          <Error error={ this.props.compError } message={ this.props.compMessage } />
-          {
-            (
-             this.props.requestStatus === requestStatuses.PENDING &&
-             !this.props.compError
-            ) && <Spinner />
-          }<br />
-          <RightButtonPanel>
-            <Button type="submit" className="teal darken-3">Create</Button>
-          </RightButtonPanel>
-        </form>
-      </Modal>
+      <form onSubmit={ handleSubmit(this.onSubmit) }>
+        <div>
+          <Field name="name" component={ NameInput } />
+        </div>
+        <div>
+          <Field name="shortName" component={ ShortNameInput } />
+        </div>
+        <div>
+          <Field name="website" component={ WebsiteInput } />
+        </div>
+        <p>
+          Your request to create a competition will be reviewed by an admin. <Button type="submit" className="right teal darken-3">Create</Button>
+          <br className="clear-float" />
+        </p>
+        <Error error={ this.props.compError } message={ this.props.compMessage } />
+        { 
+          (
+           this.props.requestStatus === requestStatuses.PENDING && 
+           !this.props.compError
+          ) && <Spinner /> 
+        }
+      </form> 
     );
   }
 }
