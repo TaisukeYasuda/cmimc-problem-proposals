@@ -15,54 +15,6 @@ import {
 } from "../utilities";
 import { requestEnum } from "../../../constants";
 
-const urgent = [
-        {
-          author: "CMIMC", 
-          title: "Problems desperately needed", 
-          body: "The competition is only in 1 month and we're short 20 problems. Geometry is particularly lacking. Help!"
-        }
-      ],
-      read = [
-        {
-          author: "PUMaC", 
-          title: "Tell all your friends",
-          body: "As the year is beginning, be sure to recommend any interesting freshman friends to join our contest."
-        },
-        {
-          author: "Admin", 
-          title: "Welcome to USMCA",
-          body: "Congrats on making an account to the best website on earth!"
-        }
-      ],
-      unread = [
-        {
-          author: "CMIMC", 
-          title: "Looking for test solvers", 
-          body: "We only have one test solver on the Power Round, so ask around to see if anyone wants to test solve. Thanks!"
-        },
-        {
-          author: "HMMT", 
-          title: "Meeting tomorrow", 
-          body: "Please come to the meeting tomorrow at 7:00 in McCosh 4."
-        }
-      ];
-
-const requests = [ 
-  {
-    body: "Cody Johnson requests you to create the competition \"CMIMC.\"",
-    type: requestEnum.REQUEST
-  },
-  {
-    body: "Cody Johnson requests to join the competition \"CMIMC\" as a member.",
-    type: requestEnum.REQUEST
-  },
-  { 
-    body: "Cody Johnson invites you to become a director for \"CMIMC.\"",
-    type: requestEnum.INVITE
-  }
-];
-
-
 const competitions = [
   {name: "CMIMC", membershipStatus: "Member"},
   {name: "PUMaC", membershipStatus: "Pending"},

@@ -1,24 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import _ from "lodash";
 
 import NotificationList from "./notification-list";
 import RequestList from "./request-list";
+import RequestCounter from "./request-counter";
 import { VerticalNav, Counter } from "../../utilities";
 import { requestEnum } from "../../../../constants";
 
-const NotificationsTab = ({ unread, read, urgent, requests }) => {
-  const requestList = requests.filter(request => request.type === requestEnum.REQUEST),
-        inviteList = requests.filter(request => request.type === requestEnum.INVITE);
+const NotificationsTab = ({ unread, read, urgent }) => {
   /* add styling */
   unread = unread.map(notif => Object.assign(notif, { label: "new" }));
   read = read.map(notif => Object.assign(notif, { label: "none" }));
   urgent = urgent.map(notif => Object.assign(notif, { label: "urgent" }));
-  /* @TODO sort all notifications by updated date */
+  /* combine and sort unread, read, and urgent */ 
+  let all = _.concat(unread, read, urgent);
+  all = _.sortBy(all, 'created');
   const notificationsTabs = {
     "all": {
       title: "All",
-      view: <NotificationList notifications={ unread.concat(read).concat(urgent) } />
+      view: <NotificationList notifications={ all } />
     },
     "urgent": {
       title: <div>Urgent <Counter count={ urgent.length } /></div>,
@@ -29,12 +31,12 @@ const NotificationsTab = ({ unread, read, urgent, requests }) => {
       view: <NotificationList notifications={ unread } />
     },
     "requests": {
-      title: <div>Requests <Counter count={ requestList.length } /></div>,
-      view: <RequestList requests={ requestList } />
+      title: <div>Requests <RequestCounter type={ requestEnum.REQUEST } /></div>,
+      view: <RequestList type={ requestEnum.REQUEST } />
     },
     "invites": {
-      title: <div>Invites <Counter count={ inviteList.length } /></div>,
-      view: <RequestList requests={ inviteList } />
+      title: <div>Invites <RequestCounter type={ requestEnum.INVITE } /></div>,
+      view: <RequestList type={ requestEnum.INVITE } />
     }
   };
 
@@ -44,15 +46,13 @@ const NotificationsTab = ({ unread, read, urgent, requests }) => {
 NotificationsTab.propTypes = {
   unread: PropTypes.array.isRequired,
   read: PropTypes.array.isRequired,
-  urgent: PropTypes.array.isRequired,
-  requests: PropTypes.array.isRequired
+  urgent: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
   unread: state.users.user.unread,
   read: state.users.user.read,
-  urgent: state.users.user.urgent,
-  requests: state.users.user.requests
+  urgent: state.users.user.urgent
 });
 
 export default connect(mapStateToProps)(NotificationsTab);
