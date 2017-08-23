@@ -4,17 +4,16 @@ import { connect } from "react-redux";
 import { Row, Col, Table, Input, Button, Modal } from "react-materialize";
 
 import AccountTab from "./account-page/account-tab";
-import NotificationList from "./account-page/notification-list";
-import RequestList from "./account-page/request-list";
+import NotificationsTab from "./account-page/notifications-tab";
 import CreateCompetitionForm from "../forms/create-competition";
 import {
   LoadMore,
   ProblemPreview,
   Counter,
   HorizontalNav,
-  VerticalNav,
   RightButtonPanel
 } from "../utilities";
+import { requestEnum } from "../../../constants";
 
 const notifications = [
   {author: "CMIMC", title: "Looking for test solvers", message: "We only have one test solver on the Power Round, so ask around to see if anyone wants to test solve. Thanks!", label: "new"},
@@ -24,42 +23,21 @@ const notifications = [
   {author: "Admin", title: "Welcome to USMCA", message: "Congrats on making an account to the best website on earth!", label: "none"}
 ];
 
-const requests = [ {message: "Cody Johnson requests you to create the competition \"CMIMC.\""},
-  {message: "Cody Johnson requests to join the competition \"CMIMC\" as a member."}
+const requests = [ 
+  {
+    body: "Cody Johnson requests you to create the competition \"CMIMC.\"",
+    type: requestEnum.REQUEST
+  },
+  {
+    body: "Cody Johnson requests to join the competition \"CMIMC\" as a member.",
+    type: requestEnum.REQUEST
+  },
+  { 
+    body: "Cody Johnson invites you to become a director for \"CMIMC.\"",
+    type: requestEnum.INVITE
+  }
 ];
 
-const invites = [
-  {message: "Cody Johnson invites you to become a director for \"CMIMC.\""}
-];
-
-const NotificationsTab = ({ notifications, requests, invites }) => {
-  const urgentNotifications = notifications.filter(notification => notification.label === "urgent"),
-        newNotifications = notifications.filter(notification => notification.label === "new");
-  const notificationsTabs = {
-    "all": {
-      title: "All",
-      view: <NotificationList notifications={ notifications } />
-    },
-    "urgent": {
-      title: <div>Urgent <Counter count={urgentNotifications.length} /></div>,
-      view: <NotificationList notifications={ urgentNotifications } />
-    },
-    "unread": {
-      title: <div>New <Counter count={newNotifications.length} /></div>,
-      view: <NotificationList notifications={ newNotifications } />
-    },
-    "requests": {
-      title: <div>Requests <Counter count={requests.length} /></div>,
-      view: <RequestList requests={ requests } />
-    },
-    "invites": {
-      title: <div>Invites <Counter count={invites.length} /></div>,
-      view: <RequestList requests={ invites } />
-    }
-  };
-
-  return <VerticalNav tabs={ notificationsTabs } active="all" />;
-};
 
 const competitions = [
   {name: "CMIMC", membershipStatus: "Member"},
@@ -153,7 +131,7 @@ const AccountPage = () => {
   const accountTabs = {
     "notifications": {
       title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
-      view: <NotificationsTab notifications={ notifications } requests={ requests } invites={ invites } /> 
+      view: <NotificationsTab notifications={ notifications } requests={ requests } /> 
     },
     "competitions": {
       title: <div><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</div>,
