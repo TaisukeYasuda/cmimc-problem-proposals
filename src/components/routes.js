@@ -5,12 +5,12 @@ import { withRouter, Switch, Route, Redirect } from "react-router-dom";
 
 import IndexPage from "./pages/index-page";
 import LoginPage from "./pages/login-page";
-import AdminPage from "./pages/admin";
-import ContestsPage from "./pages/contests-page";
-import ProposePage from "./pages/propose-prob-page";
-import DatabasePage from "./pages/database-page";
 import AccountPage from "./pages/account-page";
-import ViewProbPage from "./pages/view-prob-page";
+import ProposePage from "./pages/propose-page";
+import ContestsPage from "./pages/contests-page";
+import ViewContestPage from "./pages/view-contest-page";
+import ViewDatabasePage from "./pages/view-database-page";
+import ViewProblemPage from "./pages/view-problem-page";
 import NotFoundPage from "./pages/not-found-page";
 
 import requireAuth from "./auth/require-auth";
@@ -21,7 +21,8 @@ const Routes = ({ authenticated }) => (
     <Route exact path="/login" component={ LoginPage }/>
     <Route exact path="/contests" component={ requireAuth(ContestsPage) }/>
     <Route exact path="/propose" component={ requireAuth(ProposePage) }/>
-    <Route exact path="/database" component={ requireAuth(DatabasePage) }/>
+    <Route exact path="/view-database" component={ requireAuth(ViewDatabasePage) }/>
+    <Route exact path="/view-contest" component={ requireAuth(ViewContestPage) }/>
     <Route exact path="/view-problem" component={ requireAuth(ViewProbPage) }/>
     <Route path="*" component={ NotFoundPage } />
   </Switch>

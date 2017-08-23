@@ -1,97 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
-import fetch from 'isomorphic-fetch';
+import React from "react";
+import { Row, Col, Input, Button } from "react-materialize";
 
-import { 
-  postProposal,
-  proposalErrorHandler
-} from '../../actions';
-
-import ProposeForm from '../forms/propose';
-import Error from '../error';
-import Spinner from '../spinner';
+import ProposeForm from "../forms/propose";
 
 class ProposePage extends React.Component {
-  submit = values =>  {
-    if (!values.subject ||
-        !values.difficulty ||
-        !values.problem ||
-        !values.answer ||
-        !values.solution) {
-      this.props.errorHandler('Please fill out all fields.');
-      return;
-    }
-    this.props.postProposal({
-      subject: values.subject,
-      difficulty: values.difficulty,
-      problem: values.problem,
-      answer: values.answer,
-      solution: values.solution
-    });
-  }
-
-  componentWillReceiveProps = nextProps => {
-    if (this.props.proposalSubmitting && !nextProps.proposalSubmitting) {
-      this.props.history.push('/');
-    }
-  }
-
   render() {
-    return ( 
-      /* can propose only if authenticated */
-      this.props.authenticated ? (
-        /* show spinner if submitting */
-        this.props.proposalSubmitting ? ( 
-          <section>
-            <Spinner /> 
-          </section>
-        ) : (
-          <section>
-            { this.props.error && <Error message={this.props.message} /> }
-            <h1>Submit Proposal</h1>
-            <ProposeForm onSubmit={this.submit} />
-          </section>
-        )
-      ) : (
-        <section>
-          <h1>You aren't logged in yet!</h1>
-          <p>To propose problems for CMIMC, either <Link to='/'>signup</Link> or <Link to='/login'>login</Link>.</p>
-        </section>
-      )
+    return (
+      <Row className="container">
+        <h2 className="teal-text text-darken-4">Propose a Problem</h2>
+        <ProposeForm />
+      </Row>
     );
   }
 }
 
-ProposePage.propTypes = {
-  error: PropTypes.bool.isRequired,
-  message: PropTypes.string,
-  proposalSubmitting: PropTypes.bool.isRequired,
-  history: PropTypes.object.isRequired,
-  errorHandler: PropTypes.func.isRequired,
-  postProposal: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => ({
-  authenticated: state.auth.authenticated,
-  error: state.proposals.error,
-  message: state.proposals.message,
-  proposalSubmitting: state.proposals.proposalSubmitting
-});
-
-const mapDispatchToProps = dispatch => ({
-  errorHandler: message => {
-    proposalErrorHandler(dispatch, message);
-  },
-  postProposal: proposal => {
-    postProposal(proposal)(dispatch);
-  }
-});
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ProposePage)
-);
+export default ProposePage;
