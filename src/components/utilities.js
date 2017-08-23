@@ -2,11 +2,6 @@ import React from "react";
 import { Row, Col, Modal, Button } from "react-materialize";
 import renderKaTeX from "../katex";
 
-function listify (L, f) { // a list * (a -> String) -> String
-  f = f || (x => x);
-  return L.reduce((a, b) => (a + f(b) + ", "), "").slice(0, -2);
-}
-
 const LoadMore = () => (
   <a href="#" className="load-more teal-text text-darken-3 underline-hover">Load more...</a>
 );
@@ -171,7 +166,6 @@ class VerticalNav extends React.Component {
 }
 
 export {
-  listify,
   Notification,
   RightButtonPanel,
   ProblemPreview,

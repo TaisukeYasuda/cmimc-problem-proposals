@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Button, Table } from "react-materialize";
-import { RightButtonPanel, VerticalNav, listify } from "../utilities";
+import { RightButtonPanel, VerticalNav } from "../utilities";
 
 const contestTabs = ({ name, date, locations, status, tests, czars, testSolvers }) => ({
   "info": {
@@ -10,7 +10,7 @@ const contestTabs = ({ name, date, locations, status, tests, czars, testSolvers 
         <ul>
           <li>Name: {name}</li>
           <li>Date: {date}</li>
-          <li>Location(s): {listify(locations)}</li>
+          <li>Location(s): {locations.join(", ")}</li>
           <li>Status: {status} (<a href="#" className="teal-text text-darken-3">{ (status === "Active") ? "Mark as inactive" : "Mark as active" }</a>)</li>
           <li><a href="/view-database" className="teal-text text-darken-3">View database</a></li>
         </ul>
