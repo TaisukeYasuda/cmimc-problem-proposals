@@ -7,15 +7,12 @@ import AccountTab from "./account-page/account-tab";
 import NotificationList from "./account-page/notification-list";
 import RequestList from "./account-page/request-list";
 import CreateCompetitionForm from "../forms/create-competition";
-import renderKaTeX from "../../katex";
 import {
-  Notification,
   LoadMore,
   ProblemPreview,
   Counter,
   HorizontalNav,
   VerticalNav,
-  Request,
   RightButtonPanel
 } from "../utilities";
 
@@ -25,146 +22,158 @@ const notifications = [
   {author: "PUMaC", title: "Tell all your friends", message: "As the year is beginning, be sure to recommend any interesting freshman friends to join our contest.", label: "none"},
   {author: "CMIMC", title: "Problems desperately needed", message: "The competition is only in 1 month and we're short 20 problems. Geometry is particularly lacking. Help!", label: "urgent"},
   {author: "Admin", title: "Welcome to USMCA", message: "Congrats on making an account to the best website on earth!", label: "none"}
-]
-
-const urgentNotifications = notifications.filter(notification => notification.label === "urgent");
-const newNotifications = notifications.filter(notification => notification.label === "new");
+];
 
 const requests = [ {message: "Cody Johnson requests you to create the competition \"CMIMC.\""},
   {message: "Cody Johnson requests to join the competition \"CMIMC\" as a member."}
-]
+];
 
 const invites = [
   {message: "Cody Johnson invites you to become a director for \"CMIMC.\""}
-]
+];
+
+const NotificationsTab = ({ notifications, requests, invites }) => {
+  const urgentNotifications = notifications.filter(notification => notification.label === "urgent"),
+        newNotifications = notifications.filter(notification => notification.label === "new");
+  const notificationsTabs = {
+    "all": {
+      title: "All",
+      view: <NotificationList notifications={ notifications } />
+    },
+    "urgent": {
+      title: <div>Urgent <Counter count={urgentNotifications.length} /></div>,
+      view: <NotificationList notifications={ urgentNotifications } />
+    },
+    "unread": {
+      title: <div>New <Counter count={newNotifications.length} /></div>,
+      view: <NotificationList notifications={ newNotifications } />
+    },
+    "requests": {
+      title: <div>Requests <Counter count={requests.length} /></div>,
+      view: <RequestList requests={ requests } />
+    },
+    "invites": {
+      title: <div>Invites <Counter count={invites.length} /></div>,
+      view: <RequestList requests={ invites } />
+    }
+  };
+
+  return <VerticalNav tabs={ notificationsTabs } active="all" />;
+};
 
 const competitions = [
   {name: "CMIMC", membershipStatus: "Member"},
   {name: "PUMaC", membershipStatus: "Pending"},
   {name: "HMMT", membershipStatus: "Director"}
-]
+];
+
+const CompetitionsTable = ({ competitions }) => {
+  const statusOptions = {
+    "Member": <div><li><a href="#" className="teal-text text-darken-3">Leave competition</a></li></div>,
+    "Director": (
+      <div>
+        <li><a href="#" className="teal-text text-darken-3">Leave competition</a></li>
+        <li><a href="#" className="teal-text text-darken-3">Add new members</a></li>
+        <li><a href="#" className="teal-text text-darken-3">Add new directors</a></li>
+        <li><a href="#" className="teal-text text-darken-3">Step down as director</a></li>
+      </div>
+    ),
+    "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
+  };
+
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>Competition</th>
+          <th>Membership Status</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {
+          competitions.map((competition, key) =>
+            <tr key={key}>
+              <td>{competition.name}</td>
+              <td>{competition.membershipStatus}</td>
+              <td>
+                <ul>
+                  { statusOptions[competition.membershipStatus] }
+                </ul>
+              </td>
+            </tr>
+          )
+        }
+      </tbody>
+    </Table>
+  );
+};
+
+const CompetitionsTab = () => (
+  <Col s={12}>
+    <Row>
+      <p>You can change your membership status by selecting a new status from the dropdown.</p>
+      <CompetitionsTable competitions={ competitions } />
+      <RightButtonPanel>
+        <Modal header="Join a Competition" trigger={<Button className="teal darken-3">Join a Competition</Button>}>
+          <form>
+            <Input label="Search competitions" />
+            Your join request will be reviewed by the directors of (CMIMC).
+            <RightButtonPanel>
+              <Button className="teal darken-3">Join</Button>
+            </RightButtonPanel>
+          </form>
+        </Modal>
+      </RightButtonPanel>
+      <RightButtonPanel><p>Does your competition want to join USMCA? <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3">Form a new competition</a>}>
+        <CreateCompetitionForm />
+      </Modal>.</p></RightButtonPanel>
+    </Row>
+  </Col>
+);
 
 const proposals = [
   {probid: 123, votes: 0, solves: 1, views: 2, subject: "Algebra", contest: "CMIMC 2017", statement: "hi, but $\\int_0^t x~dx$"},
   {probid: 123, votes: 1, solves: 15, views: 20, subject: "Calculus", contest: "CMIMC 2017", statement: "hi"}
-]
+];
 
-const notificationTabs = {
-  "all": {
-    title: "All",
-    view: <NotificationList notifications={ notifications } />
-  },
-  "urgent": {
-    title: <div>Urgent <Counter count={urgentNotifications.length} /></div>,
-    view: <NotificationList notifications={ urgentNotifications } />
-  },
-  "unread": {
-    title: <div>New <Counter count={newNotifications.length} /></div>,
-    view: <NotificationList notifications={ newNotifications } />
-  },
-  "requests": {
-    title: <div>Requests <Counter count={requests.length} /></div>,
-    view: <RequestList requests={ requests } />
-  },
-  "invites": {
-    title: <div>Invites <Counter count={invites.length} /></div>,
-    view: <RequestList requests={ invites } />
-  }
-};
-
-const statusOptions = {
-  "Member": <div><li><a href="#" className="teal-text text-darken-3">Leave competition</a></li></div>,
-  "Director": (
-    <div>
-      <li><a href="#" className="teal-text text-darken-3">Leave competition</a></li>
-      <li><a href="#" className="teal-text text-darken-3">Add new members</a></li>
-      <li><a href="#" className="teal-text text-darken-3">Add new directors</a></li>
-      <li><a href="#" className="teal-text text-darken-3">Step down as director</a></li>
-    </div>
-  ),
-  "Pending": <div><li><a href="#" className="teal-text text-darken-3">Cancel request</a></li></div>
-};
-
-
-
-const accountTabs = {
-  "notifications": {
-    title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
-    view: <VerticalNav tabs={ notificationTabs } active="all" />
-  },
-  "competitions": {
-    title: <div><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</div>,
-    view: (
-      <Col s={12}>
-        <Row>
-          <p>You can change your membership status by selecting a new status from the dropdown.</p>
-          <Table>
-            <thead>
-              <tr>
-                <th>Competition</th>
-                <th>Membership Status</th>
-                <th>Options</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {
-                competitions.map((competition, key) =>
-                  <tr key={key}>
-                    <td>{competition.name}</td>
-                    <td>{competition.membershipStatus}</td>
-                    <td>
-                      <ul>
-                        { statusOptions[competition.membershipStatus] }
-                      </ul>
-                    </td>
-                  </tr>
-                )
-              }
-            </tbody>
-          </Table>
-          <RightButtonPanel>
-            <Modal header="Join a Competition" trigger={<Button className="teal darken-3">Join a Competition</Button>}>
-              <form>
-                <Input label="Search competitions" />
-                Your join request will be reviewed by the directors of (CMIMC).
-                <RightButtonPanel>
-                  <Button className="teal darken-3">Join</Button>
-                </RightButtonPanel>
-              </form>
-            </Modal>
-          </RightButtonPanel>
-          <RightButtonPanel><p>Does your competition want to join USMCA? <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3">Form a new competition</a>}>
-            <CreateCompetitionForm />
-          </Modal>.</p></RightButtonPanel>
-        </Row>
-      </Col>
-    )
-  },
-  "problems": {
-    title: <div><i className="fa fa-pencil-square" aria-hidden="true"></i> Problems</div>,
-    view: (
-      <Col s={12}>
-        {
-          proposals.map((proposal, key) => (
-            <ProblemPreview problem={proposal} key={key} />
-          ))
-        }
-        <LoadMore />
-      </Col>
-    )
-  },
-  "account": {
-    title: <div><i className="fa fa-user" aria-hidden="true"></i> Account</div>,
-    view: <AccountTab />
-  }
-}
+const ProblemsTab = ({ proposals }) => (
+  <Col s={12}>
+    {
+      proposals.map((proposal, key) => (
+        <ProblemPreview problem={proposal} key={key} />
+      ))
+    }
+    <LoadMore />
+  </Col>
+);
 
 const AccountPage = () => {
+  const accountTabs = {
+    "notifications": {
+      title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
+      view: <NotificationsTab notifications={ notifications } requests={ requests } invites={ invites } /> 
+    },
+    "competitions": {
+      title: <div><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</div>,
+      view: <CompetitionsTab />
+    },
+    "problems": {
+      title: <div><i className="fa fa-pencil-square" aria-hidden="true"></i> Problems</div>,
+      view: <ProblemsTab proposals={ proposals } />
+    },
+    "account": {
+      title: <div><i className="fa fa-user" aria-hidden="true"></i> Account</div>,
+      view: <AccountTab />
+    }
+  };
+
   return (
   <Row className="container">
     <HorizontalNav tabs={ accountTabs } active="notifications" />
   </Row>
-)};
+  )
+};
 
 export default AccountPage;
