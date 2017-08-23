@@ -37,12 +37,12 @@ const Notification = ({ className, label, author, title, message }) => {
 const RequestDumb = ({ request, respondCompetition }) => {
   let makeHandleClick;
   if (request.competition) {
-    makeHandleClick = adminResponse => { 
+    makeHandleClick = adminResponse => {
       return () => { respondCompetition(request, adminResponse); };
     };
   } else {
-    makeHandleClick = response => { 
-      return () => { console.log(response); } 
+    makeHandleClick = response => {
+      return () => { console.log(response); }
     };
   }
   return (
@@ -54,14 +54,14 @@ const RequestDumb = ({ request, respondCompetition }) => {
         <Col s={2}>
           <Modal header="Confirm Reject" trigger={<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a>} actions={<div>
             <Button flat modal="close" waves="light">Cancel</Button>
-            <Button flat modal="close" waves="light" 
+            <Button flat modal="close" waves="light"
               onClick={ makeHandleClick(requestTypes.REJECT) }>Confirm</Button>
           </div>}>
             Are you sure you want to reject this request?
           </Modal>
           <Modal header="Confirm Accept" trigger={<a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}actions={<div>
             <Button flat modal="close" waves="light">Cancel</Button>
-            <Button flat modal="close" waves="light" 
+            <Button flat modal="close" waves="light"
               onClick={ makeHandleClick(requestTypes.ACCEPT) }>Confirm</Button>
           </div>}>
             Are you sure you want to accept this request?

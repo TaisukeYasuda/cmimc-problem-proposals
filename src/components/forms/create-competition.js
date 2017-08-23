@@ -10,6 +10,7 @@ import {
   compErrorHandler, requestCompetition
 } from "../../actions";
 import { requestStatuses } from "../../actions/types";
+import { RightButtonPanel } from "../utilities";
 
 const NameInput = ({ input, meta, ...rest }) => (
         <Input
@@ -42,11 +43,8 @@ class CreateCompetitionForm extends React.Component {
       );
     }
     return (
-      <form onSubmit={ handleSubmit(this.onSubmit) }>
-        <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3 right">Form a new competition</a>} actions={<div>
-          <Button flat modal="close" waves="light">Cancel</Button>
-          <Button type="submit" flat modal="close" waves="light">Create</Button>
-        </div>}>
+      <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3 right">Form a new competition</a>}>
+        <form onSubmit={ handleSubmit(this.onSubmit) }>
           <div>
             <Field name="name" component={ NameInput } />
           </div>
@@ -58,7 +56,6 @@ class CreateCompetitionForm extends React.Component {
           </div>
           <p>
             Your request to create a competition will be reviewed by an admin.
-            <br className="clear-float" />
           </p>
           <Error error={ this.props.compError } message={ this.props.compMessage } />
           {
@@ -66,9 +63,12 @@ class CreateCompetitionForm extends React.Component {
              this.props.requestStatus === requestStatuses.PENDING &&
              !this.props.compError
             ) && <Spinner />
-          }
-        </Modal>
-      </form>
+          }<br />
+          <RightButtonPanel>
+            <Button type="submit" className="teal darken-3">Create</Button>
+          </RightButtonPanel>
+        </form>
+      </Modal>
     );
   }
 }
