@@ -212,6 +212,7 @@ li.urgent-announcement {
 }
 
 .feedback {
+  padding: 4px 0 24px;
   border-bottom: 1px solid #cfd8dc;
 }
 
@@ -257,4 +258,16 @@ li.urgent-announcement {
 
 .right-button-panel a.btn, .right-button-panel button {
   margin-left: 16px;
+}
+
+.upvote, .upvote a  {
+  color: #00c853;
+}
+
+.novote, .novote a  {
+  color: #9e9e9e;
+}
+
+.downvote, .downvote a  {
+  color: #d50000;
 }

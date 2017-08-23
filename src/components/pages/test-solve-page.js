@@ -2,9 +2,9 @@ import React from "react";
 import { Row, Col } from "react-materialize";
 import {  } from "../utilities";
 
-const TestSolvePage = ({ message }) => (
+const TestSolvePage = () => (
   <Row className="container">
-    sup
+    <h1>Test Solve</h1>
   </Row>
 );
 

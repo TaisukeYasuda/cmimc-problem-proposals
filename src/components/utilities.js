@@ -54,8 +54,7 @@ const ProblemPreview = ({ problem }) => (
           <span className="count">{ problem.views }</span><br />views
         </Col>
         <Col s={12}>
-          <ul>
-            <li>Contest: { problem.contest }</li>
+          <ul> <li>Contest: { problem.contest }</li>
             <li>Subject: { problem.subject }</li>
             <li>ID: { problem.probid }</li>
           </ul>
@@ -63,7 +62,7 @@ const ProblemPreview = ({ problem }) => (
       </Row>
     </Col>
     <Col s={9}>
-      <a href={ "view-problem/" + problem.probid } className="black-text underline-hover" ref={ renderKaTeX }>
+      <a href="view-problem" className="black-text underline-hover" ref={ renderKaTeX }>
         { problem.statement }
       </a>
     </Col>
@@ -83,6 +82,11 @@ class HorizontalNav extends React.Component {
 
   render() {
     const { tabs, active } = this.state;
+    if (!tabs) return (<div></div>);
+    if (tabs[active] === undefined) {
+      console.log('Active tab is not in the tabs.');
+      return (<div></div>);
+    }
     return (
       <div>
         <Col s={12} className="horizontal-nav">

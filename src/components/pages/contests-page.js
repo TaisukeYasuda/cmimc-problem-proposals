@@ -12,7 +12,7 @@ const contestTabs = ({ name, date, locations, status, czars, tests }) => ({
           <li>Date: {date}</li>
           <li>Location(s): {listify(locations)}</li>
           <li>Status: {status} (<a href="#" className="teal-text text-darken-3">{ (status === "Active") ? "Mark as inactive" : "Mark as active" }</a>)</li>
-          <li><a href="database" className="teal-text text-darken-3">View database</a></li>
+          <li><a href="view-database" className="teal-text text-darken-3">View database</a></li>
         </ul>
       </div>
     )
@@ -53,7 +53,7 @@ const contestTabs = ({ name, date, locations, status, czars, tests }) => ({
                 <tr>
                   <td>{test.name}</td>
                   <td>{test.problems}</td>
-                  <td>Edit, Select problems, Add test solvers</td>
+                  <td><a href="view-contest" className="teal-text text-darken-3">Manage</a></td>
                 </tr>
               ))
             }
