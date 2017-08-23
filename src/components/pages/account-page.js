@@ -344,7 +344,6 @@ const AccountPage = ({ user }) => {
   return (
   <Row className="container">
     <HorizontalNav tabs={ accountTabs(user) } active="notifications" />
-    { JSON.stringify(user) }
   </Row>
 )};
 
