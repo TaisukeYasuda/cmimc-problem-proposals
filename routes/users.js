@@ -1,9 +1,11 @@
 const router = require('express').Router(),
+      _ = require('lodash'),
       auth = require('../config/auth'),
       handler = require('../utils/handler');
 
 const User = require('../database/user'),
-      Problems = require('../database/problem');
+      Problem = require('../database/problem')
+      Competition = require('../database/competition');
 
 router.get('/', auth.verifyJWT, (req, res) => {
   const { id } = req.query;
@@ -50,6 +52,37 @@ router.get('/problems', auth.verifyJWT, (req, res) => {
       return handler(true, 'Successfully loaded admins info.', 200, {
         problems: problems
       })(req, res);
+    }
+  });
+});
+
+/* get competitions of the user */
+router.get('/competitions', auth.verifyJWT, (req, res) => {
+  Competition.find({ directors: req.payload.user_id }, (err, directorCompetitions) => {
+    if (err) {
+      return handler(false, 'Database failed to search for director competitions.', 503)(req, res);
+    } else {
+      directorCompetitions = _.map(directorCompetitions, competition => {
+        return { 
+          membershipStatus: competition.valid ? 'Director' : 'Pending Director',
+          competition: competition
+        };
+      });
+      Competition.find({ members: req.payload.user_id }, (err, memberCompetitions) => {
+        if (err) {
+          return handler(false, 'Database failed to search for member competitions.', 503)(req, res);
+        } else {
+          memberCompetitions = _.map(memberCompetitions, competition => {
+            return {
+              membershipStatus: 'Member',
+              competition: competition
+            };
+          });
+          return handler(true, 'Succesfully loaded member competitions.', 200, {
+            competitions: _.concat(directorCompetitions, memberCompetitions)
+          })(req, res);
+        }
+      });
     }
   });
 });
