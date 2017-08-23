@@ -86,6 +86,9 @@ router.post('/', auth.verifyJWT, (req, res) => {
       });
       break;
     case ACCEPT:
+      if (!req.payload.admin) {
+        return handler(false, 'Unauthorized access to requests.', 401)(req, res);
+      }
       Request.findById(requestId).populate('competition').exec((err, request) => {
         if (err) {
           return handler(false, 'Competition request was not found.', 503)(req, res);
@@ -131,6 +134,9 @@ router.post('/', auth.verifyJWT, (req, res) => {
       });
       break;
     case REJECT:
+      if (!req.payload.admin) {
+        return handler(false, 'Unauthorized access to requests.', 401)(req, res);
+      }
       Request.findById(requestId).populate('competition').exec((err, request) => {
         if (err) {
           return handler(false, 'Competition request was not found.', 503)(req, res);

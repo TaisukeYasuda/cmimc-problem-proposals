@@ -3,6 +3,7 @@ import fetch from 'isomorphic-fetch';
 import { 
   COMP_ERROR,
   COMP_REQ,
+  COMP_RES,
   requestStatuses
 } from './types';
 import { requestTypes } from '../../constants';
@@ -58,6 +59,50 @@ export function requestCompetition({ name, shortName, website }) {
           }
         });
       }, 
+      error => {
+        errorMessage = error.message || 'Failed to communicate with server.';
+        compErrorHandler(dispatch, errorMessage);
+      }
+    );
+  }
+}
+
+export function respondCompetition(request, adminResponse) {
+  return dispatch => {
+    if (!auth.isAdmin()) compErrorHandler(dispatch, 'User is not an admin.');
+    if (response !== requestTypes.ACCEPT && response !== requestTypes.REJECT) {
+      compErrorHandler(dispatch, 'Invalid response to request.');
+    }
+    dispatch({ 
+      type: COMP_RES, 
+      payload: { requestStatus: requestStatuses.PENDING }
+    });
+    fetch.post('/api/competition', {
+      method: 'post',
+      body: JSON.stringify({
+        requestId: request._id,
+        type: adminResponse
+      }),
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(
+      response => {
+        return response.json()
+        .then(data => {
+          if (!data.success) compErrorHandler(dispatch, data.message);
+          else {
+            dispatch({ 
+              type: COMP_RES, 
+              payload: {
+                type: adminResponse,
+                requestStatus: requestStatuses.SUCCESS
+              }
+            });
+          }
+        });
+      },
       error => {
         errorMessage = error.message || 'Failed to communicate with server.';
         compErrorHandler(dispatch, errorMessage);

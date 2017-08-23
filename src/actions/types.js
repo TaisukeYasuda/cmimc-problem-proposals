@@ -22,7 +22,8 @@ export const USER_ERROR = 'user_error', // notifiy user data error
 
 /* competitions */
 export const COMP_ERROR = 'comp_error', // notify a competition error
-             COMP_REQ = 'comp_req'; // request to create competition
+             COMP_REQ = 'comp_req', // request to create competition
+             COMP_RES = 'comp_res'; // respond to create competition
 
 /* problem proposals */
 export const PROPOSAL_ERROR = 'proposal_error', // notify a proposal error
