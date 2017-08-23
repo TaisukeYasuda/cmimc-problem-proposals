@@ -32,13 +32,13 @@ const CompetitionsTableDumb = ({ competitions }) => {
 
       <tbody>
         {
-          competitions.map((competition, key) =>
+          competitions.map((competitionInfo, key) =>
             <tr key={key}>
-              <td>{competition.short_name}</td>
-              <td>{competition.membershipStatus}</td>
+              <td>{competitionInfo.competition.short_name}</td>
+              <td>{competitionInfo.membershipStatus}</td>
               <td>
                 <ul>
-                  { statusOptions[competition.membershipStatus] }
+                  { statusOptions[competitionInfo.membershipStatus] }
                 </ul>
               </td>
             </tr>
