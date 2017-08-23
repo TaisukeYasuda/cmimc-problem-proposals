@@ -36,21 +36,21 @@ const Notification = ({ className, label, author, title, message }) => {
 const Request = ({ request }) => (
   <li className="white">
     <Row>
-      <Col s={11}>
+      <Col s={10}>
         { request.body }
       </Col>
-      <Col s={1}>
-        <Modal header="Confirm Accept" trigger={<a href="#" className="right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}actions={<div>
-          <Button flat modal="close" waves="light">Cancel</Button>
-          <Button flat modal="close" waves="light">Confirm</Button>
-        </div>}>
-          Are you sure you want to accept this request?
-        </Modal>
-        <Modal header="Confirm Reject" trigger={<a href="#"><i className="fa fa-times" aria-hidden="true"></i></a>} actions={<div>
+      <Col s={2}>
+        <Modal header="Confirm Reject" trigger={<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a>} actions={<div>
           <Button flat modal="close" waves="light">Cancel</Button>
           <Button flat modal="close" waves="light">Confirm</Button>
         </div>}>
           Are you sure you want to reject this request?
+        </Modal>
+        <Modal header="Confirm Accept" trigger={<a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}actions={<div>
+          <Button flat modal="close" waves="light">Cancel</Button>
+          <Button flat modal="close" waves="light">Confirm</Button>
+        </div>}>
+          Are you sure you want to accept this request?
         </Modal>
       </Col>
     </Row>
