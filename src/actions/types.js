@@ -18,12 +18,12 @@ export const AUTH_USER = 'auth_user', // set user to be authenticated
 /* authorization */
 export const USER_ERROR = 'user_error', // notifiy user data error
              USER_INFO = 'user_info', // get user info
-             USER_ADMIN = 'user_admin'; // get admins
+             USER_ADMIN = 'user_admin', // get admins
+             USER_COMP_RES = 'comp_res'; // respond to create competition
 
 /* competitions */
 export const COMP_ERROR = 'comp_error', // notify a competition error
-             COMP_REQ = 'comp_req', // request to create competition
-             COMP_RES = 'comp_res'; // respond to create competition
+             COMP_REQ = 'comp_req'; // request to create competition
 
 /* problem proposals */
 export const PROB_ERROR = 'prob_error', // notify a proposal error

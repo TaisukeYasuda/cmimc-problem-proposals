@@ -1,6 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Row, Col, Modal, Button } from "react-materialize";
+import { connect } from "react-redux";
+
 import renderKaTeX from "../katex";
+import { respondCompetition } from "../actions";
+import { requestTypes } from "../../constants";
 
 const LoadMore = () => (
   <a href="#" className="load-more teal-text text-darken-3 underline-hover">Load more...</a>
@@ -28,29 +33,56 @@ const Notification = ({ className, label, author, title, message }) => {
       </li>;
 };
 
-const Request = ({ request }) => (
-  <li className="white">
-    <Row>
-      <Col s={10}>
-        { request.body }
-      </Col>
-      <Col s={2}>
-        <Modal header="Confirm Reject" trigger={<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a>} actions={<div>
-          <Button flat modal="close" waves="light">Cancel</Button>
-          <Button flat modal="close" waves="light">Confirm</Button>
-        </div>}>
-          Are you sure you want to reject this request?
-        </Modal>
-        <Modal header="Confirm Accept" trigger={<a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}actions={<div>
-          <Button flat modal="close" waves="light">Cancel</Button>
-          <Button flat modal="close" waves="light">Confirm</Button>
-        </div>}>
-          Are you sure you want to accept this request?
-        </Modal>
-      </Col>
-    </Row>
-  </li>
-);
+/* smart component for approving requests */
+const RequestDumb = ({ request, respondCompetition }) => {
+  let makeHandleClick;
+  if (request.competition) {
+    makeHandleClick = adminResponse => { 
+      return () => { respondCompetition(request, adminResponse); };
+    };
+  } else {
+    makeHandleClick = response => { 
+      return () => { console.log(response); } 
+    };
+  }
+  return (
+    <li className="white">
+      <Row>
+        <Col s={10}>
+          { request.body }
+        </Col>
+        <Col s={2}>
+          <Modal header="Confirm Reject" trigger={<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a>} actions={<div>
+            <Button flat modal="close" waves="light">Cancel</Button>
+            <Button flat modal="close" waves="light" 
+              onClick={ makeHandleClick(requestTypes.REJECT) }>Confirm</Button>
+          </div>}>
+            Are you sure you want to reject this request?
+          </Modal>
+          <Modal header="Confirm Accept" trigger={<a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}actions={<div>
+            <Button flat modal="close" waves="light">Cancel</Button>
+            <Button flat modal="close" waves="light" 
+              onClick={ makeHandleClick(requestTypes.ACCEPT) }>Confirm</Button>
+          </div>}>
+            Are you sure you want to accept this request?
+          </Modal>
+        </Col>
+      </Row>
+    </li>
+  );
+}
+RequestDumb.propTypes = {
+  request: PropTypes.object.isRequired,
+  respondCompetition: PropTypes.func.isRequired
+};
+const mapStateToProps = state => ({
+      }),
+      mapDispatchToProps = dispatch => ({
+        respondCompetition: (request, adminResponse) => {
+          respondCompetition(request, adminResponse)(dispatch);
+        }
+      });
+const Request = connect(mapStateToProps, mapDispatchToProps)(RequestDumb);
 
 const ProblemPreview = ({ children, problem }) => (
   <Row className="problem-preview">

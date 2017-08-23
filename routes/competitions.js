@@ -12,8 +12,9 @@ const User = require('../database/user'),
 
 router.post('/', auth.verifyJWT, (req, res) => {
   const { type, competition, userId, requestId } = req.body;
-  if (!competition.name) {
-    handler(false, 'Competition name must be filled out.', 400)(req, res);
+  console.log(competition);
+  if (competition && !competition.name) {
+    return handler(false, 'Competition name must be filled out.', 400)(req, res);
   }
   switch(type) {
     case REQUEST:
@@ -38,9 +39,10 @@ router.post('/', auth.verifyJWT, (req, res) => {
               return handler(false, 'Author of competition request could not be found.', 400)(req, res);
             } else {
               /* create competition */
-              const newCompetition = Object.assign(new Competition(), {
-                ...competition,
-                directors: [ user._id ] // make requester the first director
+              let newCompetition = new Competition();
+              newCompetition = Object.assign(newCompetition, competition);
+              newCompetition = Object.assign(newCompetition, {
+                directors: [ user._id ] // make requester first director
               });
               newCompetition.save(err => {
                 if (err) {

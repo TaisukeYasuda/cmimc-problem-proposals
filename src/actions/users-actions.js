@@ -6,8 +6,10 @@ import {
   requestStatuses,
   USER_ERROR,
   USER_INFO,
-  USER_ADMIN
+  USER_ADMIN,
+  USER_COMP_RES
 } from './types';
+import { requestTypes } from '../../constants';
 
 /*******************************************************************************
  * Synchronous actions.
@@ -43,7 +45,6 @@ export function userInfo() {
             const { error, message, user } = data;
             if (error) userErrorHandler(dispatch, message);
             else {
-              console.log(user);
               dispatch({
                 type: USER_INFO,
                 payload: {
@@ -96,3 +97,49 @@ export function adminInfo() {
     );
   }
 }
+
+export function respondCompetition(request, adminResponse) {
+  return dispatch => {
+    if (!auth.isAdmin()) userErrorHandler(dispatch, 'User is not an admin.');
+    if (adminResponse !== requestTypes.ACCEPT && 
+        adminResponse !== requestTypes.REJECT) {
+      userErrorHandler(dispatch, 'Invalid response to request.');
+    }
+    dispatch({ 
+      type: USER_COMP_RES, 
+      payload: { requestStatus: requestStatuses.PENDING }
+    });
+    fetch('/api/competitions', {
+      method: 'post',
+      body: JSON.stringify({
+        requestId: request._id,
+        type: adminResponse
+      }),
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(
+      response => {
+        return response.json()
+        .then(data => {
+          if (!data.success) userErrorHandler(dispatch, data.message);
+          else {
+            dispatch({ 
+              type: USER_COMP_RES, 
+              payload: {
+                requestId: request._id,
+                requestStatus: requestStatuses.SUCCESS
+              }
+            });
+          }
+        });
+      },
+      error => {
+        errorMessage = error.message || 'Failed to communicate with server.';
+        userErrorHandler(dispatch, errorMessage);
+      }
+    );
+  }
+}
+
