@@ -7,7 +7,6 @@ import { Request, LoadMore } from "../../utilities";
 
 const RequestList = ({ requests, type }) => {
   requests = requests.filter(request => request.type === type),
-  console.log('ailee love', requests);
   let noRequestView = <li className="transparent">Error.</li>;
   switch (type) {
     case requestEnum.REQUEST:

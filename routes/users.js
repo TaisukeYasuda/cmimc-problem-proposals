@@ -15,7 +15,7 @@ router.get('/', auth.verifyJWT, (req, res) => {
     return handler(false, 'Unauthorized request for user information.', 401)(req, res);
   } else { 
     User.findById(id)
-    .populate('urgent unread read requests')
+    .populate('urgent urgent.competition unread unread.competition read read.competition requests')
     .exec((err, user) => {
       if (err) {
         console.log(err);

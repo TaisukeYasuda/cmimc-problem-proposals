@@ -38,7 +38,8 @@
 ## Notification
 ```
 {
-  author: User,
+  admin_author: Boolean,
+  author: Competition,
   title: String,
   body: String,
   created: Date,

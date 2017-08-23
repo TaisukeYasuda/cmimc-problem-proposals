@@ -89,7 +89,6 @@ export function fetchMyCompetitions() {
           .then(data => {
             if (!data.success) compErrorHandler(dispatch, data.message);
             else {
-              console.log('aileeeeean', data);
               dispatch({
                 type: COMP_FETCH_MINE,
                 payload: {

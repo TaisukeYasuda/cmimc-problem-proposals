@@ -26,6 +26,7 @@ export default function (state = INITIAL_STATE, action) {
     case USER_INFO:
       switch (action.payload.requestStatus) {
         case SUCCESS:
+          console.log(action.payload.user);
           return {
             ...state,
             error: false,

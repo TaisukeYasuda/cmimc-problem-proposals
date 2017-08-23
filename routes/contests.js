@@ -8,8 +8,7 @@ const { REQUEST, ACCEPT, REJECT } = requestTypes;
 
 const User = require('../database/user'),
       Competition = require('../database/competition'),
-      Request = require('../database/request'),
-      Notification = require('../database/notification');
+      Request = require('../database/request');
 
 router.post('/', auth.verifyJWT, (req, res) => {
   const { type, competition, userId, requestId } = req.body;
@@ -75,7 +74,6 @@ router.post('/', auth.verifyJWT, (req, res) => {
                         });
                         async.parallel(tasks, (err, results) => {
                           if (err) {
-                            console.log(err);
                             return handler(false, 'Database failed to send request to admins.', 503)(req, res);
                           } else {
                             /* success */
@@ -96,17 +94,14 @@ router.post('/', auth.verifyJWT, (req, res) => {
       if (!req.payload.admin) {
         return handler(false, 'Unauthorized access to requests.', 401)(req, res);
       }
-      Request.findById(requestId).populate('competition author').exec((err, request) => {
+      Request.findById(requestId).populate('competition').exec((err, request) => {
         if (err) {
           return handler(false, 'Competition request was not found.', 503)(req, res);
         } else {
           /* approve competition */
-          let approvedCompetition = request.competition,
-              requestAuthor = request.author;
-          approvedCompetition.valid = true;
-          approvedCompetition.save(err => {
+          request.competition.valid = true;
+          request.competition.save(err => {
             if (err) {
-              console.log(err);
               return handler(false, 'Database failed to approve competition.', 503)(req, res);
             } else {
               /* remove request from all admins */
@@ -124,38 +119,15 @@ router.post('/', auth.verifyJWT, (req, res) => {
                 });
                 async.parallel(tasks, (err, results) => {
                   if (err) {
-                    console.log(err);
                     return handler(false, 'Database failed to delete request from admins.', 503)(req, res);
                   } else {
                     /* remove request */
                     request.remove(err => {
                       if (err) {
-                        console.log(err);
                         return handler(false, 'Database failed to delete request.', 503)(req, res);
                       } else {
-                        /* send notification to requester */
-                        let notification = new Notification();
-                        notification = Object.assign(notification, {
-                          admin_author: true,
-                          title: 'Competition request approved',
-                          body: `Your request to create the competition ${approvedCompetition.name} has been approved. You are now the director of this competition.`
-                        });
-                        notification.save(err => {
-                          if (err) {
-                            console.log(err);
-                            return handler(false, 'Failed to create notification to requester.', 503)(req, res);
-                          } else {
-                            requestAuthor.unread.push(notification._id);
-                            requestAuthor.save(err => {
-                              if (err) {
-                                console.log(err);
-                                return handler(false, 'Failed to send notification to requester.', 503)(req, res);
-                              } else {
-                                return handler(true, 'Competition approved.', 200)(req, res);
-                              }
-                            });       
-                          }
-                        });
+                        /* success */
+                        return handler(true, 'Competition approved.', 200)(req, res);
                       }
                     });
                   }
@@ -170,17 +142,13 @@ router.post('/', auth.verifyJWT, (req, res) => {
       if (!req.payload.admin) {
         return handler(false, 'Unauthorized access to requests.', 401)(req, res);
       }
-      Request.findById(requestId).populate('competition author').exec((err, request) => {
+      Request.findById(requestId).populate('competition').exec((err, request) => {
         if (err) {
-          console.log(err);
           return handler(false, 'Competition request was not found.', 503)(req, res);
         } else {
           /* delete competition */
-          let rejectedCompetition = request.competition,
-              requestAuthor = request.author;
           request.competition.remove(err => {
             if (err) {
-              console.log(err);
               return handler(false, 'Failed to remove competition.', 503)(req, res);
             } else {
               /* remove request from all admins */
@@ -198,38 +166,15 @@ router.post('/', auth.verifyJWT, (req, res) => {
                 });
                 async.parallel(tasks, (err, results) => {
                   if (err) {
-                    console.log(err);
                     return handler(false, 'Database failed to delete request from admins.', 503)(req, res);
                   } else {
                     /* remove request */
                     request.remove(err => {
                       if (err) {
-                        console.log(err);
                         return handler(false, 'Database failed to delete request.', 503)(req, res);
                       } else {
-                        /* send notification to requester */
-                        let notification = new Notification();
-                        notification = Object.assign(notification, {
-                          admin_author: true,
-                          title: 'Competition request rejected',
-                          body: `Your request to create the competition ${rejectedCompetition.name} has been rejected. Contact the admin for questions.`
-                        });
-                        notification.save(err => {
-                          if (err) {
-                            console.log(err);
-                            return handler(false, 'Failed to create notification to requester.', 503)(req, res);
-                          } else {
-                            requestAuthor.unread.push(notification._id);
-                            requestAuthor.save(err => {
-                              if (err) {
-                                console.log(err);
-                                return handler(false, 'Failed to send notification to requester.', 503)(req, res);
-                              } else {
-                                return handler(true, 'Competition rejected.', 200)(req, res);
-                              }
-                            });       
-                          }
-                        });
+                        /* success */
+                        return handler(true, 'Competition rejected.', 200)(req, res);
                       }
                     });
                   }
