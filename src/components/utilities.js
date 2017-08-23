@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Modal } from "react-materialize";
+import { Row, Col, Modal, Button } from "react-materialize";
 import renderKaTeX from "../katex";
 
 function listify (L, f) { // a list * (a -> String) -> String
@@ -36,10 +36,16 @@ const Notification = ({ className, label, author, title, message }) => {
 const Request = ({ request }) => (
   <li className="white">
     { request.body }
-    <Modal header='Confirm Reject' trigger={<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a>}>
+    <Modal header="Confirm Reject" trigger={<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a>} actions={<div>
+      <Button flat modal="close" waves="light">Cancel</Button>
+      <Button flat modal="close" waves="light">Confirm</Button>
+    </div>}>
       Are you sure you want to reject this request?
     </Modal>
-    <Modal header='Confirm Accept' trigger={<a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}>
+    <Modal header="Confirm Accept" trigger={<a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}actions={<div>
+      <Button flat modal="close" waves="light">Cancel</Button>
+      <Button flat modal="close" waves="light">Confirm</Button>
+    </div>}>
       Are you sure you want to accept this request?
     </Modal>
   </li>
