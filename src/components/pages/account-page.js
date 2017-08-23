@@ -10,7 +10,8 @@ import {
   Counter,
   HorizontalNav,
   VerticalNav,
-  Request
+  Request,
+  RightButtonPanel
 } from "../utilities";
 
 const notifications = [
@@ -239,15 +240,20 @@ const accountTabs = {
               }
             </tbody>
           </Table>
-          <Modal header="Join a Competition" trigger={<Button className="teal darken-3 right">Join a Competition</Button>}>
-            <form>
-              <Input label="Search competitions" />
-              Your join request will be reviewed by the directors of (CMIMC). <Button className="right teal darken-3">Join</Button>
-            </form>
-          </Modal><br /><br />
-          <p className="right">Does your competition want to join USMCA? <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3">Form a new competition</a>}>
+          <RightButtonPanel>
+            <Modal header="Join a Competition" trigger={<Button className="teal darken-3">Join a Competition</Button>}>
+              <form>
+                <Input label="Search competitions" />
+                Your join request will be reviewed by the directors of (CMIMC).
+                <RightButtonPanel>
+                  <Button className="teal darken-3">Join</Button>
+                </RightButtonPanel>
+              </form>
+            </Modal>
+          </RightButtonPanel>
+          <RightButtonPanel><p>Does your competition want to join USMCA? <Modal header="Form a Competition" trigger={<a href className="underline-hover teal-text text-darken-3">Form a new competition</a>}>
             <CreateCompetitionForm />
-          </Modal>.</p>
+          </Modal>.</p></RightButtonPanel>
         </Row>
       </Col>
     )
@@ -270,14 +276,17 @@ const accountTabs = {
     view: (
       <Col s={12}>
         <h2 className="teal-text text-darken-4" style={{marginTop: "0"}}>Account
-          <Modal header="Edit Account" trigger={<a href="#" className="right teal-text text-darken-4"><i className="fa fa-pencil" aria-hidden="true"></i></a>}>
-            <form className="row">
+          <Modal header="Edit Account" trigger={<a href="#" className="teal-text text-darken-4 right"><i className="fa fa-pencil" aria-hidden="true"></i></a>}>
+            <form>
               <Input s={12} label="Name" value={user.name} />
               <Input s={12} label="Email" value={user.email} />
               <Input s={12} label="University" value={user.university} />
-              <Button className="teal darken-3 right">Save</Button>
+              <RightButtonPanel>
+                <Button className="teal darken-3">Save</Button>
+              </RightButtonPanel>
             </form>
-          </Modal></h2>
+          </Modal>
+          </h2>
         <ul>
           <li>Name: {user.name}</li>
           <li>Email: {user.email}</li>
@@ -287,7 +296,7 @@ const accountTabs = {
               <Input s={12} type="password" placeholder="Current password" />
               <Input s={12} type="password" placeholder="New password" />
               <Input s={12} type="password" placeholder="New password (confirm)" />
-              <Button className="teal darken-3 right">Confirm</Button>
+              <RightButtonPanel><Button className="teal darken-3">Confirm</Button></RightButtonPanel>
             </form>
           </Modal></li>
         </ul>
@@ -301,7 +310,7 @@ const accountTabs = {
           )
         }
         </ul>
-        <Button className="teal darken-3 right">Step Down</Button><Button className="teal darken-3 right right-space">Add Admin</Button>
+        <RightButtonPanel><Button className="teal darken-3">Add Admin</Button><Button className="teal darken-3">Step Down</Button></RightButtonPanel>
       </Col>
     )
   }

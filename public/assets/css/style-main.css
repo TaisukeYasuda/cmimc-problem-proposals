@@ -250,3 +250,11 @@ li.urgent-announcement {
 .form-error-msg {
   color: #c62828;
 }
+
+.right-button-panel {
+  float: right;
+}
+
+.right-button-panel a.btn, .right-button-panel button {
+  margin-left: 16px;
+}

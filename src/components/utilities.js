@@ -15,6 +15,15 @@ const Counter = ({ count }) => (
   <span className="counter">{count}</span>
 );
 
+const RightButtonPanel = ({ children, marginBottom }) => (
+  <div>
+    <div className="right-button-panel" style={{ marginBottom }}>
+      { children }
+    </div>
+    <br className="clear-float" />
+  </div>
+)
+
 const Notification = ({ className, label, author, title, message }) => {
   return <li className={className}>
         <a href="#"><span className="select-circle"></span></a>
@@ -83,7 +92,7 @@ class HorizontalNav extends React.Component {
                     className = (key === active) ? "left active-tab" : "left";
               return (
                 <a
-                  key={idx} href="#" className={ className }
+                  key={idx} className={ className }
                   onClick={ evt =>  {this.setState({ active: key }); } }>
                   { tab.title }
                 </a>
@@ -122,7 +131,7 @@ class VerticalNav extends React.Component {
                 return (
                   <li key={idx}>
                     <a
-                      href="#" className={ className }
+                      className={ className }
                       onClick={ evt =>  {this.setState({ active: key }); } }>
                       { tab.title }
                     </a>
@@ -143,6 +152,7 @@ class VerticalNav extends React.Component {
 export {
   listify,
   Notification,
+  RightButtonPanel,
   ProblemPreview,
   LoadMore,
   Counter,
