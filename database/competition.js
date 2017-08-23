@@ -25,5 +25,5 @@ competitionSchema.pre('save', function(name) {
   next();
 });
 
-const Competition = mongoose.model('Competition', userSchema);
+const Competition = mongoose.model('Competition', competitionSchema);
 module.exports = Competition;

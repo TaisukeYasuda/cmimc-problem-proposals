@@ -19,7 +19,7 @@ router.post('/', auth.verifyJWT, (req, res) => {
       /* see if contest with same name exists */
       Competition.findOne({ 
         name: { 
-          $regex: new RegExp('^' + competition.name.toLowerCase(), 'i' 
+          $regex: new RegExp('^' + competition.name.toLowerCase(), 'i')
         },
         valid: true
       }, (err, existingCompetition) => {
