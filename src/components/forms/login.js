@@ -43,14 +43,14 @@ class LoginForm extends React.Component {
           <div>
             <Field name="password" component={ PasswordInput } />
           </div>
-          <Error s={12} error={ authenticated } message="You are already logged in." />
-          <Error s={12} error={ authError } message={ authMessage } />
           <Col s={12}>
             <Button waves="light" className="teal darken-4 right" disabled={ authenticated }>
               Log In
             </Button>
           </Col>
         </Row>
+        <Error s={12} error={ authenticated } message="You are already logged in." />
+        <Error s={12} error={ authError } message={ authMessage } />
       </form>
     );
   }

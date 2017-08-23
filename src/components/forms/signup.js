@@ -65,11 +65,11 @@ class SignupForm extends React.Component {
           <div>
             <Field name="university" component={ UniversityInput } />
           </div>
-          <Error s={12} error={ authError } message={ authMessage } />
           <Col s={12}>
             <Button waves="light" className="teal darken-4 right">Sign Up</Button>
           </Col>
         </Row>
+        <Error s={12} error={ authError } message={ authMessage } />
       </form>
     );
   }
