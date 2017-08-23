@@ -7,7 +7,7 @@ const results = [
   {probid: 123, votes: 1, solves: 15, views: 20, subject: "Calculus", contest: "CMIMC 2017", statement: "Let $f$ be a three-times differentiable function (defined on $\\mathbb R$ and real-valued) such that $f$ has at least five distinct real zeros. Prove that $f+6f'+12f''+8f'''$ has at least two distinct real zeros."}
 ]
 
-const DatabasePage = ({ message }) => (
+const DatabasePage = () => (
   <Row className="container">
     <Col s={12}>
       <h2 className="teal-text text-darken-4">Database</h2>
@@ -57,7 +57,7 @@ const DatabasePage = ({ message }) => (
       <h3>Results</h3>
       {
         results.map((proposal, key) => (
-          <ProblemPreview problem={proposal} key={key} />
+          <ProblemPreview problem={proposal} key={key}>sup</ProblemPreview>
         ))
       }
       <a href="#" className="load-more teal-text text-darken-3 underline-hover">Load more...</a>

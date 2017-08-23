@@ -182,11 +182,11 @@ li.urgent-announcement {
   border-bottom: 1px solid #cfd8dc;
 }
 
-.problem-preview .col:first-child {
+.problem-preview .col:nth-child(2) {
   font-size: 10px;
 }
 
-.problem-preview .col:first-child .s4 {
+.problem-preview .col:nth-child(2) .s4 {
   text-align: center;
 }
 

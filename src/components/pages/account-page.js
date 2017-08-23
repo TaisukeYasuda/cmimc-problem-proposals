@@ -17,37 +17,37 @@ import { requestEnum } from "../../../constants";
 
 const urgent = [
         {
-          author: "CMIMC", 
-          title: "Problems desperately needed", 
+          author: "CMIMC",
+          title: "Problems desperately needed",
           body: "The competition is only in 1 month and we're short 20 problems. Geometry is particularly lacking. Help!"
         }
       ],
       read = [
         {
-          author: "PUMaC", 
+          author: "PUMaC",
           title: "Tell all your friends",
           body: "As the year is beginning, be sure to recommend any interesting freshman friends to join our contest."
         },
         {
-          author: "Admin", 
+          author: "Admin",
           title: "Welcome to USMCA",
           body: "Congrats on making an account to the best website on earth!"
         }
       ],
       unread = [
         {
-          author: "CMIMC", 
-          title: "Looking for test solvers", 
+          author: "CMIMC",
+          title: "Looking for test solvers",
           body: "We only have one test solver on the Power Round, so ask around to see if anyone wants to test solve. Thanks!"
         },
         {
-          author: "HMMT", 
-          title: "Meeting tomorrow", 
+          author: "HMMT",
+          title: "Meeting tomorrow",
           body: "Please come to the meeting tomorrow at 7:00 in McCosh 4."
         }
       ];
 
-const requests = [ 
+const requests = [
   {
     body: "Cody Johnson requests you to create the competition \"CMIMC.\"",
     type: requestEnum.REQUEST
@@ -56,7 +56,7 @@ const requests = [
     body: "Cody Johnson requests to join the competition \"CMIMC\" as a member.",
     type: requestEnum.REQUEST
   },
-  { 
+  {
     body: "Cody Johnson invites you to become a director for \"CMIMC.\"",
     type: requestEnum.INVITE
   }
@@ -115,7 +115,6 @@ const CompetitionsTable = ({ competitions }) => {
 const CompetitionsTab = () => (
   <Col s={12}>
     <Row>
-      <p>You can change your membership status by selecting a new status from the dropdown.</p>
       <CompetitionsTable competitions={ competitions } />
       <RightButtonPanel>
         <Modal header="Join a Competition" trigger={<Button className="teal darken-3">Join a Competition</Button>}>
@@ -155,7 +154,7 @@ const AccountPage = () => {
   const accountTabs = {
     "notifications": {
       title: <div><i className="fa fa-bell" aria-hidden="true"></i> Notifications</div>,
-      view: <NotificationsTab /> 
+      view: <NotificationsTab />
     },
     "competitions": {
       title: <div><i className="fa fa-trophy" aria-hidden="true"></i> Competitions</div>,

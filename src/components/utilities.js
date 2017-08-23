@@ -36,14 +36,26 @@ const Notification = ({ className, label, author, title, message }) => {
 const Request = ({ request }) => (
   <li className="white">
     { request.body }
-    <a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a><a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>
+    <Modal header='Confirm Reject' trigger={<a href="#" className="right"><i className="fa fa-times" aria-hidden="true"></i></a>}>
+      Are you sure you want to reject this request?
+    </Modal>
+    <Modal header='Confirm Accept' trigger={<a href="#" className="right right-space"><i className="fa fa-check" aria-hidden="true"></i></a>}>
+      Are you sure you want to accept this request?
+    </Modal>
   </li>
 );
 
-const ProblemPreview = ({ problem }) => (
+const ProblemPreview = ({ children, problem }) => (
   <Row className="problem-preview">
+    <Col s={9}>
+      <div className="katex-preview" style={{marginBottom: "24px"}}>
+        <a href="view-problem" className="black-text underline-hover" ref={ renderKaTeX }>
+          { problem.statement }
+        </a>
+      </div>
+    </Col>
     <Col s={3}>
-      <Row>
+      <Row style={{marginBottom: "0"}}>
         <Col s={4}>
           <span className="count">{ problem.votes }</span><br />votes
         </Col>
@@ -53,22 +65,15 @@ const ProblemPreview = ({ problem }) => (
         <Col s={4}>
           <span className="count">{ problem.views }</span><br />views
         </Col>
+      </Row>
+      <Row style={{marginBottom: "24px"}}>
         <Col s={12}>
-          <ul> <li>Contest: { problem.contest }</li>
-            <li>Subject: { problem.subject }</li>
-            <li>ID: { problem.probid }</li>
-          </ul>
+          { children }
         </Col>
       </Row>
     </Col>
-    <Col s={9}>
-      <a href="view-problem" className="black-text underline-hover" ref={ renderKaTeX }>
-        { problem.statement }
-      </a>
-    </Col>
   </Row>
 );
-
 
 class HorizontalNav extends React.Component {
   constructor(props) {

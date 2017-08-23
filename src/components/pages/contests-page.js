@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col, Button, Table } from "react-materialize";
 import { RightButtonPanel, VerticalNav, listify } from "../utilities";
 
-const contestTabs = ({ name, date, locations, status, czars, tests }) => ({
+const contestTabs = ({ name, date, locations, status, tests, czars, testSolvers }) => ({
   "info": {
     title: "Information",
     view: (
@@ -12,8 +12,36 @@ const contestTabs = ({ name, date, locations, status, czars, tests }) => ({
           <li>Date: {date}</li>
           <li>Location(s): {listify(locations)}</li>
           <li>Status: {status} (<a href="#" className="teal-text text-darken-3">{ (status === "Active") ? "Mark as inactive" : "Mark as active" }</a>)</li>
-          <li><a href="view-database" className="teal-text text-darken-3">View database</a></li>
+          <li><a href="/view-database" className="teal-text text-darken-3">View database</a></li>
         </ul>
+      </div>
+    )
+  },
+  "tests": {
+    title: "Tests",
+    view: (
+      <div className="round-container">
+        <Table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Problems</th>
+              <th>Options</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {
+              tests.map((test, key) => (
+                <tr key={key}>
+                  <td>{test.name}</td>
+                  <td>{test.problems}</td>
+                  <td><a href="/view-test" className="teal-text text-darken-3">Manage</a></td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </Table>
       </div>
     )
   },
@@ -34,31 +62,20 @@ const contestTabs = ({ name, date, locations, status, czars, tests }) => ({
       </div>
     )
   },
-  "tests": {
-    title: "Tests",
+  "test-solvers": {
+    title: "Test Solvers",
     view: (
       <div className="round-container">
-        <Table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Problems</th>
-              <th>Options</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {
-              tests.map((test, key) => (
-                <tr>
-                  <td>{test.name}</td>
-                  <td>{test.problems}</td>
-                  <td><a href="view-contest" className="teal-text text-darken-3">Manage</a></td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </Table>
+        <ul>
+          {
+            testSolvers.map((testSolver, key) => (
+              <li key={key}>{testSolver}<a href="#" className="teal-text text-darken-3 right"><i className="fa fa-times" aria-hidden="true"></i></a></li>
+            ))
+          }
+        </ul>
+        <RightButtonPanel>
+          <a href="#" className="teal-text text-darken-3">Add test solvers</a>
+        </RightButtonPanel>
       </div>
     )
   }
@@ -74,10 +91,10 @@ const tests = [
   {name: "Algebra (Individuals)", problems: 1}
 ]
 
-const ContestPreview = ({ name, date, locations, status, czars, tests }) => (
+const ContestPreview = ({ name, date, locations, status, tests, czars, testSolvers }) => (
   <Col s={12} className="top-border">
     <h2 className="teal-text text-darken-3">{name}</h2>
-    <VerticalNav tabs={ contestTabs({ name, date, locations, status, czars, tests })} active="info" />
+    <VerticalNav tabs={ contestTabs({ name, date, locations, status, tests, czars, testSolvers })} active="info" />
   </Col>
 )
 
@@ -85,10 +102,10 @@ const ContestsPage = () => (
   <Row className="container">
     <h2 className="teal-text text-darken-4">Contests</h2>
     <RightButtonPanel marginBottom="24px">
-      <Button className="teal darken-3">Shared Database</Button>
+      <a href="/view-database" className="btn teal darken-3">Shared Database</a>
       <Button className="teal darken-3">New Contest</Button>
     </RightButtonPanel>
-    <ContestPreview name="CMIMC 2018" date="January 28th, 2018" locations={["Carnegie Mellon University", "CMU Qatar Campus"]} status="Active" czars={["Taisuke Yasuda", "Cody Johnson"]} tests={tests} />
+    <ContestPreview name="CMIMC 2018" date="January 28th, 2018" locations={["Carnegie Mellon University", "CMU Qatar Campus"]} status="Active" tests={tests} czars={["Taisuke Yasuda", "Cody Johnson"]} testSolvers={["Taisuke Yasuda", "Cody Johnson"]} />
   </Row>
 );
 
